@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 public class CheckDates {
 
     public boolean isPreviousWeek(String dateInString) {
-        LocalDate inputlocalDate = convertToLocalDate(dateInString);
+        LocalDate inputlocalDate = convertToLocalDate(dateInString); // ez átláthatóság és debugolás szempontjából szép hogy felveszel 5 változót viszont sztem nem túl optimális
         LocalDate today = LocalDate.now();
         LocalDate sameDayLastWeek = today.minusWeeks(1);
         LocalDate mondayLastWeek = sameDayLastWeek.with(DayOfWeek.MONDAY);
@@ -36,7 +36,7 @@ public class CheckDates {
     }
 
     public HashMap<LocalDate, Integer> daysOfNotCommiting(List<GfCommits> gfCommits) {
-        int value = 0;
+        int value = 0; //  ugyanaz mint a GitHubApp.java
         HashMap<LocalDate, Integer> dateIntegerHashMap = new HashMap<>();
         putDaysInMap(value, dateIntegerHashMap);
         checkWhichDaysWereNotCommitted(gfCommits, value, dateIntegerHashMap);
