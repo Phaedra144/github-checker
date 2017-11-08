@@ -24,9 +24,9 @@ public class GitHubService {
         Call<RepoSearchResult> gfClassRepos = gitHubRetrofit.getService().getSearchedRepos();
         myClassRepos = gfClassRepos.execute().body();
         List<Repo> classRepos = new ArrayList<>();
-        for (Repo repo:myClassRepos.getItems()) {
+        for (Repo repo : myClassRepos.getItems()) {
             String repoName = repo.getName();
-            if (!((repoName.contains("todo")) || (repoName.contains("RPG") || (repoName.contains("to-do"))))){
+            if (!(repoName.contains("todo") || repoName.contains("RPG") || repoName.contains("to-do"))) { // ez az éselés elég nastyn néz ki ez így tuti jó? a zárójelezés. a másodiknál a nyitó az biztos kell az elején?
                 classRepos.add(repo);
             }
         }
