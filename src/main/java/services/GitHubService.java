@@ -24,7 +24,7 @@ public class GitHubService {
         Call<RepoSearchResult> gfClassRepos = gitHubRetrofit.getService().getSearchedRepos();
         myClassRepos = gfClassRepos.execute().body();
         List<Repo> classRepos = new ArrayList<>();
-        for (Repo repo:myClassRepos.getItems()) {
+        for (Repo repo : myClassRepos.getItems()) {
             String repoName = repo.getName();
             if (!((repoName.contains("todo")) || (repoName.contains("RPG") || (repoName.contains("to-do"))))){
                 classRepos.add(repo);
@@ -44,25 +44,15 @@ public class GitHubService {
     }
 
     public List<GfCommits> getPreviousWeekCommits(String repoName) throws IOException {
-        Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits("greenfox-academy", repoName);
-        List<GfCommits> gfCommits = gfCommitsCall.execute().body();
-        List<GfCommits> previousWeekCommits = new ArrayList<>();
-        for (int i = 0; i < gfCommits.size(); i++) {
-            GfCommits gfCommits1 = gfCommits.get(i);
-            String date = gfCommits.get(i).getCommit().getAuthor().getDate();
-            if (checkDates.isPreviousWeek(date)){
-                previousWeekCommits.add(gfCommits1);
-            }
-
-        }
-        return previousWeekCommits;
+        Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits("greenfox-academy", repoName, checkDates.getPreviousWeekStartDate(), checkDates.getPreviousWeekEndDate());
+        return gfCommitsCall.execute().body();
     }
 
     public int checkHowManyDaysNotCommitted(List<GfCommits> gfCommits) {
         int count = 0;
         HashMap<LocalDate, Integer> myMap = checkDates.daysOfNotCommiting(gfCommits);
         for (Map.Entry entry : myMap.entrySet()) {
-            if (entry.getValue().equals(Integer.valueOf(0))){
+            if (entry.getValue().equals(0)){
                 count++;
             }
         }

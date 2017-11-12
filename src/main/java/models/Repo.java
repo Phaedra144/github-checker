@@ -7,8 +7,8 @@ import java.util.List;
  */
 public class Repo {
 
-    int id;
-    String name;
+    private int id;
+    private String name;
 
     public Repo(int id, String name, List<String> topics) {
         this.id = id;
@@ -17,18 +17,6 @@ public class Repo {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override

@@ -6,23 +6,11 @@ package models;
  */
 public class GfCommits {
 
-    String sha;
-    Commit commit;
-
-    public String getSha() {
-        return sha;
-    }
-
-    public void setSha(String sha) {
-        this.sha = sha;
-    }
+    private String sha;
+    private Commit commit;
 
     public Commit getCommit() {
         return commit;
-    }
-
-    public void setCommit(Commit commit) {
-        this.commit = commit;
     }
 
     @Override

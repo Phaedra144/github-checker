@@ -5,41 +5,34 @@ import models.GfCommits;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Created by Szilvi on 2017. 10. 04..
  */
 public class CheckDates {
 
-    public boolean isPreviousWeek(String dateInString) {
-        LocalDate inputlocalDate = convertToLocalDate(dateInString);
-        LocalDate today = LocalDate.now();
-        LocalDate sameDayLastWeek = today.minusWeeks(1);
-        LocalDate mondayLastWeek = sameDayLastWeek.with(DayOfWeek.MONDAY);
-        LocalDate saturdayLastWeek = sameDayLastWeek.with(DayOfWeek.SATURDAY);
-        return getDatesBetweenUsingJava8(mondayLastWeek, saturdayLastWeek).contains(inputlocalDate);
+    public String getPreviousWeekStartDate() {
+        LocalDate sameDayLastWeek = getLastWeekDate();
+        return String.valueOf(sameDayLastWeek.with(DayOfWeek.MONDAY));
     }
 
-    public static List<LocalDate> getDatesBetweenUsingJava8(
-            LocalDate startDate, LocalDate endDate) {
-        long numOfDaysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-        return IntStream.iterate(0, i -> i + 1)
-                .limit(numOfDaysBetween)
-                .mapToObj(i -> startDate.plusDays(i))
-                .collect(Collectors.toList());
+    public String getPreviousWeekEndDate() {
+        LocalDate sameDayLastWeek = getLastWeekDate();
+        return String.valueOf(sameDayLastWeek.with(DayOfWeek.FRIDAY));
+    }
+
+    private LocalDate getLastWeekDate() {
+        LocalDate today = LocalDate.now();
+        return today.minusWeeks(1);
     }
 
     public HashMap<LocalDate, Integer> daysOfNotCommiting(List<GfCommits> gfCommits) {
-        int value = 0;
         HashMap<LocalDate, Integer> dateIntegerHashMap = new HashMap<>();
-        putDaysInMap(value, dateIntegerHashMap);
-        checkWhichDaysWereNotCommitted(gfCommits, value, dateIntegerHashMap);
+        putDaysInMap(0, dateIntegerHashMap);
+        checkWhichDaysWereNotCommitted(gfCommits, 0, dateIntegerHashMap);
         return dateIntegerHashMap;
     }
 
@@ -69,8 +62,7 @@ public class CheckDates {
 
     private List<LocalDate> getPreviousWeekDays() {
         List<LocalDate> prevWeekDays = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-        LocalDate sameDayLastWeek = today.minusWeeks(1);
+        LocalDate sameDayLastWeek = getLastWeekDate();
         prevWeekDays.add(sameDayLastWeek.with(DayOfWeek.MONDAY));
         prevWeekDays.add(sameDayLastWeek.with(DayOfWeek.TUESDAY));
         prevWeekDays.add(sameDayLastWeek.with(DayOfWeek.WEDNESDAY));

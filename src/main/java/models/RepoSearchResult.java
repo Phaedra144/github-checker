@@ -9,10 +9,10 @@ import java.util.List;
  */
 public class RepoSearchResult {
 
-    List<Repo> items;
+    private List<Repo> items;
 
-    public void setItems(List<Repo> items) {
-        this.items = items;
+    public List<Repo> getItems() {
+        return items;
     }
 
     @Override
@@ -20,9 +20,5 @@ public class RepoSearchResult {
         return "models.RepoSearchResult{" +
                 "items=" + items +
                 '}';
-    }
-
-    public List<Repo> getItems() {
-        return items;
     }
 }

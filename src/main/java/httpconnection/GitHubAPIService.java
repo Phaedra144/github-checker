@@ -6,6 +6,7 @@ import models.RepoSearchResult;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ public interface GitHubAPIService {
     @GET("search/repositories?q=topic:oracle+topic:pallida&per_page=100")
     Call<RepoSearchResult> getSearchedRepos();
 
-    @GET("repos/{owner}/{repo}/commits?per_page=100")
-    Call<List<GfCommits>> getClassCommits(@Path("owner") String owner, @Path("repo") String repo);
+    @GET("repos/{owner}/{repo}/commits?&per_page=50")
+    Call<List<GfCommits>> getClassCommits(@Path("owner") String owner, @Path("repo") String repo, @Query("since") String startDate, @Query("until") String endDate);
 
 
 }

@@ -7,23 +7,11 @@ import models.Author;
  */
 public class Commit {
 
-    Author author;
-    String message;
+    private Author author;
+    private String message;
 
     public Author getAuthor() {
         return author;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     @Override
