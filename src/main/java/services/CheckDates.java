@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Szilvi on 2017. 10. 04..
@@ -40,6 +41,17 @@ public class CheckDates {
         for (LocalDate weekday : getPreviousWeekDays()) {
             dateIntegerHashMap.put(weekday,value);
         }
+    }
+
+    public int checkHowManyDaysNotCommitted(List<GfCommits> gfCommits) {
+        int count = 0;
+        HashMap<LocalDate, Integer> myMap = daysOfNotCommiting(gfCommits);
+        for (Map.Entry entry : myMap.entrySet()) {
+            if (entry.getValue().equals(0)){
+                count++;
+            }
+        }
+        return count;
     }
 
     private void checkWhichDaysWereNotCommitted(List<GfCommits> gfCommits, int value, HashMap<LocalDate, Integer> dateIntegerHashMap) {

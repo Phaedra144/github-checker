@@ -9,12 +9,21 @@ import services.GitHubService;
  */
 public class GitHubApp {
 
+    static  boolean IS_COMMITCHECKING = false;
+    static boolean IS_MEMBER_ADDING = true;
+    static String FILENAME_OF_MEMBERS = "C:\\Users\\Szilvi\\Downloads\\2017-11-Corsac cohort Github usernames - Sheet1.csv";
+
     public static void main(String[] args) {
         GitHubService gitHubService = new GitHubService();
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
         try {
-            List<Repo> classRepos = gitHubService.getRepos();
-            gitHubService.fillNotCommittedDays(notCommittedDays, classRepos);
+            if (IS_COMMITCHECKING){
+                List<Repo> classRepos = gitHubService.getRepos();
+                gitHubService.fillNotCommittedDays(notCommittedDays, classRepos);
+            }
+            if (IS_MEMBER_ADDING){
+                gitHubService.addNewMembersToGf(FILENAME_OF_MEMBERS);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
