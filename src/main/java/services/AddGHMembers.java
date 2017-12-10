@@ -1,53 +1,25 @@
 package services;
 
 import httpconnection.GitHubRetrofit;
-import models.*;
+import models.MemberStatusResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import retrofit2.Call;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Szilvi on 2017. 09. 28..
- */
-public class GitHubService {
+import static services.Settings.COHORT_ID;
+import static services.Settings.GITHUB_ORG;
+import static services.Settings.GITHUB_SYSTEM_ENV;
 
-    GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
-    RepoSearchResult myClassRepos;
-    CheckDates checkDates = new CheckDates();
+public class AddGHMembers {
+
     FileHandling fileHandling = new FileHandling();
-    static String GITHUB_ORG = "greenfox-academy";
-    static int CORSAC_ID = 2555784;
+    GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
 
-    public List<Repo> getRepos() throws IOException {
-        Call<RepoSearchResult> gfClassRepos = gitHubRetrofit.getService().getSearchedRepos();
-        myClassRepos = gfClassRepos.execute().body();
-        List<Repo> classRepos = new ArrayList<>();
-        for (Repo repo : myClassRepos.getItems()) {
-            String repoName = repo.getName();
-            if (!(repoName.contains("todo") || repoName.contains("RPG") || repoName.contains("to-do"))){
-                classRepos.add(repo);
-            }
-        }
-        return classRepos;
-    }
-
-    public void fillNotCommittedDays(HashMap<String, Integer> notCommittedDays, List<Repo> classRepos) throws IOException {
-        List<GfCommits> gfCommits;
-        for (int i = 0; i < classRepos.size(); i++) {
-            String repoName = classRepos.get(i).getName();
-            gfCommits = getPreviousWeekCommits(repoName);
-            int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits);
-            notCommittedDays.put(repoName, noCommitDays);
-        }
-    }
-
-    public List<GfCommits> getPreviousWeekCommits(String repoName) throws IOException {
-        Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, checkDates.getPreviousWeekStartDate(), checkDates.getPreviousWeekEndDate());
-        return gfCommitsCall.execute().body();
-    }
 
     public void addNewMembersToGf(String filename) throws IOException {
         List<String> ghHandles = fileHandling.readFile(filename);
@@ -68,7 +40,7 @@ public class GitHubService {
                     MemberStatusResponse memberStatusResponse = addingMemberResponse.execute().body();
                     checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, shortGhHandle);
                 }
-                Call<MemberStatusResponse> addMemberToTeam = gitHubRetrofit.getService().addMemberToTeam(CORSAC_ID, shortGhHandle);
+                Call<MemberStatusResponse> addMemberToTeam = gitHubRetrofit.getService().addMemberToTeam(COHORT_ID, shortGhHandle);
                 MemberStatusResponse memberStatusResponse = addMemberToTeam.execute().body();
                 checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, shortGhHandle);
             }
@@ -90,7 +62,7 @@ public class GitHubService {
         URL url = new URL("https://api.github.com/orgs/" + GITHUB_ORG + "/members/" + ghHandle);
         HttpURLConnection http = (HttpURLConnection)url.openConnection();
         http.setRequestProperty("Content-Type", "application/json");
-        http.setRequestProperty("Authorization", System.getenv("COMMIT_CHECKER"));
+        http.setRequestProperty("Authorization", System.getenv(GITHUB_SYSTEM_ENV));
         http.setRequestProperty("Accept", "application/vnd.github.v3+json");
         int code = http.getResponseCode();
         return code == 204;

@@ -1,19 +1,13 @@
 package models;
 
-import models.Repo;
+import lombok.Getter;
 
 import java.util.List;
 
-/**
- * Created by Szilvi on 2017. 10. 03..
- */
 public class RepoSearchResult {
 
+    @Getter
     private List<Repo> items;
-
-    public List<Repo> getItems() {
-        return items;
-    }
 
     @Override
     public String toString() {

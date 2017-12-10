@@ -1,12 +1,14 @@
 package httpconnection;
 
 import okhttp3.OkHttpClient;
+import org.springframework.stereotype.Service;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
 /**
  * Created by Szilvi on 2017. 10. 03..
  */
+@Service
 public class GitHubRetrofit {
 
     AuthInterceptor authInterceptor = new AuthInterceptor();

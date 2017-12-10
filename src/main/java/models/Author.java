@@ -1,16 +1,15 @@
 package models;
 
+import lombok.Getter;
+
 /**
  * Created by Szilvi on 2017. 10. 04..
  */
 public class Author {
 
     private String name;
+    @Getter
     private String date;
-
-    public String getDate() {
-        return date;
-    }
 
     @Override
     public String toString() {

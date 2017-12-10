@@ -1,7 +1,10 @@
 import java.io.IOException;
 import java.util.*;
 import models.Repo;
-import services.GitHubService;
+import services.AddGHMembers;
+import services.GHCommitChecker;
+
+import static services.Settings.*;
 
 
 /**
@@ -9,20 +12,17 @@ import services.GitHubService;
  */
 public class GitHubApp {
 
-    static  boolean IS_COMMITCHECKING = false;
-    static boolean IS_MEMBER_ADDING = true;
-    static String FILENAME_OF_MEMBERS = "C:\\Users\\Szilvi\\Downloads\\2017-11-Corsac cohort Github usernames - Sheet1.csv";
-
     public static void main(String[] args) {
-        GitHubService gitHubService = new GitHubService();
+        GHCommitChecker ghCommitChecker = new GHCommitChecker();
+        AddGHMembers addGHMembers = new AddGHMembers();
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
         try {
             if (IS_COMMITCHECKING){
-                List<Repo> classRepos = gitHubService.getRepos();
-                gitHubService.fillNotCommittedDays(notCommittedDays, classRepos);
+                List<Repo> classRepos = ghCommitChecker.getRepos();
+                ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos);
             }
             if (IS_MEMBER_ADDING){
-                gitHubService.addNewMembersToGf(FILENAME_OF_MEMBERS);
+                addGHMembers.addNewMembersToGf(FILENAME_OF_MEMBERS);
             }
         } catch (IOException e) {
             e.printStackTrace();

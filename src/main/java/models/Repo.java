@@ -1,5 +1,7 @@
 package models;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
@@ -8,15 +10,12 @@ import java.util.List;
 public class Repo {
 
     private int id;
+    @Getter
     private String name;
 
     public Repo(int id, String name, List<String> topics) {
         this.id = id;
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     @Override
