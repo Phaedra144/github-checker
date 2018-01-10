@@ -3,6 +3,7 @@ package com.greenfox.szilvi.githubchecker.entities;
 import lombok.Getter;
 
 import javax.persistence.Entity;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,12 +21,11 @@ public class ClassGithub {
     private int id;
     private String cohortName;
     private String className;
-    private List<String> githubHandles;
+    private String githubHandle;
 
-    public ClassGithub(String cohortName, String className, List<String> githubHandles) {
+    public ClassGithub(String cohortName, String className, String githubHandle) {
         this.cohortName = cohortName;
         this.className = className;
-        this.githubHandles = githubHandles;
+        this.githubHandle = githubHandle;
     }
-
 }

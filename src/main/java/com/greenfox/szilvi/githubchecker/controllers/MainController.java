@@ -47,7 +47,9 @@ public class MainController {
     public String checkCommits(@RequestParam String ghHandles, @RequestParam String gfcohort,@RequestParam String gfclass, @RequestParam String startDate, @RequestParam String endDate, Model model) throws IOException {
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
         List<String> classRepos = ghCommitChecker.getRepos(ghHandles);
-        classGithubRepo.save(new ClassGithub(gfcohort, gfclass, classRepos));
+        for (String classRepo:classRepos) {
+            classGithubRepo.save(new ClassGithub(gfcohort, gfclass, classRepo));
+        }
         ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate.toString(), endDate.toString());
 
         model.addAttribute("map", notCommittedDays);
