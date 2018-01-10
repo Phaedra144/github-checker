@@ -21,9 +21,9 @@ public class MainController {
     GHCommitChecker ghCommitChecker;
 
     @PostMapping("/commitcheck")
-    public String checkCommits(@RequestParam String gfclass, @RequestParam String gfcohort, Model model) throws IOException {
+    public String checkCommits(@RequestParam String ghHandles, Model model) throws IOException {
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
-        List<Repo> classRepos = ghCommitChecker.getRepos(gfclass, gfcohort);
+        List<String> classRepos = ghCommitChecker.getRepos(ghHandles);
         ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos);
         model.addAttribute("map", notCommittedDays);
         return "index";
