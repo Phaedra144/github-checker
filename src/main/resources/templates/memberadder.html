@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Title</title>
+    </head>
+    <body>
+        <h3>Green Fox Github Checker</h3>
+        <p>You can add members to Green Fox organization to any team that you add here:</p>
+        <form th:action="@{/addmember}" method="post">
+            <label for="team">Please add a team name</label>
+            <input id="team" name="team" type="text"/>
+            <label for="members">Please add members</label>
+            <input id="members" name="members" type="text"/>
+            <button type="submit">GO</button>
+        </form>
+        <div th:each="response : ${responses}">
+            <p th:text="${response}"></p>
+        </div>
+
+    </body>
+</html>
