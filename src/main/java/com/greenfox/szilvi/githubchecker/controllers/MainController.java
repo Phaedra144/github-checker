@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,10 +22,10 @@ public class MainController {
     GHCommitChecker ghCommitChecker;
 
     @PostMapping("/commitcheck")
-    public String checkCommits(@RequestParam String gfclass, @RequestParam String gfcohort, Model model) throws IOException {
+    public String checkCommits(@RequestParam String ghHandles, @RequestParam String startDate, @RequestParam String endDate, Model model) throws IOException {
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
-        List<Repo> classRepos = ghCommitChecker.getRepos(gfclass, gfcohort);
-        ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos);
+        List<String> classRepos = ghCommitChecker.getRepos(ghHandles);
+        ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate.toString(), endDate.toString());
         model.addAttribute("map", notCommittedDays);
         return "index";
     }

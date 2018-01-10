@@ -15,7 +15,7 @@ public class AuthInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         String authToken = System.getProperty(GITHUB_TOKEN);
         Request.Builder builder = chain.request().newBuilder();
-        builder.addHeader("Authorization", authToken);
+        builder.addHeader("Authorization", "token " + authToken);
         builder.addHeader("Accept", "application/vnd.github.v3+json");
 
         return chain.proceed(builder.build());

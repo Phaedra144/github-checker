@@ -1,9 +1,7 @@
 package com.greenfox.szilvi.githubchecker.services;
 
 import com.greenfox.szilvi.githubchecker.httpconnection.GitHubRetrofit;
-import com.greenfox.szilvi.githubchecker.models.*;
 import com.greenfox.szilvi.githubchecker.models.GfCommits;
-import com.greenfox.szilvi.githubchecker.models.Repo;
 import com.greenfox.szilvi.githubchecker.models.RepoSearchResult;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -22,17 +20,14 @@ public class GHCommitChecker {
     RepoSearchResult myClassRepos;
     CheckDates checkDates = new CheckDates();
 
-    public List<Repo> getRepos(String gfclass, String gfcohort) throws IOException {
-        String query = "topic:" + gfclass + "+" + "topic:" + gfcohort + "&per_page=100";
-        Call<RepoSearchResult> gfClassRepos = gitHubRetrofit.getService().getSearchedRepos(query);
-        myClassRepos = gfClassRepos.execute().body();
-        List<Repo> classRepos = new ArrayList<>();
-        for (Repo repo : myClassRepos.getItems()) {
-            String repoName = repo.getName();
+    public List<String> getRepos(String ghHandles) throws IOException {
+        String[]ghArray = ghHandles.split(" ");
+        List<String> classRepos = new ArrayList<>();
+        for (String repo : ghArray) {
             int count = 0;
             List<String> excludeRepos = EXCLUDE_REPOS;
             for (String excRep : excludeRepos) {
-                if (repoName.contains(excRep)){
+                if (repo.contains(excRep)){
                     count++;
                 }
             }
@@ -40,21 +35,28 @@ public class GHCommitChecker {
                 classRepos.add(repo);
             }
         }
+        String firstGhHandle = cutFirstChar(classRepos.get(0));
+        classRepos.remove(0);
+        classRepos.add(0, firstGhHandle);
         return classRepos;
     }
 
-    public void fillNotCommittedDays(HashMap<String, Integer> notCommittedDays, List<Repo> classRepos) throws IOException {
+    private String cutFirstChar(String firstGhHandle) {
+        return firstGhHandle.substring(2);
+    }
+
+    public void fillNotCommittedDays(HashMap<String, Integer> notCommittedDays, List<String> classRepos, String startDate, String endDate) throws IOException {
         List<GfCommits> gfCommits;
         for (int i = 0; i < classRepos.size(); i++) {
-            String repoName = classRepos.get(i).getName();
-            gfCommits = getPreviousWeekCommits(repoName);
+            String repoName = classRepos.get(i);
+            gfCommits = getPreviousWeekCommits(repoName, startDate, endDate);
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits);
             notCommittedDays.put(repoName, noCommitDays);
         }
     }
 
-    public List<GfCommits> getPreviousWeekCommits(String repoName) throws IOException {
-        Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, checkDates.getPreviousWeekStartDate(), checkDates.getPreviousWeekEndDate());
+    public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
+        Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, startDate, endDate);
         return gfCommitsCall.execute().body();
     }
 }
