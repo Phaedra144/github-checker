@@ -1,6 +1,8 @@
 package com.greenfox.szilvi.githubchecker.controllers;
 
+import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
 import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
+import com.greenfox.szilvi.githubchecker.repositories.ClassGithubRepo;
 import com.greenfox.szilvi.githubchecker.services.AddGHMembers;
 import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class MainController {
     @Autowired
     AddGHMembers addGHMembers;
 
+    @Autowired
+    ClassGithubRepo classGithubRepo;
+
     @GetMapping("/index")
     public String getMain(){
         return "index";
@@ -39,10 +44,14 @@ public class MainController {
     }
 
     @PostMapping("/checkcommit")
-    public String checkCommits(@RequestParam String ghHandles, @RequestParam String startDate, @RequestParam String endDate, Model model) throws IOException {
+    public String checkCommits(@RequestParam String ghHandles, @RequestParam String gfcohort,@RequestParam String gfclass, @RequestParam String startDate, @RequestParam String endDate, Model model) throws IOException {
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
         List<String> classRepos = ghCommitChecker.getRepos(ghHandles);
+        for (String classRepo:classRepos) {
+            classGithubRepo.save(new ClassGithub(gfcohort, gfclass, classRepo));
+        }
         ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate.toString(), endDate.toString());
+
         model.addAttribute("map", notCommittedDays);
         return "commitchecker";
     }
