@@ -31,7 +31,6 @@ dependencies {
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
-    compile 'org.springframework.boot:spring-boot-starter-log4j2'
     compileOnly 'org.projectlombok:lombok'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
