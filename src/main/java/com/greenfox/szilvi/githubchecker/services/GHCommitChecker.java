@@ -45,18 +45,18 @@ public class GHCommitChecker {
         return firstGhHandle.substring(2);
     }
 
-    public void fillNotCommittedDays(HashMap<String, Integer> notCommittedDays, List<String> classRepos) throws IOException {
+    public void fillNotCommittedDays(HashMap<String, Integer> notCommittedDays, List<String> classRepos, String startDate, String endDate) throws IOException {
         List<GfCommits> gfCommits;
         for (int i = 0; i < classRepos.size(); i++) {
             String repoName = classRepos.get(i);
-            gfCommits = getPreviousWeekCommits(repoName);
+            gfCommits = getPreviousWeekCommits(repoName, startDate, endDate);
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits);
             notCommittedDays.put(repoName, noCommitDays);
         }
     }
 
-    public List<GfCommits> getPreviousWeekCommits(String repoName) throws IOException {
-        Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, checkDates.getPreviousWeekStartDate(), checkDates.getPreviousWeekEndDate());
+    public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
+        Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, startDate, endDate);
         return gfCommitsCall.execute().body();
     }
 }
