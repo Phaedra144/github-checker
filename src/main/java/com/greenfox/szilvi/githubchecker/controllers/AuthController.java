@@ -23,11 +23,11 @@ public class AuthController {
 
     @RequestMapping("/oauth")
     public String redirecttoOauth(){
-        return "redirect:https://github.com/login/oauth/authorize?client_id=ea78181b0500c62004c9&redirect_uri=http://localhost:8080/auth&scope=repo";
+        return "redirect:https://github.com/login/oauth/authorize?client_id=ea78181b0500c62004c9&redirect_uri=http://localhost:8080/auth&scope=admin:org";
     }
 
     @RequestMapping("/auth")
-    public String getAccessToken(@RequestParam String code, Model model) throws IOException {
+    public String getAccessToken(@RequestParam String code) throws IOException {
         authorization.getAccessToken(code);
         return "index";
     }

@@ -30,14 +30,16 @@ public class Authorization {
                 System.getenv("CLIENT_ID"),"https://github.com/login/oauth/authorize").build();
         TokenResponse tokenResponse = flow
                 .newTokenRequest(code)
-                .setScopes(Collections.singletonList("repo"))
+                .setScopes(Collections.singletonList("admin:org"))
                 .setRequestInitializer(new HttpRequestInitializer() {
                     @Override
                     public void initialize(HttpRequest request) throws IOException {
                         request.getHeaders().setAccept("application/json");
                     }
                 }).execute();
+        System.out.println(flow.getScopes());
         System.setProperty("accessToken", tokenResponse.getAccessToken());
+        System.out.println(tokenResponse.getAccessToken());
         return tokenResponse.getAccessToken();
     }
 }

@@ -2,30 +2,29 @@ package com.greenfox.szilvi.githubchecker.services;
 
 import com.greenfox.szilvi.githubchecker.httpconnection.GitHubRetrofit;
 import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
+import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 
-
+@Service
 public class AddGHMembers {
 
     FileHandling fileHandling = new FileHandling();
     GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
 
-
-    public void addNewMembersToGf(String filename) throws IOException {
-        List<String> ghHandles = fileHandling.readFile(filename);
+    public List<MemberStatusResponse> addNewMembersToGf(String filename) throws IOException {
+        List<String> ghHandles = new ArrayList<String>(Arrays.asList(filename.split(" ")));
         List<MemberStatusResponse> memberStatusResponseList = new ArrayList<>();
         callingToAddMembers(ghHandles, memberStatusResponseList);
-        for (MemberStatusResponse status : memberStatusResponseList) {
-            System.out.println(status);
-        }
+        return  memberStatusResponseList;
     }
 
     private void callingToAddMembers(List<String> ghHandles, List<MemberStatusResponse> memberStatusResponseList) throws IOException {
@@ -42,7 +41,6 @@ public class AddGHMembers {
                 MemberStatusResponse memberStatusResponse = addMemberToTeam.execute().body();
                 checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, shortGhHandle);
             }
-
         }
     }
 
