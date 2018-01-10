@@ -48,7 +48,7 @@ public class GHCommitChecker {
         for (int i = 0; i < classRepos.size(); i++) {
             String repoName = classRepos.get(i);
             gfCommits = getPreviousWeekCommits(repoName, startDate, endDate);
-            int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits);
+            int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
             notCommittedDays.put(repoName, noCommitDays);
         }
     }
