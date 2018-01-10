@@ -2,7 +2,6 @@ package com.greenfox.szilvi.githubchecker.services;
 
 import com.greenfox.szilvi.githubchecker.httpconnection.GitHubRetrofit;
 import com.greenfox.szilvi.githubchecker.models.GfCommits;
-import com.greenfox.szilvi.githubchecker.models.RepoSearchResult;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
@@ -17,7 +16,6 @@ import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 public class GHCommitChecker {
 
     GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
-    RepoSearchResult myClassRepos;
     CheckDates checkDates = new CheckDates();
 
     public List<String> getRepos(String ghHandles) throws IOException {
