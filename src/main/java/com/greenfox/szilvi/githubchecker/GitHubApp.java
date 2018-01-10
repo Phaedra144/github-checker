@@ -2,7 +2,7 @@ package com.greenfox.szilvi.githubchecker;
 
 import java.io.IOException;
 import java.util.*;
-import com.greenfox.szilvi.githubchecker.models.Repo;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
