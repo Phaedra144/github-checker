@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <title>Programmer Fox Club</title>
 </head>
 <body>
-
+<h3>Green Fox Github Checker</h3>
+<p>If you want to check how your class proceeds with commits please type your class' and cohort's name!</p>
+<form th:action="@{/commitcheck}" method="post">
+    <label for="class">Class name</label>
+    <input id="class" name="gfclass"/>
+    <label for="cohort">Cohort name</label>
+    <input id="cohort" name="gfcohort"/>
+    <button type="submit">GO</button>
+</form>
+<div th:each="mapEntry : ${map}">
+    <span th:text="${mapEntry.key}"></span> =
+    <span th:text="${mapEntry.value}"></span>
+</div>
 </body>
 </html>

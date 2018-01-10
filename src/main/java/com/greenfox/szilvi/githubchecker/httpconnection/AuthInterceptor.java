@@ -13,7 +13,7 @@ import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 public class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
-        String authToken = System.getenv(GITHUB_SYSTEM_ENV);
+        String authToken = System.getProperty(GITHUB_TOKEN);
         Request.Builder builder = chain.request().newBuilder();
         builder.addHeader("Authorization", authToken);
         builder.addHeader("Accept", "application/vnd.github.v3+json");

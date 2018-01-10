@@ -5,6 +5,7 @@ import com.greenfox.szilvi.githubchecker.models.*;
 import com.greenfox.szilvi.githubchecker.models.GfCommits;
 import com.greenfox.szilvi.githubchecker.models.Repo;
 import com.greenfox.szilvi.githubchecker.models.RepoSearchResult;
+import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
 import java.io.IOException;
@@ -14,14 +15,16 @@ import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 /**
  * Created by Szilvi on 2017. 09. 28..
  */
+@Service
 public class GHCommitChecker {
 
     GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
     RepoSearchResult myClassRepos;
     CheckDates checkDates = new CheckDates();
 
-    public List<Repo> getRepos() throws IOException {
-        Call<RepoSearchResult> gfClassRepos = gitHubRetrofit.getService().getSearchedRepos();
+    public List<Repo> getRepos(String gfclass, String gfcohort) throws IOException {
+        String query = "topic:" + gfclass + "+" + "topic:" + gfcohort + "&per_page=100";
+        Call<RepoSearchResult> gfClassRepos = gitHubRetrofit.getService().getSearchedRepos(query);
         myClassRepos = gfClassRepos.execute().body();
         List<Repo> classRepos = new ArrayList<>();
         for (Repo repo : myClassRepos.getItems()) {

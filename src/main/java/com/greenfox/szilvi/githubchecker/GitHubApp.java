@@ -29,8 +29,8 @@ public class GitHubApp implements CommandLineRunner {
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
         try {
             if (IS_COMMITCHECKING){
-                List<Repo> classRepos = ghCommitChecker.getRepos();
-                ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos);
+//                List<Repo> classRepos = ghCommitChecker.getRepos();
+//                ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos);
             }
             if (IS_MEMBER_ADDING){
                 addGHMembers.addNewMembersToGf(FILENAME_OF_MEMBERS);

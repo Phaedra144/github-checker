@@ -10,9 +10,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.greenfox.szilvi.githubchecker.services.Settings.COHORT_ID;
-import static com.greenfox.szilvi.githubchecker.services.Settings.GITHUB_ORG;
-import static com.greenfox.szilvi.githubchecker.services.Settings.GITHUB_SYSTEM_ENV;
+import static com.greenfox.szilvi.githubchecker.services.Settings.*;
+
 
 public class AddGHMembers {
 
@@ -61,7 +60,7 @@ public class AddGHMembers {
         URL url = new URL("https://api.github.com/orgs/" + GITHUB_ORG + "/members/" + ghHandle);
         HttpURLConnection http = (HttpURLConnection)url.openConnection();
         http.setRequestProperty("Content-Type", "application/json");
-        http.setRequestProperty("Authorization", System.getenv(GITHUB_SYSTEM_ENV));
+        http.setRequestProperty("Authorization", System.getProperty(GITHUB_TOKEN));
         http.setRequestProperty("Accept", "application/vnd.github.v3+json");
         int code = http.getResponseCode();
         return code == 204;

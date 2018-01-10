@@ -5,6 +5,8 @@ import com.greenfox.szilvi.githubchecker.models.GfCommits;
 import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
 import com.greenfox.szilvi.githubchecker.models.Repo;
 import com.greenfox.szilvi.githubchecker.models.RepoSearchResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
@@ -21,8 +23,8 @@ public interface GitHubAPIService {
     @GET("orgs/{org}/repos")
     Call<List<Repo>> getOrgRepos(@Path("org") String org);
 
-    @GET("search/repositories?q=topic:oracle+topic:pallida&per_page=100")
-    Call<RepoSearchResult> getSearchedRepos();
+    @GET("search/repositories")
+    Call<RepoSearchResult> getSearchedRepos(@Query("q") String query);
 
     @GET("repos/{owner}/{repo}/commits?&per_page=50")
     Call<List<GfCommits>> getClassCommits(@Path("owner") String owner, @Path("repo") String repo, @Query("since") String startDate, @Query("until") String endDate);
