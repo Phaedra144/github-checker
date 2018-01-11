@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MainController {
@@ -55,7 +56,10 @@ public class MainController {
         List<String> classRepos = ghCommitChecker.checkRepos(ghHandles);
         ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate, endDate);
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
         model.addAttribute("map", notCommittedDays);
+        model.addAttribute("sum", ghCommitChecker.getTotal(notCommittedDays));
         return "commitchecker";
     }
 

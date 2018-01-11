@@ -27,7 +27,7 @@
                     <a class="nav-link" href="/checkcommit">Commits</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/addmember">Members</a>
+                    <a class="nav-link" href="#">Members</a>
                 </li>
             </ul>
         </nav>
@@ -45,6 +45,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Github Commits
+                        <span th:text="${startDate} + ' - ' + ${endDate}"></span>
                     </div>
                     <form th:action="@{/checkcommit}" method="post">
                         <label>GFA classes</label>
@@ -74,6 +75,11 @@
                                     <td th:text="${mapEntry.key}">ghhandle</td>
                                     <td th:text="${mapEntry.value}">value</td>
                                     <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>Total NotCommitted Days:</th>
+                                    <td th:text="${sum}"></td>
+                                    <td></td>
                                 </tr>
                                </tbody>
                             </table>

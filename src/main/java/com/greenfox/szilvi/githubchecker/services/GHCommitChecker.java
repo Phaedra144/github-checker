@@ -51,4 +51,12 @@ public class GHCommitChecker {
         return gfCommitsCall.execute().body();
     }
 
+    public int getTotal(HashMap<String, Integer> notCommittedDays) {
+        int total = 0;
+        for (Map.Entry entry : notCommittedDays.entrySet()) {
+            total = total + (Integer)entry.getValue();
+        }
+        return total;
+    }
+
 }
