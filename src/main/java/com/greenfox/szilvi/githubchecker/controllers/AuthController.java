@@ -23,7 +23,7 @@ public class AuthController {
 
     @RequestMapping("/oauth")
     public String redirecttoOauth(){
-        return "redirect:https://github.com/login/oauth/authorize?client_id=ea78181b0500c62004c9&redirect_uri=http://localhost:8080/auth&scope=admin:org";
+        return "redirect:https://github.com/login/oauth/authorize?client_id=ea78181b0500c62004c9&redirect_uri=https://github-checker.herokuapp.com/auth&scope=admin:org";
     }
 
     @RequestMapping("/auth")
