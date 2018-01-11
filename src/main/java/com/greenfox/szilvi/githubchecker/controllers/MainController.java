@@ -5,6 +5,7 @@ import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
 import com.greenfox.szilvi.githubchecker.repositories.ClassGithubRepo;
 import com.greenfox.szilvi.githubchecker.services.AddGHMembers;
 import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
+import com.greenfox.szilvi.githubchecker.services.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,9 +30,13 @@ public class MainController {
     @Autowired
     ClassGithubRepo classGithubRepo;
 
-    @GetMapping("/index")
+    @GetMapping("")
     public String getMain(){
-        return "index";
+        if(System.getProperty(Settings.GITHUB_TOKEN) != null){
+            return "index";
+        }else {
+            return "login";
+        }
     }
 
     @GetMapping("/checkcommit")
