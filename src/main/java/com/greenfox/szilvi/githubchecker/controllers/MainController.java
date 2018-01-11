@@ -54,7 +54,6 @@ public class MainController {
         }
         List<String> classRepos = ghCommitChecker.checkRepos(ghHandles);
         ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate, endDate);
-
         model.addAttribute("map", notCommittedDays);
         return "commitchecker";
     }

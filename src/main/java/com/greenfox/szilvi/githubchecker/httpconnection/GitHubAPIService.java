@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface GitHubAPIService {
 
-    @GET("repos/{owner}/{repo}/commits?&per_page=50")
+    @GET("repos/{owner}/{repo}/commits?&per_page=100")
     Call<List<GfCommits>> getClassCommits(@Path("owner") String owner, @Path("repo") String repo, @Query("since") String startDate, @Query("until") String endDate);
 
     @PUT("orgs/{org}/memberships/{username}")

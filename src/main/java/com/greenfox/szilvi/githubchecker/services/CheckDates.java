@@ -65,7 +65,7 @@ public class CheckDates {
         return weekDaysBetween;
     }
 
-    private LocalDate convertToLocalDate(String date) {
+    public LocalDate convertToLocalDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(date, formatter);
     }

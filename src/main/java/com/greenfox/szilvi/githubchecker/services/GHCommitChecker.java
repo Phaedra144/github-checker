@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 
@@ -42,6 +43,8 @@ public class GHCommitChecker {
     }
 
     public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
+        LocalDate endD = checkDates.convertToLocalDate(endDate).plusDays(1);
+        endDate = endD.toString();
         Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, startDate, endDate);
         return gfCommitsCall.execute().body();
     }
