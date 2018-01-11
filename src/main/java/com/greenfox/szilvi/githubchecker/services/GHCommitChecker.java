@@ -18,26 +18,13 @@ public class GHCommitChecker {
     GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
     CheckDates checkDates = new CheckDates();
 
-    public List<String> getRepos(List<String> ghHandles) throws IOException {
-        List<String> classRepos = new ArrayList<>();
-        for (String repo : ghHandles) {
-            int count = 0;
-            List<String> excludeRepos = EXCLUDE_REPOS;
-            for (String excRep : excludeRepos) {
-                if (repo.contains(excRep)){
-                    count++;
-                }
-            }
-            if (count < 1){
-                classRepos.add(repo);
-            }
+    public List<String> checkRepos(List<String> ghHandles) throws IOException {
+        if(ghHandles.get(0).substring(0, 2).equals(",,")){
+            String firstGhHandle = cutFirstChar(ghHandles.get(0));
+            ghHandles.remove(0);
+            ghHandles.add(0, firstGhHandle);
         }
-        if(classRepos.get(0).substring(0, 2).equals(",,")){
-            String firstGhHandle = cutFirstChar(classRepos.get(0));
-            classRepos.remove(0);
-            classRepos.add(0, firstGhHandle);
-        }
-        return classRepos;
+        return ghHandles;
     }
 
     private String cutFirstChar(String firstGhHandle) {
@@ -58,4 +45,5 @@ public class GHCommitChecker {
         Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, startDate, endDate);
         return gfCommitsCall.execute().body();
     }
+
 }

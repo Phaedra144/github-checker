@@ -4,8 +4,8 @@ import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
 import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
 import com.greenfox.szilvi.githubchecker.repositories.ClassGithubRepo;
 import com.greenfox.szilvi.githubchecker.services.AddGHMembers;
+import com.greenfox.szilvi.githubchecker.services.Authorization;
 import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
-import com.greenfox.szilvi.githubchecker.services.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,24 +30,18 @@ public class MainController {
     @Autowired
     ClassGithubRepo classGithubRepo;
 
+    @Autowired
+    Authorization authorization;
+
     @GetMapping("")
     public String getMain(){
-        if(System.getProperty(Settings.GITHUB_TOKEN) != null){
-            return "index";
-        }else {
-            return "login";
-        }
+        return authorization.checkTokenOnPage("index");
     }
 
     @GetMapping("/checkcommit")
     public String getCommitChecker(Model model){
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
-        return "commitchecker";
-    }
-
-    @GetMapping("/addmember")
-    public String getMemberAdder(){
-        return "memberadder";
+        return authorization.checkTokenOnPage("commitchecker");
     }
 
     @PostMapping("/checkcommit")
@@ -58,11 +52,16 @@ public class MainController {
         for (ClassGithub ch:ghHandlesByClass) {
             ghHandles.add(ch.getGithubHandle());
         }
-        List<String> classRepos = ghCommitChecker.getRepos(ghHandles);
+        List<String> classRepos = ghCommitChecker.checkRepos(ghHandles);
         ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate, endDate);
 
         model.addAttribute("map", notCommittedDays);
         return "commitchecker";
+    }
+
+    @GetMapping("/addmember")
+    public String getMemberAdder(){
+        return authorization.checkTokenOnPage("memberadder");
     }
 
     @PostMapping("/addmember")

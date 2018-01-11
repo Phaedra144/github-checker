@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.greenfox.szilvi.githubchecker.services.Settings.GITHUB_TOKEN;
+
 @Service
 public class Authorization {
 
@@ -42,5 +44,13 @@ public class Authorization {
         System.setProperty("accessToken", tokenResponse.getAccessToken());
         System.out.println(tokenResponse.getAccessToken());
         return tokenResponse.getAccessToken();
+    }
+
+    public String checkTokenOnPage(String whereTo) {
+        if(System.getProperty(GITHUB_TOKEN) != null){
+            return whereTo;
+        }else {
+            return "login";
+        }
     }
 }
