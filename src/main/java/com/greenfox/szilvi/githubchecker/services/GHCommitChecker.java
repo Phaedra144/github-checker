@@ -33,9 +33,11 @@ public class GHCommitChecker {
                 classRepos.add(repo);
             }
         }
-        String firstGhHandle = cutFirstChar(classRepos.get(0));
-        classRepos.remove(0);
-        classRepos.add(0, firstGhHandle);
+        if(classRepos.get(0).substring(0, 2).equals(",,")){
+            String firstGhHandle = cutFirstChar(classRepos.get(0));
+            classRepos.remove(0);
+            classRepos.add(0, firstGhHandle);
+        }
         return classRepos;
     }
 
