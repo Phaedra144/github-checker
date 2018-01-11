@@ -8,12 +8,11 @@
         <h3>Green Fox Github Checker</h3>
         <p>If you want to check how your class proceeds with commits please type your class' and cohort's name!</p>
         <form th:action="@{/checkcommit}" method="post">
-            <label for="cohort">Cohort name</label>
-            <input id="cohort" name="gfcohort" type="text"/>
-            <label for="class">Class name</label>
-            <input id="class" name="gfclass" type="text"/>
-            <label for="ghHandles">Please insert GitHub handles:</label>
-            <input id="ghHandles" name="ghHandles" type="text"/>
+            <label for="gfclass">GFA classes</label>
+            <select id="gfclass" class="form-control" name="gfclass">
+                <option value="">Select Class</option>
+                <option th:each="className : ${classes}" th:text="${className}">Class names</option>
+            </select>
             <label for="startDate">Please choose start date</label>
             <input id="startDate" name="startDate" type="date"/>
             <label for="endDate">Please choose end date</label>
@@ -21,7 +20,7 @@
             <button type="submit">GO</button>
         </form>
         <div th:each="mapEntry : ${map}">
-            <span th:text="${mapEntry.key}"></span> =
+            <span th:text="${mapEntry.key}"></span>
             <span th:text="${mapEntry.value}"></span>
         </div>
     </body>

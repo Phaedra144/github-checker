@@ -18,10 +18,9 @@ public class GHCommitChecker {
     GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
     CheckDates checkDates = new CheckDates();
 
-    public List<String> getRepos(String ghHandles) throws IOException {
-        String[]ghArray = ghHandles.split(" ");
+    public List<String> getRepos(List<String> ghHandles) throws IOException {
         List<String> classRepos = new ArrayList<>();
-        for (String repo : ghArray) {
+        for (String repo : ghHandles) {
             int count = 0;
             List<String> excludeRepos = EXCLUDE_REPOS;
             for (String excRep : excludeRepos) {

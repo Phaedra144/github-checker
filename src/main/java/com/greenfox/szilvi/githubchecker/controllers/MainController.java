@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,7 +35,8 @@ public class MainController {
     }
 
     @GetMapping("/checkcommit")
-    public String getCommitChecker(){
+    public String getCommitChecker(Model model){
+        model.addAttribute("classes", classGithubRepo.getDistinctClasses());
         return "commitchecker";
     }
 
@@ -44,13 +46,15 @@ public class MainController {
     }
 
     @PostMapping("/checkcommit")
-    public String checkCommits(@RequestParam String ghHandles, @RequestParam String gfcohort,@RequestParam String gfclass, @RequestParam String startDate, @RequestParam String endDate, Model model) throws IOException {
+    public String checkCommits(@RequestParam String gfclass, @RequestParam String startDate, @RequestParam String endDate, Model model) throws IOException {
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
-        List<String> classRepos = ghCommitChecker.getRepos(ghHandles);
-        for (String classRepo:classRepos) {
-            classGithubRepo.save(new ClassGithub(gfcohort, gfclass, classRepo));
+        List<String> ghHandles = new ArrayList<>();
+        List<ClassGithub> ghHandlesByClass = classGithubRepo.findAllByClassName(gfclass);
+        for (ClassGithub ch:ghHandlesByClass) {
+            ghHandles.add(ch.getGithubHandle());
         }
-        ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate.toString(), endDate.toString());
+        List<String> classRepos = ghCommitChecker.getRepos(ghHandles);
+        ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate, endDate);
 
         model.addAttribute("map", notCommittedDays);
         return "commitchecker";
