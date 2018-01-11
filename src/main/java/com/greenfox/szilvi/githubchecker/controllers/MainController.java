@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class MainController {
@@ -46,7 +45,12 @@ public class MainController {
     }
 
     @PostMapping("/checkcommit")
-    public String checkCommits(@RequestParam String gfclass, @RequestParam String startDate, @RequestParam String endDate, Model model) throws IOException {
+    public String checkCommits(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Model model) throws IOException {
+        if(gfclass.equals("") || startDate.equals("") || endDate.equals("")){
+            model.addAttribute("error", "You are missing something, try again!");
+            model.addAttribute("classes", classGithubRepo.getDistinctClasses());
+            return "commitchecker";
+        }
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
         List<String> ghHandles = new ArrayList<>();
         List<ClassGithub> ghHandlesByClass = classGithubRepo.findAllByClassName(gfclass);
