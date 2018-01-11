@@ -14,6 +14,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Service
@@ -30,7 +31,7 @@ public class Authorization {
                 System.getenv("CLIENT_ID"),"https://github.com/login/oauth/authorize").build();
         TokenResponse tokenResponse = flow
                 .newTokenRequest(code)
-                .setScopes(Collections.singletonList("admin:org"))
+                .setScopes(Arrays.asList("repo", "admin:org"))
                 .setRequestInitializer(new HttpRequestInitializer() {
                     @Override
                     public void initialize(HttpRequest request) throws IOException {
