@@ -43,6 +43,8 @@ public class GHCommitChecker {
     }
 
     public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
+        LocalDate startD = checkDates.convertToLocalDate(startDate).minusDays(1);
+        startDate = startD.toString();
         LocalDate endD = checkDates.convertToLocalDate(endDate).plusDays(1);
         endDate = endD.toString();
         Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, startDate, endDate);
