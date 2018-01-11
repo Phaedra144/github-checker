@@ -2,13 +2,40 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8"/>
-        <title>Github Checker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link rel="stylesheet" type="text/css" href="../bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../narrow-jumbotron.css"/>
+        <title>Github Checker</title>
     </head>
     <body>
-        <h3>Green Fox Github Checker</h3>
-        <p>If you want to check how your class proceeds with commits or you want to add new members to Green Fox github organization, please choose from the links below:</p>
-        <a href="/checkcommit">Commit checking</a>
-        <a href="/addmember">Add members</a>
+    <div class="container">
+        <header class="header clearfix">
+            <nav>
+                <ul class="nav nav-pills float-right">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/checkcommit">Commits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addmember">Members</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Github Checker</h3>
+        </header>
+        <main role="main">
+
+            <div class="jumbotron">
+                <h1 class="display-3">Green Fox Github Checker</h1>
+                <p class="lead">If you want to check how your class proceeds with commits or you want to add new members to Green Fox github organization, please choose from the links below:</p>
+                <p><a class="btn btn-lg btn-success" href="/checkcommit" role="button">Check commits</a></p>
+                <p><a class="btn btn-lg btn-success" href="/addmember" role="button">Add members</a></p>
+            </div>
+
+        </main>
+
+    </div>
     </body>
 </html>

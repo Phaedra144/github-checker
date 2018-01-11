@@ -1,27 +1,93 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <meta charset="UTF-8"/>
-        <title>Github Checker</title>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <!-- Bootstrap Core CSS -->
+        <link href="../bootstrap.min.css" rel="stylesheet"/>
+        <!-- DataTables CSS -->
+        <link href="../dataTables.bootstrap.css" rel="stylesheet"/>
+        <!-- DataTables Responsive CSS -->
+        <link href="../dataTables.responsive.css" rel="stylesheet"/>
+        <!-- Custom CSS -->
+        <link href="../sb-admin-2.css" rel="stylesheet"/>
+        <!-- Custom Fonts -->
+        <link href="../font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
     </head>
     <body>
-        <h3>Green Fox Github Checker</h3>
-        <p>If you want to check how your class proceeds with commits please type your class' and cohort's name!</p>
-        <form th:action="@{/checkcommit}" method="post">
-            <label for="gfclass">GFA classes</label>
-            <select id="gfclass" class="form-control" name="gfclass">
-                <option value="">Select Class</option>
-                <option th:each="className : ${classes}" th:text="${className}">Class names</option>
-            </select>
-            <label for="startDate">Please choose start date</label>
-            <input id="startDate" name="startDate" type="date"/>
-            <label for="endDate">Please choose end date</label>
-            <input id="endDate" name="endDate" type="date"/>
-            <button type="submit">GO</button>
-        </form>
-        <div th:each="mapEntry : ${map}">
-            <span th:text="${mapEntry.key}"></span>
-            <span th:text="${mapEntry.value}"></span>
+    <header class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills float-right">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/checkcommit">Commits</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/addmember">Members</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!-- /.row -->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Green Fox Github Checker</h1>
+            </div>
+            <!-- /.col-lg-12 -->
         </div>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Github Commits
+                    </div>
+                    <form th:action="@{/checkcommit}" method="post">
+                        <label>GFA classes</label>
+                        <select class="form-control" name="gfclass">
+                            <option value="">Select Class</option>
+                            <option th:each="className : ${classes}" th:text="${className}">Class names</option>
+                        </select>
+                        <label for="startDate">Start date</label>
+                        <input id="startDate" name="startDate" type="date"/>
+                        <label for="endDate">End date</label>
+                        <input id="endDate" name="endDate" type="date"/>
+                        <button type="submit">GO</button>
+                    </form>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Github Handle</th>
+                                    <th>Nr.of not committed days</th>
+                                    <th>Nr.of mentor comments</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="mapEntry : ${map}">
+                                    <td th:text="${mapEntry.key}">ghhandle</td>
+                                    <td th:text="${mapEntry.value}">value</td>
+                                    <td>-</td>
+                                </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+
+        </div>
+    </div>
+
     </body>
+
 </html>

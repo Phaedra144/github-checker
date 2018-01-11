@@ -33,7 +33,7 @@ public class MainController {
     @Autowired
     Authorization authorization;
 
-    @GetMapping("")
+    @GetMapping(value = {"", "/"})
     public String getMain(){
         return authorization.checkTokenOnPage("index");
     }
