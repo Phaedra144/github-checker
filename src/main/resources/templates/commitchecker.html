@@ -56,12 +56,16 @@
                                 <option th:each="className : ${classes}" th:text="${className}">Class names</option>
                             </select>
                         </div>
-                        <label for="startDate">Start date</label>
-                        <input id="startDate" name="startDate" type="date"/>
-                        <label for="endDate">End date</label>
-                        <input id="endDate" name="endDate" type="date"/>
-                        <button type="submit" class="btn btn-success">GO</button>
-                        <span th:if="${error} != null" th:text="${error}" style="color: red"></span>
+                        <div class="form-group">
+                            <label for="startDate">Start date</label>
+                            <input id="startDate" name="startDate" type="date"/>
+                            <label for="endDate">End date</label>
+                            <input id="endDate" name="endDate" type="date"/>
+                        </div>
+                        <div style="text-align: right">
+                            <span th:if="${error} != null" th:text="${error}" style="color: red"></span>
+                            <button type="submit" class="btn btn-success">GO</button>
+                        </div>
                     </form>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
