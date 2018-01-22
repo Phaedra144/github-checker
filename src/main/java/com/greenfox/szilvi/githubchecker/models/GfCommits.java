@@ -1,6 +1,5 @@
 package com.greenfox.szilvi.githubchecker.models;
 
-
 import lombok.Getter;
 
 /**

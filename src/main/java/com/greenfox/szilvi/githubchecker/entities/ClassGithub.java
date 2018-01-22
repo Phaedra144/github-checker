@@ -1,7 +1,4 @@
 package com.greenfox.szilvi.githubchecker.entities;
-
-import lombok.Getter;
-
 import javax.persistence.Entity;
 
 import javax.persistence.GeneratedValue;

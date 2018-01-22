@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 
 import static com.greenfox.szilvi.githubchecker.services.Settings.GITHUB_TOKEN;
 

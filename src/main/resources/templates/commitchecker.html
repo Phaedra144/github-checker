@@ -14,6 +14,7 @@
         <link href="../sb-admin-2.css" rel="stylesheet"/>
         <!-- Custom Fonts -->
         <link href="../font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="../narrow-jumbotron.css"/>
 
     </head>
     <body>
@@ -27,7 +28,7 @@
                     <a class="nav-link" href="/checkcommit">Commits</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Members</a>
+                    <a class="nav-link" href="/addmember">Members</a>
                 </li>
             </ul>
         </nav>
@@ -49,15 +50,17 @@
                     </div>
                     <form th:action="@{/checkcommit}" method="post">
                         <label>GFA classes</label>
-                        <select class="form-control" name="gfclass">
-                            <option value="">Select Class</option>
-                            <option th:each="className : ${classes}" th:text="${className}">Class names</option>
-                        </select>
+                        <div class="form-group">
+                            <select class="form-control" name="gfclass">
+                                <option value="">Select Class</option>
+                                <option th:each="className : ${classes}" th:text="${className}">Class names</option>
+                            </select>
+                        </div>
                         <label for="startDate">Start date</label>
                         <input id="startDate" name="startDate" type="date"/>
                         <label for="endDate">End date</label>
                         <input id="endDate" name="endDate" type="date"/>
-                        <button type="submit">GO</button>
+                        <button type="submit" class="btn btn-success">GO</button>
                         <span th:if="${error} != null" th:text="${error}" style="color: red"></span>
                     </form>
                     <!-- /.panel-heading -->

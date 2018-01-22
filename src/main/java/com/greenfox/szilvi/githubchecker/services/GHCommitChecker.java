@@ -1,5 +1,6 @@
 package com.greenfox.szilvi.githubchecker.services;
 
+import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
 import com.greenfox.szilvi.githubchecker.httpconnection.GitHubRetrofit;
 import com.greenfox.szilvi.githubchecker.models.GfCommits;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,12 @@ public class GHCommitChecker {
             total = total + (Integer)entry.getValue();
         }
         return total;
+    }
+
+    public void ghHandlesToString(List<String> ghHandles, List<ClassGithub> ghHandlesByClass) {
+        for (ClassGithub ch:ghHandlesByClass) {
+            ghHandles.add(ch.getGithubHandle());
+        }
     }
 
 }

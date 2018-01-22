@@ -40,6 +40,12 @@ div.dataTables_paginate ul.pagination {
     white-space: nowrap;
 }
 
+ .error {
+     color: #ff0000;
+     font-style: italic;
+ }
+
+
 @media screen and (max-width: 767px) {
     div.dataTables_length,
     div.dataTables_filter,

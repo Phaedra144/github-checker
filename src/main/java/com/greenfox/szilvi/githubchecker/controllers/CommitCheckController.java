@@ -1,9 +1,7 @@
 package com.greenfox.szilvi.githubchecker.controllers;
 
 import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
-import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
 import com.greenfox.szilvi.githubchecker.repositories.ClassGithubRepo;
-import com.greenfox.szilvi.githubchecker.services.AddGHMembers;
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 
 @Controller
-public class MainController {
+public class CommitCheckController {
 
     @Autowired
     GHCommitChecker ghCommitChecker;
-
-    @Autowired
-    AddGHMembers addGHMembers;
 
     @Autowired
     ClassGithubRepo classGithubRepo;
@@ -54,9 +49,7 @@ public class MainController {
         HashMap<String, Integer> notCommittedDays = new HashMap<>();
         List<String> ghHandles = new ArrayList<>();
         List<ClassGithub> ghHandlesByClass = classGithubRepo.findAllByClassName(gfclass);
-        for (ClassGithub ch:ghHandlesByClass) {
-            ghHandles.add(ch.getGithubHandle());
-        }
+        ghCommitChecker.ghHandlesToString(ghHandles, ghHandlesByClass);
         List<String> classRepos = ghCommitChecker.checkRepos(ghHandles);
         ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate, endDate);
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
@@ -65,17 +58,5 @@ public class MainController {
         model.addAttribute("map", notCommittedDays);
         model.addAttribute("sum", ghCommitChecker.getTotal(notCommittedDays));
         return "commitchecker";
-    }
-
-    @GetMapping("/addmember")
-    public String getMemberAdder(){
-        return authorization.checkTokenOnPage("memberadder");
-    }
-
-    @PostMapping("/addmember")
-    public String addMember(@RequestParam String members, Model model) throws IOException {
-        List<MemberStatusResponse> memberStatusResponse = addGHMembers.addNewMembersToGf(members);
-        model.addAttribute("responses", memberStatusResponse);
-        return "memberadder";
     }
 }

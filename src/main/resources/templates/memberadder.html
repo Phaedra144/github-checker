@@ -3,20 +3,49 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Title</title>
+        <link href="../dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" type="text/css" href="../narrow-jumbotron.css"/>
     </head>
     <body>
-        <h3>Green Fox Github Checker</h3>
-        <p>You can add members to Green Fox organization to any team that you add here:</p>
-        <form th:action="@{/addmember}" method="post">
-            <label for="team">Please add a team name</label>
-            <input id="team" name="team" type="text"/>
-            <label for="members">Please add members</label>
-            <input id="members" name="members" type="text"/>
-            <button type="submit">GO</button>
+    <div class="container">
+        <header class="header clearfix">
+            <nav>
+                <ul class="nav nav-pills float-right">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/checkcommit">Commits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addmember">Members</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <div class="col-lg-12">
+            <h1 class="page-header">Green Fox Github Checker</h1>
+        </div>
+        <p>You can add members to Green Fox organization. You can add these persons to a team immediately, if you do not want it, please write "None"! The name of them team must be an already created one. Name of the members must be separated by spaces!</p>
+        <form th:action="@{/addmember}" th:object="${addMemberForm}" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="team">Team name</label>
+                    <input th:field="*{teamName}" type="text" class="form-control" id="team" placeholder="Team name"/>
+                    <label class="error" th:if="${#fields.hasErrors('teamName')}" th:errors="*{teamName}"></label>
+                </div>
+                <div class="form-group">
+                    <label for="members">Add members separated by spaces</label>
+                    <textarea class="form-control" id="members" th:field="*{members}" rows="3"></textarea>
+                    <label class="error" th:if="${#fields.hasErrors('members')}" th:errors="*{members}"></label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
         </form>
         <div th:each="response : ${responses}">
             <p th:text="${response}"></p>
         </div>
-
+    </div>
     </body>
 </html>
