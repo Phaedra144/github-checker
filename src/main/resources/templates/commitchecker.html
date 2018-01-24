@@ -80,8 +80,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="mapEntry : ${map}">
-                                    <td th:text="${mapEntry.key}" th:href="@{https://github.com/greenfox-academy/{ghhandle}(ghhandle=${mapEntry.key})}">ghhandle</td>
+                                <tr th:each="mapEntry : ${map}" th:href="@{https://github.com/greenfox-academy/{ghhandle}(ghhandle=${mapEntry.key})}">
+                                    <td th:text="${mapEntry.key}">ghhandle</td>
                                     <td th:text="${mapEntry.value}">value</td>
                                     <td>-</td>
                                 </tr>
