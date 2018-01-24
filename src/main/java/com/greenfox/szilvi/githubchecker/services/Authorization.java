@@ -33,11 +33,8 @@ public class Authorization {
         TokenResponse tokenResponse = flow
                 .newTokenRequest(code)
                 .setScopes(Arrays.asList("repo", "admin:org"))
-                .setRequestInitializer(new HttpRequestInitializer() {
-                    @Override
-                    public void initialize(HttpRequest request) throws IOException {
-                        request.getHeaders().setAccept("application/json");
-                    }
+                .setRequestInitializer((HttpRequest httprequest) ->{
+                        httprequest.getHeaders().setAccept("application/json");
                 }).execute();
         System.setProperty("accessToken", tokenResponse.getAccessToken());
         System.out.println(tokenResponse.getAccessToken());
