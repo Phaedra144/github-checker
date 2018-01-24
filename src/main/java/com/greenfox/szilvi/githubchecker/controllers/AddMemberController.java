@@ -25,12 +25,12 @@ public class AddMemberController {
     @Autowired
     AddGHMembers addGHMembers;
 
-    @GetMapping("/addmember")
+    @GetMapping("/addmembers")
     public String getMemberAdder(AddMemberForm addMemberForm){
         return authorization.checkTokenOnPage("memberadder");
     }
 
-    @PostMapping("/addmember")
+    @PostMapping("/addmembers")
     public String addMember(@Valid AddMemberForm addMemberForm, BindingResult bindingResult, Model model) throws IOException {
         if(bindingResult.hasErrors()){
             return "memberadder";
