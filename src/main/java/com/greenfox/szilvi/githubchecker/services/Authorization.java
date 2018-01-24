@@ -39,8 +39,6 @@ public class Authorization {
                         request.getHeaders().setAccept("application/json");
                     }
                 }).execute();
-        tokenResponse.setExpiresInSeconds(86400l);
-        System.out.println(tokenResponse.getExpiresInSeconds());
         System.setProperty("accessToken", tokenResponse.getAccessToken());
         System.out.println(tokenResponse.getAccessToken());
         return tokenResponse.getAccessToken();
