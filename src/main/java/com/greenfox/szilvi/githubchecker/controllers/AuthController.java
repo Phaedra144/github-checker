@@ -34,4 +34,10 @@ public class AuthController {
         authorization.getAccessToken(code);
         return "index";
     }
+
+    @RequestMapping("/logout")
+    public String logout(){
+        System.setProperty(GITHUB_TOKEN, "");
+        return "login";
+    }
 }

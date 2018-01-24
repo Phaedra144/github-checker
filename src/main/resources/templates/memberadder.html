@@ -21,6 +21,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Members</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
                 </ul>
             </nav>
         </header>
@@ -30,7 +33,7 @@
         <p>You can add members to Green Fox organization. </p>
         <p>These persons can be added to a team immediately, if you do not want it, please write "None"! </p>
         <p>The name of them team must be an already created one. Name of the members must be separated by spaces!</p>
-        <form th:action="@{/addmember}" th:object="${addMemberForm}" method="post">
+        <form th:action="@{/addmembers}" th:object="${addMemberForm}" method="post">
             <div class="form-row">
                 <div class="form-group">
                     <label for="team">Team name</label>

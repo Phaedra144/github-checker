@@ -24,7 +24,6 @@ public class GitHubApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String token = System.getProperty(GITHUB_TOKEN);
-        token = null;
+
     }
 }

@@ -39,14 +39,15 @@ public class Authorization {
                         request.getHeaders().setAccept("application/json");
                     }
                 }).execute();
-        System.out.println(flow.getScopes());
+        tokenResponse.setExpiresInSeconds(86400l);
+        System.out.println(tokenResponse.getExpiresInSeconds());
         System.setProperty("accessToken", tokenResponse.getAccessToken());
         System.out.println(tokenResponse.getAccessToken());
         return tokenResponse.getAccessToken();
     }
 
     public String checkTokenOnPage(String whereTo) {
-        if(System.getProperty(GITHUB_TOKEN) != null){
+        if(System.getProperty(GITHUB_TOKEN) != ""){
             return whereTo;
         }else {
             return "login";
