@@ -25,7 +25,7 @@ public class AddMemberController {
     @Autowired
     AddGHMembers addGHMembers;
 
-    @GetMapping("/addmembers")
+    @GetMapping("/szilviaddmembers")
     public String getMemberAdder(AddMemberForm addMemberForm){
         return authorization.checkTokenOnPage("memberadder");
     }
