@@ -1,7 +1,7 @@
 package com.greenfox.szilvi.githubchecker.controllers;
 
 import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
-import com.greenfox.szilvi.githubchecker.repositories.ClassGithubRepo;
+import com.greenfox.szilvi.githubchecker.repositories.GithubHandleRepo;
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class CommitCheckController {
     GHCommitChecker ghCommitChecker;
 
     @Autowired
-    ClassGithubRepo classGithubRepo;
+    GithubHandleRepo classGithubRepo;
 
     @Autowired
     Authorization authorization;

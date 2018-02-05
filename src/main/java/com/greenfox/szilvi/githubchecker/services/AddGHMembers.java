@@ -28,8 +28,7 @@ public class AddGHMembers {
     }
 
     private void callingToAddMembersToOrgAndTeam(List<String> ghHandles, String teamName, List<MemberStatusResponse> memberStatusResponseList) throws IOException {
-        for (int i = 0; i < ghHandles.size(); i++){
-            String ghHandle = ghHandles.get(i);
+        for (String ghHandle : ghHandles){
             Call<MemberStatusResponse> addingMemberResponse = gitHubRetrofit.getService().addMemberToOrg(GITHUB_ORG, ghHandle);
             MemberStatusResponse memberStatusResponse = addingMemberResponse.execute().body();
             checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, ghHandle);

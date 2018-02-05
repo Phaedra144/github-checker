@@ -14,7 +14,7 @@ public class ClassGithub {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+    long id;
     String cohortName;
     String className;
     String githubHandle;

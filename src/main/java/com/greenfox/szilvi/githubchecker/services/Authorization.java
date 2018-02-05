@@ -33,9 +33,9 @@ public class Authorization {
         TokenResponse tokenResponse = flow
                 .newTokenRequest(code)
                 .setScopes(Arrays.asList("repo", "admin:org"))
-                .setRequestInitializer((HttpRequest httprequest) ->{
-                        httprequest.getHeaders().setAccept("application/json");
-                }).execute();
+                .setRequestInitializer(httprequest -> {
+                    httprequest.getHeaders().setAccept("application/json");}
+                    ).execute();
         System.setProperty("accessToken", tokenResponse.getAccessToken());
         System.out.println(tokenResponse.getAccessToken());
         return tokenResponse.getAccessToken();
