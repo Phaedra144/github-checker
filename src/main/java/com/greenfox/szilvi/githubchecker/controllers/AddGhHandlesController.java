@@ -6,10 +6,7 @@ import com.greenfox.szilvi.githubchecker.services.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,13 +42,13 @@ public class AddGhHandlesController {
         return "gh_handles";
     }
 
-    @DeleteMapping("/deletehandles/{id}")
+    @RequestMapping("/deletehandles/{id}")
     public String deleteGhHandles(@PathVariable long id){
         ghHandleService.removeHandle(id);
         return "redirect:/listhandles";
     }
 
-    @GetMapping("/edithandles/{id}")
+    @RequestMapping("/edithandles/{id}")
     public String editGhHandles(@PathVariable long id){
         ghHandleService.removeHandle(id);
         return "redirect:/listhandles";
