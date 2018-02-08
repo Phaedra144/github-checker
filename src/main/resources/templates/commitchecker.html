@@ -80,10 +80,10 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:onclick="|window.open('https://github.com/greenfox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${map}">
+                                <tr th:onclick="|window.open('https://github.com/greenfox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${nocommits}">
                                     <td th:text="${mapEntry.key}">ghhandle</td>
-                                    <td th:text="${mapEntry.value}">value</td>
-                                    <td>-</td>
+                                    <td th:text="${mapEntry.value.get(0)}">value</td>
+                                    <td th:text="${mapEntry.value.get(1)}"></td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>

@@ -1,6 +1,7 @@
 package com.greenfox.szilvi.githubchecker.controllers;
 
 import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
+import com.greenfox.szilvi.githubchecker.models.Comment;
 import com.greenfox.szilvi.githubchecker.repositories.GithubHandleRepo;
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
@@ -46,17 +47,15 @@ public class CommitCheckController {
             model.addAttribute("classes", classGithubRepo.getDistinctClasses());
             return "commitchecker";
         }
-        HashMap<String, Integer> notCommittedDays = new HashMap<>();
-        List<String> ghHandles = new ArrayList<>();
-        List<ClassGithub> ghHandlesByClass = classGithubRepo.findAllByClassName(gfclass);
-        ghCommitChecker.ghHandlesToString(ghHandles, ghHandlesByClass);
-        List<String> classRepos = ghCommitChecker.checkRepos(ghHandles);
-        ghCommitChecker.fillNotCommittedDays(notCommittedDays, classRepos, startDate, endDate);
+        List<String> ghHandles = ghCommitChecker.ghHandlesToString(classGithubRepo.findAllByClassName(gfclass));
+        HashMap<String, List<Integer>> notCommittedDaysAndComments = ghCommitChecker.fillNotCommittedDaysAndComments(ghCommitChecker.checkRepos(ghHandles), startDate, endDate);
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
-        model.addAttribute("map", notCommittedDays);
-        model.addAttribute("sum", ghCommitChecker.getTotal(notCommittedDays));
+        model.addAttribute("nocommits", notCommittedDaysAndComments);
+        model.addAttribute("sum", ghCommitChecker.getTotal(notCommittedDaysAndComments));
         return "commitchecker";
     }
+
+
 }

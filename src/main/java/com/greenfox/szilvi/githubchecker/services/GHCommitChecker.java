@@ -2,20 +2,25 @@ package com.greenfox.szilvi.githubchecker.services;
 
 import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
 import com.greenfox.szilvi.githubchecker.httpconnection.GitHubRetrofit;
+import com.greenfox.szilvi.githubchecker.models.Comment;
 import com.greenfox.szilvi.githubchecker.models.GfCommits;
+import com.greenfox.szilvi.githubchecker.repositories.GithubHandleRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 
-/**
- * Created by Szilvi on 2017. 09. 28..
- */
+
 @Service
 public class GHCommitChecker {
+
+    @Autowired
+    GithubHandleRepo classGithubRepo;
 
     GitHubRetrofit gitHubRetrofit = new GitHubRetrofit();
     CheckDates checkDates = new CheckDates();
@@ -33,37 +38,63 @@ public class GHCommitChecker {
         return firstGhHandle.substring(2);
     }
 
-    public void fillNotCommittedDays(HashMap<String, Integer> notCommittedDays, List<String> classRepos, String startDate, String endDate) throws IOException {
+    public HashMap<String, List<Integer>> fillNotCommittedDaysAndComments(List<String> classRepos, String startDate, String endDate) throws IOException {
         List<GfCommits> gfCommits;
+        List<Comment> gfComments = new ArrayList<>();
+        HashMap<String, List<Integer>> notCommittedDays = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
-            String repoName = classRepos.get(i);
-            gfCommits = getPreviousWeekCommits(repoName, startDate, endDate);
+            List<Integer> counts = new ArrayList<>();
+            gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate);
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
-            notCommittedDays.put(repoName, noCommitDays);
+            for (GfCommits gfcomm:gfCommits) {
+                gfComments.addAll(getComments(classRepos.get(i), gfcomm.getSha()));
+            }
+            counts.add(noCommitDays);
+            counts.add(gfComments.size());
+            notCommittedDays.put(classRepos.get(i), counts);
         }
+        return notCommittedDays;
     }
 
     public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
-        LocalDate startD = checkDates.convertToLocalDate(startDate).minusDays(1);
-        startDate = startD.toString();
-        LocalDate endD = checkDates.convertToLocalDate(endDate).plusDays(1);
-        endDate = endD.toString();
+        startDate = getStringStartDate(startDate);
+        endDate = getStringEndDate(endDate);
         Call<List<GfCommits>> gfCommitsCall = gitHubRetrofit.getService().getClassCommits(GITHUB_ORG, repoName, startDate, endDate);
         return gfCommitsCall.execute().body();
     }
 
-    public int getTotal(HashMap<String, Integer> notCommittedDays) {
+    public List<Comment> getComments(String repoName, String sha) throws IOException {
+        Call<List<Comment>> gfComments = gitHubRetrofit.getService().getCommentsOnRepos(GITHUB_ORG, repoName, sha);
+        List<Comment>gfCommentsek = gfComments.execute().body();
+        return gfCommentsek;
+    }
+
+    public int getTotal(HashMap<String, List<Integer>> notCommittedDays) {
         int total = 0;
         for (Map.Entry entry : notCommittedDays.entrySet()) {
-            total = total + (Integer)entry.getValue();
+            List<Integer> counts = (List<Integer>) entry.getValue();
+            total = total + counts.get(0);
         }
         return total;
     }
 
-    public void ghHandlesToString(List<String> ghHandles, List<ClassGithub> ghHandlesByClass) {
+    public List<String> ghHandlesToString(List<ClassGithub> ghHandlesByClass) {
+        List<String> ghHandles = new ArrayList<>();
         for (ClassGithub ch:ghHandlesByClass) {
             ghHandles.add(ch.getGithubHandle());
         }
+        return ghHandles;
     }
 
+    private String getStringEndDate(String endDate) {
+        LocalDate endD = checkDates.convertToLocalDate(endDate).plusDays(1);
+        endDate = endD.toString();
+        return endDate;
+    }
+
+    private String getStringStartDate(String startDate) {
+        LocalDate startD = checkDates.convertToLocalDate(startDate).minusDays(1);
+        startDate = startD.toString();
+        return startDate;
+    }
 }
