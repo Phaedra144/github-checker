@@ -1,4 +1,6 @@
 package com.greenfox.szilvi.githubchecker.entities;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 
 import javax.persistence.GeneratedValue;
@@ -8,7 +10,7 @@ import javax.persistence.Id;
 /**
  * Created by Szilvi on 2017. 10. 03..
  */
-
+@Setter
 @Entity
 public class ClassGithub {
 

@@ -13,6 +13,9 @@ public interface GithubHandleRepo extends CrudRepository<ClassGithub, Long> {
 
     List<ClassGithub> findAllByClassName(String className);
 
+    @Query(value = "SELECT * FROM class_github ORDER BY cohort_name ASC, class_name ASC", nativeQuery = true)
     List<ClassGithub>findAll();
+
+    ClassGithub findByGithubHandle(String githubHandle);
 
 }

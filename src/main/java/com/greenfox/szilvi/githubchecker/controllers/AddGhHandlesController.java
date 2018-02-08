@@ -1,6 +1,5 @@
 package com.greenfox.szilvi.githubchecker.controllers;
 
-import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
 import com.greenfox.szilvi.githubchecker.services.GhHandleService;
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -31,7 +28,7 @@ public class AddGhHandlesController {
         if(cohortName.equals("") || className.equals("") || ghHdls.equals("")){
             return "gh_handles";
         }
-       List<String> ghHandles = new ArrayList<>(Arrays.asList(ghHdls.split(" ")));
+       List<String> ghHandles = ghHandleService.handleListOfHandles(ghHdls);
         ghHandleService.saveGhHandlesToClass(ghHandles, cohortName, className);
         return "gh_handles";
     }
@@ -49,8 +46,9 @@ public class AddGhHandlesController {
     }
 
     @RequestMapping("/edithandles/{id}")
-    public String editGhHandles(@PathVariable long id){
-        ghHandleService.removeHandle(id);
+    public String editGhHandles(@PathVariable long id, String className, String cohortName, String githubHandle){
+        ghHandleService.findAndReplace(id, className, cohortName, githubHandle);
         return "redirect:/listhandles";
     }
+
 }

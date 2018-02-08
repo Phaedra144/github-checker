@@ -18,10 +18,13 @@ import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 public class AddGHMembers {
 
     @Autowired
+    GhHandleService ghHandleService;
+
+    @Autowired
     GitHubRetrofit gitHubRetrofit;
 
     public List<MemberStatusResponse> addNewMembersToGf(String members, String teamName) throws IOException {
-        List<String> ghHandles = new ArrayList<String>(Arrays.asList(members.split(" ")));
+        List<String> ghHandles = ghHandleService.handleListOfHandles(members);
         List<MemberStatusResponse> memberStatusResponseList = new ArrayList<>();
         callingToAddMembersToOrgAndTeam(ghHandles, teamName, memberStatusResponseList);
         return  memberStatusResponseList;

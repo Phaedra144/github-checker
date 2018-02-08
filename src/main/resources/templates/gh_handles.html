@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Title</title>
-    <link href="../dataTables.bootstrap.css" rel="stylesheet"/>
     <link href="../bootstrap.min.css" rel="stylesheet"/>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="../narrow-jumbotron.css"/>
+    <link href="../ghhandles.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="container">
@@ -38,7 +38,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="cohort">Cohort name</label>
-                <input name="cohortName" type="text" class="form-control" id="cohort" placeholder="Cohort name"/>
+                <input name="cohortName" type="text" class="form-control" id="cohort" placeholder="Cohort name" style="width: 100px"/>
             </div>
             <div class="form-group">
                 <label for="class">Class name</label>
@@ -60,16 +60,18 @@
                     <th>Class name</th>
                     <th>Github handle</th>
                 </tr>
-                <tr  th:each="handle : ${handles}">
-                    <td th:text="${handle.cohortName}">Cohort name</td>
-                    <td th:text="${handle.className}">Class name</td>
-                    <td th:text="${handle.githubHandle}">Github handle</td>
-                    <td><a th:href="@{/deletehandles/{id}(id=${handle.id})}">
-                        <span class="glyphicon glyphicon-trash"></span></a>
-                    </td>
-                    <td><a href="/edithandles">
-                        <span class="glyphicon glyphicon-pencil"></span></a>
-                    </td>
+                <tr th:each="handle : ${handles}">
+                    <form th:action="@{/edithandles/{id}(id=${handle.id})}" method="post">
+                        <td><input th:value="${handle.cohortName}" type="text" placeholder="Cohort name" name="cohortName"/></td>
+                        <td><input th:value="${handle.className}" type="text" placeholder="Class name" name="className"/></td>
+                        <td><input th:value="${handle.githubHandle}" type="text" placeholder="Github Handle" name="githubHandle"/></td>
+                        <td><a th:href="@{/deletehandles/{id}(id=${handle.id})}">
+                            <span class="glyphicon glyphicon-trash"></span></a>
+                        </td>
+                        <td><button type="submit">
+                            <span class="glyphicon glyphicon-pencil"></span></button>
+                        </td>
+                    </form>
                 </tr>
             </table>
         </div>
