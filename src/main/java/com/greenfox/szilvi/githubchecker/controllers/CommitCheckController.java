@@ -53,7 +53,7 @@ public class CommitCheckController {
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         model.addAttribute("nocommits", notCommittedDaysAndComments);
-        model.addAttribute("sum", ghCommitChecker.getTotal(notCommittedDaysAndComments));
+        model.addAttribute("sums", ghCommitChecker.getTotalNoCommitsAndComments(notCommittedDaysAndComments));
         return "commitchecker";
     }
 

@@ -40,15 +40,14 @@ public class GHCommitChecker {
 
     public HashMap<String, List<Integer>> fillNotCommittedDaysAndComments(List<String> classRepos, String startDate, String endDate) throws IOException {
         List<GfCommits> gfCommits;
-        List<Comment> gfComments = new ArrayList<>();
+        List<Comment> gfComments;
         HashMap<String, List<Integer>> notCommittedDays = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
             List<Integer> counts = new ArrayList<>();
             gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate);
+            gfComments = new ArrayList<>();
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
-            for (GfCommits gfcomm:gfCommits) {
-                gfComments.addAll(getComments(classRepos.get(i), gfcomm.getSha()));
-            }
+            checkingComments(classRepos, gfCommits, gfComments, i);
             counts.add(noCommitDays);
             counts.add(gfComments.size());
             notCommittedDays.put(classRepos.get(i), counts);
@@ -63,19 +62,30 @@ public class GHCommitChecker {
         return gfCommitsCall.execute().body();
     }
 
+    private void checkingComments(List<String> classRepos, List<GfCommits> gfCommits, List<Comment> gfComments, int i) throws IOException {
+        for (GfCommits gfcomm:gfCommits) {
+            gfComments.addAll(getComments(classRepos.get(i), gfcomm.getSha()));
+        }
+    }
+
     public List<Comment> getComments(String repoName, String sha) throws IOException {
         Call<List<Comment>> gfComments = gitHubRetrofit.getService().getCommentsOnRepos(GITHUB_ORG, repoName, sha);
         List<Comment>gfCommentsek = gfComments.execute().body();
         return gfCommentsek;
     }
 
-    public int getTotal(HashMap<String, List<Integer>> notCommittedDays) {
-        int total = 0;
+    public ArrayList<Integer> getTotalNoCommitsAndComments(HashMap<String, List<Integer>> notCommittedDays) {
+        ArrayList<Integer> totals = new ArrayList<>();
+        int noCommits = 0;
+        int comments = 0;
         for (Map.Entry entry : notCommittedDays.entrySet()) {
             List<Integer> counts = (List<Integer>) entry.getValue();
-            total = total + counts.get(0);
+            noCommits = noCommits + counts.get(0);
+            comments = comments + counts.get(1);
         }
-        return total;
+        totals.add(noCommits);
+        totals.add(comments);
+        return totals;
     }
 
     public List<String> ghHandlesToString(List<ClassGithub> ghHandlesByClass) {

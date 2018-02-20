@@ -87,7 +87,7 @@
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
-                                    <td th:text="${sum}"></td>
+                                    <td th:each="sum : ${sums}" th:text="${sum}"></td>
                                     <td></td>
                                 </tr>
                                </tbody>
