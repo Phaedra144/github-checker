@@ -28,7 +28,7 @@ public class AddGhHandlesController {
         if(cohortName.equals("") || className.equals("") || ghHdls.equals("")){
             return "gh_handles";
         }
-       List<String> ghHandles = ghHandleService.handleListOfHandles(ghHdls);
+        List<String> ghHandles = ghHandleService.handleListOfHandles(ghHdls);
         ghHandleService.saveGhHandlesToClass(ghHandles, cohortName, className);
         return "gh_handles";
     }

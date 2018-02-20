@@ -18,9 +18,11 @@ public class GhHandleService {
     public List<String> handleListOfHandles(String ghHandles){
         String splitter = "";
         for(char strChar:ghHandles.toCharArray()){
-            if(!splitter.contains(" ") && !splitter.contains("\r") || !splitter.contains("\n")){
-                if (strChar == ' ' || strChar == '\r' || strChar == '\n'){
-                    splitter = splitter + strChar;
+            if(!splitter.contains(" ")){
+                if(!splitter.contains("\r") || !splitter.contains("\n")){
+                    if (strChar == ' ' || strChar == '\r' || strChar == '\n'){
+                        splitter = splitter + strChar;
+                    }
                 }
             }
         }
