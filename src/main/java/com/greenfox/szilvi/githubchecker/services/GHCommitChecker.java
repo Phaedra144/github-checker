@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -46,11 +45,10 @@ public class GHCommitChecker {
             List<Integer> counts = new ArrayList<>();
             gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate);
             gfComments = getComments(classRepos.get(i));
-            int nrOfComments = checkAndSaveIfNewComment(gfComments.size(), classRepos.get(i));
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
             counts.add(noCommitDays);
             counts.add(gfCommits.size());
-            counts.add(nrOfComments);
+            counts.add(gfComments.size());
             githubThingsHashMap.put(classRepos.get(i), counts);
         }
         return githubThingsHashMap;
@@ -83,17 +81,6 @@ public class GHCommitChecker {
         totals.add(commits);
         totals.add(comments);
         return totals;
-    }
-
-    private int checkAndSaveIfNewComment(int numberOfComments, String repo) {
-        ClassGithub classGithub = classGithubRepo.findByGithubHandle(repo);
-        int difference = 0;
-        if (classGithub.getNumberOfComments() != numberOfComments) {
-            difference = numberOfComments - classGithub.getNumberOfComments();
-            classGithub.setNumberOfComments(numberOfComments);
-            classGithubRepo.save(classGithub);
-        }
-        return difference;
     }
 
     public List<String> ghHandlesToString(List<ClassGithub> ghHandlesByClass) {
