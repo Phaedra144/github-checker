@@ -1,7 +1,5 @@
 package com.greenfox.szilvi.githubchecker.controllers;
 
-import com.greenfox.szilvi.githubchecker.entities.ClassGithub;
-import com.greenfox.szilvi.githubchecker.models.Comment;
 import com.greenfox.szilvi.githubchecker.repositories.GithubHandleRepo;
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,30 +27,31 @@ public class CommitCheckController {
     Authorization authorization;
 
     @GetMapping(value = {"", "/"})
-    public String getMain(){
+    public String getMain() {
         return authorization.checkTokenOnPage("index");
     }
 
     @GetMapping("/checkcommit")
-    public String getCommitChecker(Model model){
+    public String getCommitChecker(Model model) {
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
         return authorization.checkTokenOnPage("commitchecker");
     }
 
     @PostMapping("/checkcommit")
     public String checkCommits(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Model model) throws IOException {
-        if(gfclass.equals("") || startDate.equals("") || endDate.equals("")){
+        if (gfclass.equals("") || startDate.equals("") || endDate.equals("")) {
             model.addAttribute("error", "You are missing something, try again!");
             model.addAttribute("classes", classGithubRepo.getDistinctClasses());
             return "commitchecker";
         }
         List<String> ghHandles = ghCommitChecker.ghHandlesToString(classGithubRepo.findAllByClassName(gfclass));
-        HashMap<String, List<Integer>> notCommittedDaysAndComments = ghCommitChecker.fillNotCommittedDaysAndComments(ghCommitChecker.checkRepos(ghHandles), startDate, endDate);
+        HashMap<String, List<Integer>> repoHashMap = ghCommitChecker.fillMapWithRepoRelevantStats(ghCommitChecker.checkRepos(ghHandles), startDate, endDate);
+
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
-        model.addAttribute("nocommits", notCommittedDaysAndComments);
-        model.addAttribute("sums", ghCommitChecker.getTotalNoCommitsAndComments(notCommittedDaysAndComments));
+        model.addAttribute("repoHashMap", repoHashMap);
+        model.addAttribute("sums", ghCommitChecker.getTotalStats(repoHashMap));
         return "commitchecker";
     }
 

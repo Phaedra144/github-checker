@@ -27,7 +27,7 @@ public interface GitHubAPIService {
     @GET("orgs/{org}/teams")
     Call<List<TeamResponse>>getTeamsOfOrg(@Path("org") String org);
 
-    @GET("repos/{owner}/{repo}/commits/{ref}/comments")
-    Call<List<Comment>>getCommentsOnRepos(@Path("owner") String owner, @Path("repo") String repo, @Path("ref") String sha);
+    @GET("repos/{owner}/{repo}/comments")
+    Call<List<Comment>>getCommentsOnRepos(@Path("owner") String owner, @Path("repo") String repo);
 
 }

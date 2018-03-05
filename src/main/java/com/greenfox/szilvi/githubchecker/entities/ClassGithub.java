@@ -20,6 +20,7 @@ public class ClassGithub {
     String cohortName;
     String className;
     String githubHandle;
+    int numberOfComments;
 
     public ClassGithub() {
     }
@@ -44,5 +45,13 @@ public class ClassGithub {
 
     public String getGithubHandle() {
         return githubHandle;
+    }
+
+    public int getNumberOfComments() {
+        return numberOfComments;
+    }
+
+    public void setNumberOfComments(int numberOfComments) {
+        this.numberOfComments = numberOfComments;
     }
 }

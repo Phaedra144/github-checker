@@ -76,14 +76,16 @@
                                 <tr>
                                     <th>Github Handle</th>
                                     <th>Nr.of not committed days</th>
+                                    <th>Nr.of commits</th>
                                     <th>Nr.of mentor comments</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:onclick="|window.open('https://github.com/greenfox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${nocommits}">
+                                <tr th:onclick="|window.open('https://github.com/greenfox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${repoHashMap}">
                                     <td th:text="${mapEntry.key}">ghhandle</td>
                                     <td th:text="${mapEntry.value.get(0)}">value</td>
                                     <td th:text="${mapEntry.value.get(1)}"></td>
+                                    <td th:text="${mapEntry.value.get(2)}"></td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
@@ -102,6 +104,9 @@
 
         </div>
     </div>
+    <script>
+        $('#date').datepicker({ firstDay: 1 });
+    </script>
 
     </body>
 

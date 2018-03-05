@@ -38,21 +38,22 @@ public class GHCommitChecker {
         return firstGhHandle.substring(2);
     }
 
-    public HashMap<String, List<Integer>> fillNotCommittedDaysAndComments(List<String> classRepos, String startDate, String endDate) throws IOException {
+    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(List<String> classRepos, String startDate, String endDate) throws IOException {
         List<GfCommits> gfCommits;
         List<Comment> gfComments;
-        HashMap<String, List<Integer>> notCommittedDays = new HashMap<>();
+        HashMap<String, List<Integer>> githubThingsHashMap = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
             List<Integer> counts = new ArrayList<>();
             gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate);
-            gfComments = new ArrayList<>();
+            gfComments = getComments(classRepos.get(i));
+            int nrOfComments = checkAndSaveIfNewComment(gfComments.size(), classRepos.get(i));
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
-//            checkingComments(classRepos, gfCommits, gfComments, i);
             counts.add(noCommitDays);
-            counts.add(gfComments.size());
-            notCommittedDays.put(classRepos.get(i), counts);
+            counts.add(gfCommits.size());
+            counts.add(nrOfComments);
+            githubThingsHashMap.put(classRepos.get(i), counts);
         }
-        return notCommittedDays;
+        return githubThingsHashMap;
     }
 
     public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
@@ -62,30 +63,37 @@ public class GHCommitChecker {
         return gfCommitsCall.execute().body();
     }
 
-    private void checkingComments(List<String> classRepos, List<GfCommits> gfCommits, List<Comment> gfComments, int i) throws IOException {
-        for (GfCommits gfcomm:gfCommits) {
-            gfComments.addAll(getComments(classRepos.get(i), gfcomm.getSha()));
-        }
+    public List<Comment> getComments(String repoName) throws IOException {
+        Call<List<Comment>> gfComments = gitHubRetrofit.getService().getCommentsOnRepos(GITHUB_ORG, repoName);
+        return gfComments.execute().body();
     }
 
-    public List<Comment> getComments(String repoName, String sha) throws IOException {
-        Call<List<Comment>> gfComments = gitHubRetrofit.getService().getCommentsOnRepos(GITHUB_ORG, repoName, sha);
-        List<Comment>gfCommentsek = gfComments.execute().body();
-        return gfCommentsek;
-    }
-
-    public ArrayList<Integer> getTotalNoCommitsAndComments(HashMap<String, List<Integer>> notCommittedDays) {
+    public ArrayList<Integer> getTotalStats(HashMap<String, List<Integer>> repoHashMap) {
         ArrayList<Integer> totals = new ArrayList<>();
         int noCommits = 0;
+        int commits = 0;
         int comments = 0;
-        for (Map.Entry entry : notCommittedDays.entrySet()) {
+        for (Map.Entry entry : repoHashMap.entrySet()) {
             List<Integer> counts = (List<Integer>) entry.getValue();
             noCommits = noCommits + counts.get(0);
-            comments = comments + counts.get(1);
+            commits = commits + counts.get(1);
+            comments = comments + counts.get(2);
         }
         totals.add(noCommits);
+        totals.add(commits);
         totals.add(comments);
         return totals;
+    }
+
+    private int checkAndSaveIfNewComment(int numberOfComments, String repo) {
+        ClassGithub classGithub = classGithubRepo.findByGithubHandle(repo);
+        int difference = 0;
+        if (classGithub.getNumberOfComments() != numberOfComments) {
+            difference = numberOfComments - classGithub.getNumberOfComments();
+            classGithub.setNumberOfComments(numberOfComments);
+            classGithubRepo.save(classGithub);
+        }
+        return difference;
     }
 
     public List<String> ghHandlesToString(List<ClassGithub> ghHandlesByClass) {
