@@ -1,9 +1,6 @@
 package com.greenfox.szilvi.githubchecker.httpconnection;
 
-import com.greenfox.szilvi.githubchecker.models.Comment;
-import com.greenfox.szilvi.githubchecker.models.GfCommits;
-import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
-import com.greenfox.szilvi.githubchecker.models.TeamResponse;
+import com.greenfox.szilvi.githubchecker.models.*;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
@@ -16,7 +13,10 @@ import java.util.List;
 public interface GitHubAPIService {
 
     @GET("repos/{owner}/{repo}/commits?&per_page=100")
-    Call<List<GfCommits>> getClassCommits(@Path("owner") String owner, @Path("repo") String repo, @Query("since") String startDate, @Query("until") String endDate);
+    Call<List<GfCommits>> getRepoCommitsForPeriod(@Path("owner") String owner, @Path("repo") String repo, @Query("since") String startDate, @Query("until") String endDate);
+
+    @GET("repos/{owner}/{repo}/commits?&per_page=100")
+    Call<List<GfCommits>> getRepoCommits(@Path("owner") String owner, @Path("repo") String repo);
 
     @PUT("orgs/{org}/memberships/{username}")
     Call<MemberStatusResponse> addMemberToOrg(@Path("org") String org, @Path("username") String username);
@@ -29,5 +29,8 @@ public interface GitHubAPIService {
 
     @GET("repos/{owner}/{repo}/comments")
     Call<List<Comment>>getCommentsOnRepos(@Path("owner") String owner, @Path("repo") String repo);
+
+    @GET("/repos/{owner}/{repo}/forks?&per_page=150")
+    Call<List<ForkedRepo>>getForkedRepos(@Path("owner") String owner, @Path("repo") String repo);
 
 }

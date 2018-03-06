@@ -45,7 +45,7 @@ public class CommitCheckController {
             return "commitchecker";
         }
         List<String> ghHandles = ghCommitChecker.ghHandlesToString(classGithubRepo.findAllByClassName(gfclass));
-        HashMap<String, List<Integer>> repoHashMap = ghCommitChecker.fillMapWithRepoRelevantStats(ghCommitChecker.checkRepos(ghHandles), startDate, endDate);
+        HashMap<String, List<Integer>> repoHashMap = ghCommitChecker.fillMapWithRepoRelevantStats(ghCommitChecker.checkRepos(ghHandles), startDate, endDate, ghCommitChecker.getGfLanguage(gfclass));
 
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
         model.addAttribute("startDate", startDate);
