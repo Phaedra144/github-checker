@@ -78,7 +78,7 @@
                                     <th>Nr.of not committed days</th>
                                     <th>Nr.of commits</th>
                                     <th>Total nr.of mentor comments</th>
-                                    <th>Total nr.of todo commits</th>
+                                    <th>Total nr.of todo-app commits</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -87,7 +87,7 @@
                                     <td th:text="${mapEntry.value.get(0)}">value</td>
                                     <td th:text="${mapEntry.value.get(1)}"></td>
                                     <td th:text="${mapEntry.value.get(2)}"></td>
-                                    <td th:text="${mapEntry.value.get(3)}"></td>
+                                    <td th:onclick="|window.open('https://github.com/${mapEntry.key}/todo-app')|" th:text="${mapEntry.value.get(3)}"></td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
