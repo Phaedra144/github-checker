@@ -1,11 +1,9 @@
 package com.greenfox.szilvi.githubchecker.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class ForkedRepo {
 
     private int id;
-    private String fullName;
+    private String full_name;
     private String language;
 
     public ForkedRepo() {
@@ -13,7 +11,7 @@ public class ForkedRepo {
 
     public ForkedRepo(int id, String fullName, String language) {
         this.id = id;
-        this.fullName = fullName;
+        this.full_name = fullName;
         this.language = language;
     }
 
@@ -25,14 +23,12 @@ public class ForkedRepo {
         this.id = id;
     }
 
-    @JsonProperty("full_name")
-    public String getFullName() {
-        return fullName;
+    public String getFull_name() {
+        return full_name;
     }
 
-    @JsonProperty("full_name")
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
     public String getLanguage() {

@@ -102,8 +102,8 @@ public class GHCommitChecker {
         List<ForkedRepo> forkedRepos = gfForked.execute().body();
         HashMap<String, String> ownersAndRepos = new HashMap<>();
         for (ForkedRepo forkedRepo : forkedRepos) {
-            if (forkedRepo.getLanguage().equals(language)){
-                String[] repoNameParts = forkedRepo.getFullName().split("/");
+            if (forkedRepo.getLanguage() != null && forkedRepo.getLanguage().equals(language)){
+                String[] repoNameParts = forkedRepo.getFull_name().split("/");
                 ownersAndRepos.put(repoNameParts[0], repoNameParts[1]);
             }
         }
