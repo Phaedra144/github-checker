@@ -25,9 +25,8 @@ public class AuthController {
         String url = null;
         String heroku = "https://github-checker.herokuapp.com/auth";
         String localhost = "http://localhost:8080/auth";
-        String clientId = System.getenv("CLIENT_ID");
         url = IS_LOCALHOST ? localhost : heroku;
-        return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=repo%20admin:org";
+        return "redirect:https://github.com/login/oauth/authorize?client_id=ea78181b0500c62004c9&redirect_uri=" + url + "&scope=repo%20admin:org";
     }
 
     @RequestMapping("/auth")
