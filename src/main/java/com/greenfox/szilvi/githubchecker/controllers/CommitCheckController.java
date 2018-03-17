@@ -39,11 +39,7 @@ public class CommitCheckController {
 
     @PostMapping("/checkcommit")
     public String checkCommits(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Model model) throws IOException {
-        if (gfclass.equals("") || startDate.equals("") || endDate.equals("")) {
-            model.addAttribute("error", "You are missing something, try again!");
-            model.addAttribute("classes", classGithubRepo.getDistinctClasses());
-            return "commitchecker";
-        }
+        if (handlingError(gfclass, startDate, endDate, model)) return "commitchecker";
         List<String> ghHandles = ghCommitChecker.ghHandlesToString(classGithubRepo.findAllByClassName(gfclass));
         HashMap<String, List<Integer>> repoHashMap = ghCommitChecker.fillMapWithRepoRelevantStats(ghCommitChecker.checkRepos(ghHandles), startDate, endDate, ghCommitChecker.getGfLanguage(gfclass));
 
@@ -51,8 +47,17 @@ public class CommitCheckController {
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         model.addAttribute("repoHashMap", repoHashMap);
-        model.addAttribute("sums", ghCommitChecker.getTotalStats(repoHashMap));
+        model.addAttribute("sums", ghCommitChecker.getTotalStats(repoHashMap, 4));
         return "commitchecker";
+    }
+
+    private boolean handlingError(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Model model) {
+        if (gfclass.equals("") || startDate.equals("") || endDate.equals("")) {
+            model.addAttribute("error", "You are missing something, try again!");
+            model.addAttribute("classes", classGithubRepo.getDistinctClasses());
+            return true;
+        }
+        return false;
     }
 
 

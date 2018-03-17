@@ -17,7 +17,7 @@ public class CheckDates {
 
     public int checkHowManyDaysNotCommitted(List<GfCommits> gfCommits, String startDate, String endDate) {
         int count = 0;
-        HashMap<LocalDate, Integer> myMap = daysOfNotCommiting(gfCommits, startDate, endDate);
+        HashMap<LocalDate, Integer> myMap = getDaysOfNotCommiting(gfCommits, startDate, endDate);
         for (Map.Entry entry : myMap.entrySet()) {
             if (entry.getValue().equals(0)){
                 count++;
@@ -26,7 +26,7 @@ public class CheckDates {
         return count;
     }
 
-    public HashMap<LocalDate, Integer> daysOfNotCommiting(List<GfCommits> gfCommits,String startDate, String endDate) {
+    public HashMap<LocalDate, Integer> getDaysOfNotCommiting(List<GfCommits> gfCommits, String startDate, String endDate) {
         HashMap<LocalDate, Integer> dateIntegerHashMap = new HashMap<>();
         putDaysInMap(0, dateIntegerHashMap, startDate, endDate);
         checkWhichDaysWereNotCommitted(gfCommits, 0, dateIntegerHashMap, startDate, endDate);

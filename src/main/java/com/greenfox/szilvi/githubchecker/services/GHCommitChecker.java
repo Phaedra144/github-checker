@@ -77,23 +77,16 @@ public class GHCommitChecker {
         return new ArrayList<>();
     }
 
-    public ArrayList<Integer> getTotalStats(HashMap<String, List<Integer>> repoHashMap) {
+    public ArrayList<Integer> getTotalStats(HashMap<String, List<Integer>> repoHashMap, int numberOfStats) {
         ArrayList<Integer> totals = new ArrayList<>();
-        int noCommits = 0;
-        int commits = 0;
-        int comments = 0;
-        int todoCommits = 0;
-        for (Map.Entry entry : repoHashMap.entrySet()) {
-            List<Integer> counts = (List<Integer>) entry.getValue();
-            noCommits = noCommits + counts.get(0);
-            commits = commits + counts.get(1);
-            comments = comments + counts.get(2);
-            todoCommits = todoCommits + counts.get(3);
+        for (int i = 0; i < numberOfStats; i++) {
+            int count = 0;
+            for (Map.Entry entry : repoHashMap.entrySet()) {
+                List<Integer> counts = (List<Integer>) entry.getValue();
+                count = count + counts.get(i);
+            }
+            totals.add(count);
         }
-        totals.add(noCommits);
-        totals.add(commits);
-        totals.add(comments);
-        totals.add(todoCommits);
         return totals;
     }
 
