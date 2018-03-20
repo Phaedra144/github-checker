@@ -38,17 +38,18 @@ public class CommitCheckController {
     }
 
     @PostMapping("/checkcommit")
-    public String checkCommits(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Model model) throws IOException {
+    public String checkCommits(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false, value = "todoApp") boolean isTodo, @RequestParam(required = false, value = "wandererGame") boolean isWanderer, Model model) throws IOException {
         if (handlingError(gfclass, startDate, endDate, model)) return "commitchecker";
         List<String> ghHandles = ghCommitChecker.ghHandlesToString(classGithubRepo.findAllByClassName(gfclass));
-        HashMap<String, List<Integer>> repoHashMap = ghCommitChecker.fillMapWithRepoRelevantStats(ghCommitChecker.checkRepos(ghHandles), startDate, endDate, ghCommitChecker.getGfLanguage(gfclass));
-
+        HashMap<String, List<Integer>> repoHashMap = ghCommitChecker.fillMapWithRepoRelevantStats(ghCommitChecker.checkRepos(ghHandles), startDate, endDate, ghCommitChecker.getGfLanguage(gfclass), isTodo, isWanderer);
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
-        model.addAttribute("class", gfclass);
+        model.addAttribute("gfclass", gfclass);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
         model.addAttribute("repoHashMap", repoHashMap);
-        model.addAttribute("sums", ghCommitChecker.getTotalStats(repoHashMap, 5));
+        model.addAttribute("isTodo", isTodo);
+        model.addAttribute("isWanderer", isWanderer);
+        model.addAttribute("sums", ghCommitChecker.getTotalStats(repoHashMap, 3, isTodo, isWanderer));
         return "commitchecker";
     }
 

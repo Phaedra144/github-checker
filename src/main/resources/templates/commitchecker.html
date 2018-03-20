@@ -49,7 +49,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Github Commits
-                        <span th:if="${startDate} != null and ${endDate} != null" th:text="' ' + ${gfClass} + ' ' + ${startDate} + ' - ' + ${endDate}"></span>
+                        <span th:if="${startDate} != null and ${endDate} != null and ${gfclass} != null" th:text="' ' + ${gfclass} + ' ' + ${startDate} + ' - ' + ${endDate}"></span>
                     </div>
                     <form th:action="@{/checkcommit}" method="post">
                         <label>GFA classes</label>
@@ -67,6 +67,13 @@
                             <span th:if="${error} != null" th:text="${error}" style="color: red"></span>
                             <button type="submit" class="btn btn-success">GO</button>
                         </div>
+                        <div class="form-group">
+                            <p>You can include total nr. of commits of any of the following repos:</p>
+                            <label for="todo">Todo App</label>
+                            <input id="todo" name="todoApp" type="checkbox"/>
+                            <label for="wanderer">Wanderer Game</label>
+                            <input id="wanderer" name="wandererGame" type="checkbox"/>
+                        </div>
                     </form>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
@@ -78,8 +85,8 @@
                                     <th>Nr.of not committed days</th>
                                     <th>Nr.of commits</th>
                                     <th>Total nr.of mentor comments</th>
-                                    <th>Total nr.of todo-app commits</th>
-                                    <th>Total nr.of wanderer commits</th>
+                                    <th th:if="${isTodo}">Total nr.of todo-app commits</th>
+                                    <th th:if="${isWanderer}">Total nr.of wanderer commits</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -88,8 +95,8 @@
                                     <td th:text="${mapEntry.value.get(0)}">not committed days</td>
                                     <td th:text="${mapEntry.value.get(1)}">commits</td>
                                     <td th:text="${mapEntry.value.get(2)}">total comments</td>
-                                    <td th:onclick="|window.open('https://github.com/${mapEntry.key}/todo-app')|" th:text="${mapEntry.value.get(3)}">total todo commits</td>
-                                    <td th:text="${mapEntry.value.get(4)}">total wanderer commits</td>
+                                    <td th:if="${isTodo}" th:onclick="|window.open('https://github.com/${mapEntry.key}/todo-app')|" th:text="${mapEntry.value.get(3)}">total todo commits</td>
+                                    <td th:if="${isWanderer}" th:text="${mapEntry.value.get(4)}">total wanderer commits</td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>

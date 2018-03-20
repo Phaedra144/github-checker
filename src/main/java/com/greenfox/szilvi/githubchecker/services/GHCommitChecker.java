@@ -38,7 +38,7 @@ public class GHCommitChecker {
         return firstGhHandle.substring(2);
     }
 
-    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(List<String> classRepos, String startDate, String endDate, String language) throws IOException {
+    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(List<String> classRepos, String startDate, String endDate, String language, boolean isTodo, boolean isWanderer) throws IOException {
         HashMap<String, List<Integer>> githubThingsHashMap = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
             List<Integer> counts = new ArrayList<>();
@@ -55,11 +55,13 @@ public class GHCommitChecker {
             long comments = System.nanoTime() - commitsStart;
             long commentStart = System.nanoTime();
             System.out.println("Comments: " + comments / 1000000000.0);
-            int todoCommits = getHashMapCommits(getExtraReposAndOwners(language, TODO_APP), classRepos.get(i)).size();
+            int todoCommits = 0;
+            if (isTodo) todoCommits = getHashMapCommits(getExtraReposAndOwners(language, TODO_APP), classRepos.get(i)).size();
             long todoCommit = System.nanoTime() - commentStart;
             long todoCommitStart = System.nanoTime();
             System.out.println("Todocommits: " + todoCommit / 1000000000.0);
-            int wandererCommits = getHashMapCommits(getExtraReposAndOwners(language, WANDERER), classRepos.get(i)).size();
+            int wandererCommits = 0;
+            if (isWanderer) wandererCommits = getHashMapCommits(getExtraReposAndOwners(language, WANDERER), classRepos.get(i)).size();
             long wanderer = System.nanoTime() - todoCommitStart;
             System.out.println("Wanderer commits: " + wanderer / 1000000000.0);
             counts.add(noCommitDays);
@@ -94,8 +96,10 @@ public class GHCommitChecker {
         return new ArrayList<>();
     }
 
-    public ArrayList<Integer> getTotalStats(HashMap<String, List<Integer>> repoHashMap, int numberOfStats) {
+    public ArrayList<Integer> getTotalStats(HashMap<String, List<Integer>> repoHashMap, int numberOfStats, boolean isTodo, boolean isWanderer) {
         ArrayList<Integer> totals = new ArrayList<>();
+        if (isTodo) numberOfStats++;
+        if (isWanderer) numberOfStats++;
         for (int i = 0; i < numberOfStats; i++) {
             int count = 0;
             for (Map.Entry entry : repoHashMap.entrySet()) {
