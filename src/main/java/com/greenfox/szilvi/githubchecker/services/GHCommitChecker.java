@@ -42,14 +42,31 @@ public class GHCommitChecker {
         HashMap<String, List<Integer>> githubThingsHashMap = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
             List<Integer> counts = new ArrayList<>();
+            long startTime = System.nanoTime();
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(getPreviousWeekCommits(classRepos.get(i), startDate, endDate), startDate, endDate);
+            long noCommit = System.nanoTime() - startTime;
+            long noCommitStart = System.nanoTime();
+            System.out.println("No commit: " + noCommit / 1000000000.0);
             int gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate).size();
+            long commits = System.nanoTime() - noCommitStart;
+            long commitsStart = System.nanoTime();
+            System.out.println("Commits: " + commits / 1000000000.0);
             int gfComments = getComments(classRepos.get(i)).size();
-            int todoCommits = getHashMapCommits(getTodoOwnersAndRepos(language), classRepos.get(i)).size();
+            long comments = System.nanoTime() - commitsStart;
+            long commentStart = System.nanoTime();
+            System.out.println("Comments: " + comments / 1000000000.0);
+            int todoCommits = getHashMapCommits(getExtraReposAndOwners(language, TODO_APP), classRepos.get(i)).size();
+            long todoCommit = System.nanoTime() - commentStart;
+            long todoCommitStart = System.nanoTime();
+            System.out.println("Todocommits: " + todoCommit / 1000000000.0);
+            int wandererCommits = getHashMapCommits(getExtraReposAndOwners(language, WANDERER), classRepos.get(i)).size();
+            long wanderer = System.nanoTime() - todoCommitStart;
+            System.out.println("Wanderer commits: " + wanderer / 1000000000.0);
             counts.add(noCommitDays);
             counts.add(gfCommits);
             counts.add(gfComments);
             counts.add(todoCommits);
+            counts.add(wandererCommits);
             githubThingsHashMap.put(classRepos.get(i), counts);
         }
         return githubThingsHashMap;
@@ -90,8 +107,8 @@ public class GHCommitChecker {
         return totals;
     }
 
-    private HashMap<String, String> getTodoOwnersAndRepos(String language) throws IOException {
-        Call<List<ForkedRepo>> gfForked = gitHubRetrofit.getService().getForkedRepos(GITHUB_ORG, TODO_APP);
+    private HashMap<String, String> getExtraReposAndOwners(String language, String repoType) throws IOException {
+        Call<List<ForkedRepo>> gfForked = gitHubRetrofit.getService().getForkedRepos(GITHUB_ORG, getRepoType(repoType, language));
         List<ForkedRepo> forkedRepos = gfForked.execute().body();
         HashMap<String, String> ownersAndRepos = new HashMap<>();
         for (ForkedRepo forkedRepo : forkedRepos) {
@@ -135,5 +152,23 @@ public class GHCommitChecker {
             language = "JavaScript";
         }
         return language;
+    }
+
+    public String getRepoType(String repoType, String language) {
+        String transformedLanguage = "";
+        if (repoType.equals("wanderer-")) {
+            switch (language.toLowerCase()) {
+                case "java" :
+                    transformedLanguage = "java";
+                    break;
+                case "c#" :
+                    transformedLanguage = "cs";
+                    break;
+                case "typescript" :
+                    transformedLanguage = "typescript";
+            }
+            return repoType + transformedLanguage;
+        }
+        return repoType;
     }
 }

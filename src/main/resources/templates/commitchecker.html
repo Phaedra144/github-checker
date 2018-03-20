@@ -49,7 +49,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Github Commits
-                        <span th:if="${startDate} != null and ${endDate} != null" th:text="' ' + ${startDate} + ' - ' + ${endDate}"></span>
+                        <span th:if="${startDate} != null and ${endDate} != null" th:text="' ' + ${gfClass} + ' ' + ${startDate} + ' - ' + ${endDate}"></span>
                     </div>
                     <form th:action="@{/checkcommit}" method="post">
                         <label>GFA classes</label>
@@ -79,15 +79,17 @@
                                     <th>Nr.of commits</th>
                                     <th>Total nr.of mentor comments</th>
                                     <th>Total nr.of todo-app commits</th>
+                                    <th>Total nr.of wanderer commits</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:onclick="|window.open('https://github.com/greenfox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${repoHashMap}">
                                     <td th:text="${mapEntry.key}">ghhandle</td>
-                                    <td th:text="${mapEntry.value.get(0)}">value</td>
-                                    <td th:text="${mapEntry.value.get(1)}"></td>
-                                    <td th:text="${mapEntry.value.get(2)}"></td>
-                                    <td th:onclick="|window.open('https://github.com/${mapEntry.key}/todo-app')|" th:text="${mapEntry.value.get(3)}"></td>
+                                    <td th:text="${mapEntry.value.get(0)}">not committed days</td>
+                                    <td th:text="${mapEntry.value.get(1)}">commits</td>
+                                    <td th:text="${mapEntry.value.get(2)}">total comments</td>
+                                    <td th:onclick="|window.open('https://github.com/${mapEntry.key}/todo-app')|" th:text="${mapEntry.value.get(3)}">total todo commits</td>
+                                    <td th:text="${mapEntry.value.get(4)}">total wanderer commits</td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
