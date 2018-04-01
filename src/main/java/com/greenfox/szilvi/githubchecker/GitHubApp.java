@@ -1,13 +1,8 @@
 package com.greenfox.szilvi.githubchecker;
 
-import java.io.IOException;
-import java.util.*;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.greenfox.szilvi.githubchecker.services.AddGHMembers;
-import com.greenfox.szilvi.githubchecker.services.GHCommitChecker;
 
 import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 

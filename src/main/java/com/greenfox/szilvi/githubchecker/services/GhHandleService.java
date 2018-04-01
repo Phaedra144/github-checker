@@ -26,7 +26,9 @@ public class GhHandleService {
                 }
             }
         }
-        return new ArrayList<String>(Arrays.asList(ghHandles.split(splitter)));
+        ArrayList<String> theHandles = new ArrayList<String>(Arrays.asList(ghHandles.split(splitter)));
+
+        return theHandles.size() > 1 ? theHandles : new ArrayList<>(Arrays.asList(ghHandles));
     }
 
 

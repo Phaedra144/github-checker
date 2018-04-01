@@ -15,7 +15,7 @@ import java.util.List;
 import static com.greenfox.szilvi.githubchecker.services.Settings.*;
 
 @Service
-public class AddGHMembers {
+public class GhMemberService {
 
     @Autowired
     GhHandleService ghHandleService;

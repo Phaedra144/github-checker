@@ -3,6 +3,8 @@ package com.greenfox.szilvi.githubchecker.controllers;
 import com.greenfox.szilvi.githubchecker.services.GhHandleService;
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class AddGhHandlesController {
+public class AddHandlesController {
 
     @Autowired
     Authorization authorization;
@@ -24,7 +26,7 @@ public class AddGhHandlesController {
     }
 
     @PostMapping("/addhandles")
-    public String addMember(String cohortName, String className, String ghHdls, Model model) {
+    public String addMember(String cohortName, String className, String ghHdls) {
         if(cohortName.equals("") || className.equals("") || ghHdls.equals("")){
             return "gh_handles";
         }
@@ -39,10 +41,10 @@ public class AddGhHandlesController {
         return "gh_handles";
     }
 
-    @RequestMapping("/deletehandles/{id}")
+    @RequestMapping(value = "/deletehandles/{id}")
     public String deleteGhHandles(@PathVariable long id){
         ghHandleService.removeHandle(id);
-        return "redirect:/listhandles";
+        return "gh_handles";
     }
 
     @RequestMapping("/edithandles/{id}")
