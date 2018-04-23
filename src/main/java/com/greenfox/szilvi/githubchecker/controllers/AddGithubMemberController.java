@@ -24,7 +24,7 @@ public class AddGithubMemberController {
     @Autowired
     GhMemberService GhMemberService;
 
-    @GetMapping("/szilviaddmembers")
+    @GetMapping("/addgfamembers")
     public String getMemberAdder(AddMemberForm addMemberForm){
         return authorization.checkTokenOnPage("memberadder");
     }
