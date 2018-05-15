@@ -40,6 +40,9 @@ public class CheckDates {
     }
 
     private void checkWhichDaysWereNotCommitted(List<GfCommits> gfCommits, int value, HashMap<LocalDate, Integer> dateIntegerHashMap, String startDate, String endDate) {
+        if (gfCommits == null) {
+            return;
+        }
         for (int i = 0; i < gfCommits.size(); i++) {
             String date = gfCommits.get(i).getCommit().getAuthor().getDate();
             LocalDate inputlocalDate = convertToLocalDate(date.substring(0, 10));

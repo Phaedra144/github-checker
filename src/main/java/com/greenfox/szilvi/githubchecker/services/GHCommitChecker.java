@@ -43,11 +43,12 @@ public class GHCommitChecker {
         for (int i = 0; i < classRepos.size(); i++) {
             List<Integer> counts = new ArrayList<>();
             long startTime = System.nanoTime();
-            int noCommitDays = checkDates.checkHowManyDaysNotCommitted(getPreviousWeekCommits(classRepos.get(i), startDate, endDate), startDate, endDate);
+            List<GfCommits> gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate);
+            int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
             long noCommit = System.nanoTime() - startTime;
             long noCommitStart = System.nanoTime();
             System.out.println("No commit: " + noCommit / 1000000000.0);
-            int gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate).size();
+            int gfCommitsSize = gfCommits == null ? 0 : gfCommits.size();
             long commits = System.nanoTime() - noCommitStart;
             long commitsStart = System.nanoTime();
             System.out.println("Commits: " + commits / 1000000000.0);
@@ -65,7 +66,7 @@ public class GHCommitChecker {
             long wanderer = System.nanoTime() - todoCommitStart;
             System.out.println("Wanderer commits: " + wanderer / 1000000000.0);
             counts.add(noCommitDays);
-            counts.add(gfCommits);
+            counts.add(gfCommitsSize);
             counts.add(gfComments);
             counts.add(todoCommits);
             counts.add(wandererCommits);
