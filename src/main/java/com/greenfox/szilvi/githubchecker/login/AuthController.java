@@ -4,6 +4,7 @@ import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;
@@ -34,13 +35,15 @@ public class AuthController {
     }
 
     @RequestMapping("/auth")
-    public String getAccessToken(@RequestParam String code) throws IOException {
+    public String getAccessToken(@RequestParam String code, Model model) throws IOException {
         String accessToken = authorization.getAccessToken(code);
         System.out.println(accessToken);
         if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
             userHandling.saveNewUser(accessToken);
             return "index";
         } else {
+            model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
+            System.setProperty(GITHUB_TOKEN, "");
             return "login";
         }
     }
