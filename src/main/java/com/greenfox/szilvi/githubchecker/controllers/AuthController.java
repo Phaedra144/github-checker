@@ -26,11 +26,10 @@ public class AuthController {
 
     @RequestMapping("/oauth")
     public String redirecttoOauth(){
-        String heroku = "https://github-checker.herokuapp.com/auth";
-        String localhost = "http://localhost:8080/auth";
-        String url = IS_LOCALHOST ? localhost : heroku;
-        String scope = "repo%20admin:org";
-        return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=" + scope;
+        /*String heroku = "https://github-checker.herokuapp.com/auth";
+        String localhost = "http://localhost:8080/auth";*/
+        String url = IS_LOCALHOST ? LOCALHOST : HEROKU;
+        return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=repo%20admin:org";
     }
 
     @RequestMapping("/auth")

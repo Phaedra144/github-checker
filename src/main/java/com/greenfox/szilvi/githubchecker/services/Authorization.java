@@ -5,8 +5,6 @@ import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -37,7 +35,7 @@ public class Authorization {
                 httpTransport, jsonFactory,
                 new GenericUrl("https://github.com/login/oauth/access_token"),
                 new ClientParametersAuthentication(clientId, clientSecret),
-                clientId,"https://github.com/login/oauth/authorize").build();
+            clientId,"https://github.com/login/oauth/authorize").build();
         TokenResponse tokenResponse = flow
                 .newTokenRequest(code)
                 .setScopes(Arrays.asList("repo", "admin:org"))
