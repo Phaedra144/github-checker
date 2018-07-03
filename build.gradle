@@ -30,7 +30,7 @@ dependencies {
     runtime'org.springframework.boot:spring-boot-devtools'
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compileOnly 'org.projectlombok:lombok'
     compile 'org.hibernate:hibernate-validator'
     compile 'org.apache.tomcat.embed:tomcat-embed-el'
