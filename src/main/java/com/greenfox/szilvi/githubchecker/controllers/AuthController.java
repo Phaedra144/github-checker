@@ -2,6 +2,7 @@ package com.greenfox.szilvi.githubchecker.controllers;
 
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,6 +12,9 @@ import java.io.IOException;
 
 @Controller
 public class AuthController {
+
+    @Value("${CLIENT_ID}")
+    private String clientId;
 
     @Autowired
     Authorization authorization;
@@ -25,8 +29,8 @@ public class AuthController {
         String heroku = "https://github-checker.herokuapp.com/auth";
         String localhost = "http://localhost:8080/auth";
         String url = IS_LOCALHOST ? localhost : heroku;
-        String clientId = System.getenv("CLIENT_ID");
-        return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=repo%20admin:org";
+        String scope = "repo%20admin:org";
+        return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=" + scope;
     }
 
     @RequestMapping("/auth")
