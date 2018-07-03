@@ -39,8 +39,10 @@ public class AuthController {
         System.out.println(accessToken);
         if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
             userHandling.saveNewUser(accessToken);
+            return "index";
+        } else {
+            return "login";
         }
-        return "index";
     }
 
     @RequestMapping("/logout")
