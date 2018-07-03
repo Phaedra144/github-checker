@@ -1,6 +1,6 @@
 package com.greenfox.szilvi.githubchecker.login.authentication;
 
-import com.greenfox.szilvi.githubchecker.user.web.UserHandling;
+import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,9 @@ public class AuthController {
     public String getAccessToken(@RequestParam String code) throws IOException {
         String accessToken = authorization.getAccessToken(code);
         System.out.println(accessToken);
-        userHandling.saveNewUser(accessToken);
+        if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
+            userHandling.saveNewUser(accessToken);
+        }
         return "index";
     }
 
