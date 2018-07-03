@@ -1,8 +1,8 @@
-package com.greenfox.szilvi.githubchecker.controllers;
+package com.greenfox.szilvi.githubchecker.greenfoxteam.web;
 
-import com.greenfox.szilvi.githubchecker.entities.AddMemberForm;
-import com.greenfox.szilvi.githubchecker.models.MemberStatusResponse;
-import com.greenfox.szilvi.githubchecker.services.GhMemberService;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamStatus;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxTeamService;
 import com.greenfox.szilvi.githubchecker.services.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,25 +16,25 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-public class AddGithubMemberController {
+public class GreenfoxTeamController {
 
     @Autowired
     Authorization authorization;
 
     @Autowired
-    GhMemberService GhMemberService;
+    GreenfoxTeamService greenfoxTeamService;
 
     @GetMapping("/addgfamembers")
-    public String getMemberAdder(AddMemberForm addMemberForm){
+    public String getMemberAdder(GreenfoxTeamForm greenfoxTeamForm){
         return authorization.checkTokenOnPage("memberadder");
     }
 
     @PostMapping("/addmembers")
-    public String addMember(@Valid AddMemberForm addMemberForm, BindingResult bindingResult, Model model) throws IOException {
+    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm, BindingResult bindingResult, Model model) throws IOException {
         if(bindingResult.hasErrors()){
             return "memberadder";
         }
-        List<MemberStatusResponse> memberStatusResponse = GhMemberService.addNewMembersToGf(addMemberForm.getMembers(), addMemberForm.getTeamName());
+        List<GreenfoxTeamStatus> memberStatusResponse = greenfoxTeamService.addNewMembersToGf(greenfoxTeamForm.getMembers(), greenfoxTeamForm.getTeamName());
         model.addAttribute("responses", memberStatusResponse);
         return "memberadder";
     }

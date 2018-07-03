@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.entities;
+package com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-public class AddMemberForm {
+public class GreenfoxTeamForm {
 
     @NotNull(message = "You must add at least one member here!")
     String members;

@@ -11,13 +11,16 @@ import retrofit2.Retrofit;
 @Service
 public class GitHubRetrofit {
 
-    AuthInterceptor authInterceptor = new AuthInterceptor();
-    OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(authInterceptor).build();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(httpClient)
-            .build();
+    public Retrofit getRetrofit() {
+        AuthInterceptor authInterceptor = new AuthInterceptor();
+        OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(authInterceptor).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.github.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
+                .build();
+        return retrofit;
+    }
 
     GitHubAPIService service = retrofit.create(GitHubAPIService.class);
 

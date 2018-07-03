@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.models;
+package com.greenfox.szilvi.githubchecker.greenfoxteam.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TeamResponse {
+public class GreenfoxTeamResponse {
 
     private int id;
     private String name;
