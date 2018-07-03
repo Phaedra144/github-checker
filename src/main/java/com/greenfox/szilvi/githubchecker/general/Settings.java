@@ -2,7 +2,7 @@ package com.greenfox.szilvi.githubchecker.general;
 
 public class Settings {
 
-    public static boolean IS_LOCALHOST = true;
+    public static boolean IS_LOCALHOST = false;
     public static String GITHUB_TOKEN = "accessToken";
     public static String GITHUB_ORG = "green-fox-academy";
     public static int MENTORS_TEAM_ID = 2114466;

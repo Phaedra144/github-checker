@@ -1,7 +1,7 @@
 package com.greenfox.szilvi.githubchecker.githubhandles.web;
 
 import com.greenfox.szilvi.githubchecker.githubhandles.service.HandlesService;
-import com.greenfox.szilvi.githubchecker.login.authentication.Authorization;
+import com.greenfox.szilvi.githubchecker.login.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

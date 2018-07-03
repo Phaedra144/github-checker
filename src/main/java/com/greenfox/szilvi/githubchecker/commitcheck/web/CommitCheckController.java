@@ -2,7 +2,7 @@ package com.greenfox.szilvi.githubchecker.commitcheck.web;
 
 import com.greenfox.szilvi.githubchecker.commitcheck.service.CommitCheckService;
 import com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao.GithubHandleRepo;
-import com.greenfox.szilvi.githubchecker.login.authentication.Authorization;
+import com.greenfox.szilvi.githubchecker.login.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

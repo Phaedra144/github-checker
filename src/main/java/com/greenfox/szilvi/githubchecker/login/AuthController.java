@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.login.authentication;
+package com.greenfox.szilvi.githubchecker.login;
 
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;

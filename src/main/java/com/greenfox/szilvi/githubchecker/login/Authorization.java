@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.login.authentication;
+package com.greenfox.szilvi.githubchecker.login;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.BearerToken;
