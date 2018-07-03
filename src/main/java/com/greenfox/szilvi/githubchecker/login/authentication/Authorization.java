@@ -11,6 +11,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.greenfox.szilvi.githubchecker.user.persistance.dao.UserRepo;
 import com.greenfox.szilvi.githubchecker.user.persistance.entity.User;
+import com.greenfox.szilvi.githubchecker.user.web.UserHandling;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class Authorization {
 
     @Value("${CLIENT_SECRET}")
     private String clientSecret;
+
+    @Autowired
+    UserHandling userHandling;
 
     public String getAccessToken(String code) throws IOException {
         AuthorizationCodeFlow flow = getAuthorizationCodeFlow();
@@ -56,12 +61,13 @@ public class Authorization {
                 ).execute();
     }
 
-//    public boolean checkIfUserIsValid() {
-//        User user = userRepo
-//    }
+    public boolean checkIfUserIsValid() {
+        User user = userHandling.getUserByToken(System.getProperty(GITHUB_TOKEN));
+        return user.getLogin().equals(userHandling.getAuthUser().getLogin());
+    }
 
     public String checkTokenOnPage(String whereTo) {
-        if (System.getProperty(GITHUB_TOKEN) != "") {
+        if (System.getProperty(GITHUB_TOKEN) != "" && checkIfUserIsValid()) {
             return whereTo;
         } else {
             return "login";
