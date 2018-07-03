@@ -29,7 +29,7 @@ public class AuthController {
 
     @RequestMapping("/oauth")
     public String redirecttoOauth(){
-        String url = IS_LOCALHOST ? LOCALHOST : HEROKU;
+        String url = Boolean.valueOf(IS_LOCALHOST) ? LOCALHOST : HEROKU;
         return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=repo%20admin:org";
     }
 
