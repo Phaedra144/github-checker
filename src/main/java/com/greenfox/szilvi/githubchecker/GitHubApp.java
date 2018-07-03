@@ -4,7 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import static com.greenfox.szilvi.githubchecker.services.Settings.*;
+import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 
 
 /**
