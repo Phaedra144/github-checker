@@ -3,7 +3,7 @@ package com.greenfox.szilvi.githubchecker.greenfoxteam.web;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxTeamService;
-import com.greenfox.szilvi.githubchecker.services.Authorization;
+import com.greenfox.szilvi.githubchecker.login.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

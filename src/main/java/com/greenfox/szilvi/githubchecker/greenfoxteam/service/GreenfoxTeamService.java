@@ -3,7 +3,7 @@ package com.greenfox.szilvi.githubchecker.greenfoxteam.service;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.web.GreenfoxTeamAPIService;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamResponse;
-import com.greenfox.szilvi.githubchecker.services.GhHandleService;
+import com.greenfox.szilvi.githubchecker.githubhandles.service.HandlesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -12,19 +12,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.greenfox.szilvi.githubchecker.services.Settings.*;
+import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 
 @Service
 public class GreenfoxTeamService {
 
     @Autowired
-    GhHandleService ghHandleService;
+    HandlesService handlesService;
 
     @Autowired
     GreenfoxTeamAPIService greenfoxTeamAPIService;
 
     public List<GreenfoxTeamStatus> addNewMembersToGf(String members, String teamName) throws IOException {
-        List<String> ghHandles = ghHandleService.handleListOfHandles(members);
+        List<String> ghHandles = handlesService.handleListOfHandles(members);
         List<GreenfoxTeamStatus> memberStatusResponseList = new ArrayList<>();
         callingToAddMembersToOrgAndTeam(ghHandles, teamName, memberStatusResponseList);
         return  memberStatusResponseList;
