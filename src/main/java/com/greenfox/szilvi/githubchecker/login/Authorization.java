@@ -9,40 +9,66 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.greenfox.szilvi.githubchecker.user.persistance.entity.User;
+import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.greenfox.szilvi.githubchecker.general.Settings.GITHUB_TOKEN;
+import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 
 @Service
 public class Authorization {
 
+    @Value("${CLIENT_ID}")
+    private String clientId;
+
+    @Value("${CLIENT_SECRET}")
+    private String clientSecret;
+
+    @Autowired
+    UserHandling userHandling;
+
     public String getAccessToken(String code) throws IOException {
-        JsonFactory jsonFactory = new JacksonFactory();
-        HttpTransport httpTransport = new NetHttpTransport();
-        AuthorizationCodeFlow flow = new AuthorizationCodeFlow.Builder(
-                BearerToken.authorizationHeaderAccessMethod(),
-                httpTransport, jsonFactory,
-                new GenericUrl("https://github.com/login/oauth/access_token"),
-                new ClientParametersAuthentication(System.getenv("CLIENT_ID"), System.getenv("CLIENT_SECRET")),
-                System.getenv("CLIENT_ID"),"https://github.com/login/oauth/authorize").build();
-        TokenResponse tokenResponse = flow
-                .newTokenRequest(code)
-                .setScopes(Arrays.asList("repo", "admin:org"))
-                .setRequestInitializer(httprequest -> {
-                    httprequest.getHeaders().setAccept("application/json");}
-                    ).execute();
+        AuthorizationCodeFlow flow = getAuthorizationCodeFlow();
+        TokenResponse tokenResponse = getTokenResponse(code, flow);
         System.setProperty("accessToken", tokenResponse.getAccessToken());
-        System.out.println(tokenResponse.getAccessToken());
         return tokenResponse.getAccessToken();
     }
 
+    private AuthorizationCodeFlow getAuthorizationCodeFlow() {
+        JsonFactory jsonFactory = new JacksonFactory();
+        HttpTransport httpTransport = new NetHttpTransport();
+        return new AuthorizationCodeFlow.Builder(
+                BearerToken.authorizationHeaderAccessMethod(),
+                httpTransport, jsonFactory,
+                new GenericUrl(GITHUB_OAUTH_ENCODED_URL),
+                new ClientParametersAuthentication(clientId, clientSecret),
+                clientId, GITHUB_OAUTH_AUTHORIZATION_URL).build();
+    }
+
+    private TokenResponse getTokenResponse(String code, AuthorizationCodeFlow flow) throws IOException {
+        return flow
+                .newTokenRequest(code)
+                .setScopes(Arrays.asList("repo", "admin:org"))
+                .setRequestInitializer(httprequest -> {
+                            httprequest.getHeaders().setAccept("application/json");
+                        }
+                ).execute();
+    }
+
+    public boolean checkIfUserIsValid() {
+        User user = userHandling.getUserByToken(System.getProperty(GITHUB_TOKEN));
+        return user.getLogin().equals(userHandling.getAuthUser().getLogin());
+    }
+
     public String checkTokenOnPage(String whereTo) {
-        if(System.getProperty(GITHUB_TOKEN) != ""){
+        if (System.getProperty(GITHUB_TOKEN) != "" && checkIfUserIsValid()) {
             return whereTo;
-        }else {
+        } else {
             return "login";
         }
     }

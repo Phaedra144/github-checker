@@ -2,8 +2,8 @@ package com.greenfox.szilvi.githubchecker.retrofit;
 
 import okhttp3.OkHttpClient;
 import org.springframework.stereotype.Service;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Service
 public class GitHubRetrofit {
