@@ -34,7 +34,7 @@
         <p>You can add members to Green Fox organization. </p>
         <p>These persons can be added to a team immediately, if you do not want it, please write "None"! </p>
         <p>The name of the team must be an already created one. Name of the members must be separated by spaces!</p>
-        <form th:action="@{/addmembers}" th:object="${greenfoxTeamForm}" method="post">
+        <form th:action="@{/addmembers}" th:object="${addMemberForm}" method="post">
             <div class="form-row">
                 <div class="form-group">
                     <label for="team">Team name</label>
