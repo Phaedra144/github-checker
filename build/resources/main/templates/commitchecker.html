@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <!-- Bootstrap Core CSS -->
+        <link href="../bootstrap.min.css" rel="stylesheet"/>
+        <!-- DataTables CSS -->
+        <link href="../dataTables.bootstrap.css" rel="stylesheet"/>
+        <!-- DataTables Responsive CSS -->
+        <link href="../dataTables.responsive.css" rel="stylesheet"/>
+        <!-- Custom CSS -->
+        <link href="../sb-admin-2.css" rel="stylesheet"/>
+        <!-- Custom Fonts -->
+        <link href="../font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="../narrow-jumbotron.css"/>
+
+    </head>
+    <body>
+    <header class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills float-right">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/checkcommit">Commits</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/addhandles">Members</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!-- /.row -->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Green Fox Github Checker</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Github Commits
+                        <span th:if="${startDate} != null and ${endDate} != null and ${gfclass} != null" th:text="' ' + ${gfclass} + ' ' + ${startDate} + ' - ' + ${endDate}"></span>
+                    </div>
+                    <form th:action="@{/checkcommit}" method="post">
+                        <label>GFA classes</label>
+                        <div class="form-group">
+                            <select class="form-control" name="gfclass">
+                                <option value="">Select Class</option>
+                                <option th:each="className : ${classes}" th:text="${className}">Class names</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start date</label>
+                            <input id="startDate" name="startDate" type="date"/>
+                            <label for="endDate">End date</label>
+                            <input id="endDate" name="endDate" type="date"/>
+                            <span th:if="${error} != null" th:text="${error}" style="color: red"></span>
+                            <button type="submit" class="btn btn-success">GO</button>
+                        </div>
+                        <div class="form-group">
+                            <p>You can include total nr. of commits of any of the following repos:</p>
+                            <label for="todo">Todo App</label>
+                            <input id="todo" name="todoApp" type="checkbox"/>
+                            <label for="wanderer">Wanderer Game</label>
+                            <input id="wanderer" name="wandererGame" type="checkbox"/>
+                        </div>
+                    </form>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Github Handle</th>
+                                    <th>Nr.of not committed days</th>
+                                    <th>Nr.of commits</th>
+                                    <th>Total nr.of mentor comments</th>
+                                    <th th:if="${isTodo}">Total nr.of todo-app commits</th>
+                                    <th th:if="${isWanderer}">Total nr.of wanderer commits</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:onclick="|window.open('https://github.com/greenfox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${repoHashMap}">
+                                    <td th:text="${mapEntry.key}">ghhandle</td>
+                                    <td th:text="${mapEntry.value.get(0)}">not committed days</td>
+                                    <td th:text="${mapEntry.value.get(1)}">commits</td>
+                                    <td th:text="${mapEntry.value.get(2)}">total comments</td>
+                                    <td th:if="${isTodo}" th:onclick="|window.open('https://github.com/${mapEntry.key}/todo-app')|" th:text="${mapEntry.value.get(3)}">total todo commits</td>
+                                    <td th:if="${isWanderer}" th:text="${mapEntry.value.get(4)}">total wanderer commits</td>
+                                </tr>
+                                <tr>
+                                    <th>Total:</th>
+                                    <td th:each="sum : ${sums}" th:text="${sum}"></td>
+                                    <td></td>
+                                </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $('#startDate').datepicker({ firstDay: 1 });
+    </script>
+
+    </body>
+
+</html>

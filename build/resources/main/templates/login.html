@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <link rel="stylesheet" type="text/css" href="/../bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/../narrow-jumbotron.css"/>
+        <link rel="stylesheet" type="text/css" href="http://localhost:8080/login.css"/>
+        <title>Github Checker</title>
+    </head>
+    <body>
+    <div class="container">
+        <header class="header clearfix">
+            <nav>
+
+            </nav>
+            <h3 class="text-muted">Github Checker</h3>
+        </header>
+        <main role="main">
+
+            <div class="jumbotron">
+                <h1 class="display-3">Welcome to Green Fox Academy's Github Checker!</h1>
+                <p class="lead">Please sign in to Github first.</p>
+                <p th:text="${notMentor}" style="color: red"></p>
+                <p><a class="btn btn-lg btn-success" href="/oauth" role="button">Sign in</a></p>
+            </div>
+
+        </main>
+
+    </div>
+    </body>
+</html>
