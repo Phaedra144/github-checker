@@ -1,9 +1,0 @@
-spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          github:
-            clientId: ${CLIENT_ID}
-            clientSecret: ${CLIENT_SECRET}
-            scope: admin:org

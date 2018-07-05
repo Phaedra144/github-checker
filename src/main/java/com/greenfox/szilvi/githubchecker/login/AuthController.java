@@ -30,7 +30,14 @@ public class AuthController {
 
     @RequestMapping("/oauth")
     public String redirecttoOauth(){
-        String url = Boolean.valueOf(IS_LOCALHOST) ? LOCALHOST : HEROKU;
+        String url = "";
+        if (IS_LOCALHOST.equals("localhost")){
+            url = LOCALHOST;
+        } else if (IS_LOCALHOST.equals("herokus")){
+            url = HEROKU;
+        } else {
+            url = AWS;
+        }
         return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=repo%20admin:org";
     }
 
@@ -38,9 +45,9 @@ public class AuthController {
     public String getAccessToken(@RequestParam String code, Model model) throws IOException {
         String accessToken = authorization.getAccessToken(code);
         System.setProperty(GITHUB_TOKEN, accessToken);
+        userHandling.saveNewUser(accessToken);
         System.out.println(accessToken);
         if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
-            userHandling.saveNewUser(accessToken);
             return "index";
         } else {
             model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
