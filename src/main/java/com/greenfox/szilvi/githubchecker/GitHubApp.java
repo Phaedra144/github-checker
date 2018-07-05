@@ -2,15 +2,18 @@ package com.greenfox.szilvi.githubchecker;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;
-
 
 /**
  * Created by Szilvi on 2017. 09. 20..
  */
+
 @SpringBootApplication
+@EnableAutoConfiguration
 public class GitHubApp implements CommandLineRunner {
 
     public static void main(String[] args) {
@@ -22,3 +25,6 @@ public class GitHubApp implements CommandLineRunner {
         System.setProperty(GITHUB_TOKEN, "");
     }
 }
+
+
+

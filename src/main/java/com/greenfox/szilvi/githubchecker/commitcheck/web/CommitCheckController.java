@@ -3,6 +3,7 @@ package com.greenfox.szilvi.githubchecker.commitcheck.web;
 import com.greenfox.szilvi.githubchecker.commitcheck.service.CommitCheckService;
 import com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao.GithubHandleRepo;
 import com.greenfox.szilvi.githubchecker.login.Authorization;
+import com.greenfox.szilvi.githubchecker.retrofit.newrf.GfTeamAPI;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,8 +28,12 @@ public class CommitCheckController {
     @Autowired
     UserHandling userHandling;
 
+    @Autowired
+    GfTeamAPI gfTeamAPI;
+
     @GetMapping(value = {"", "/"})
     public String getMain() {
+        System.out.println(gfTeamAPI.getTeamsOfOrg());
         return userHandling.checkTokenOnPage("index");
     }
 

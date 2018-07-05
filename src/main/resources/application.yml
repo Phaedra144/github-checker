@@ -4,7 +4,6 @@ spring:
       client:
         registration:
           github:
-            client:
-              clientId: ${CLIENT_ID}
-              clientSecret: ${CLIENT_SECRET}
-              scope: admin:org
+            clientId: ${CLIENT_ID}
+            clientSecret: ${CLIENT_SECRET}
+            scope: admin:org

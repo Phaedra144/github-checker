@@ -32,8 +32,6 @@ public class Authorization {
     @Autowired
     UserHandling userHandling;
 
-    String accessToken;
-
     public String getAccessToken(String code) throws IOException {
         AuthorizationCodeFlow flow = getAuthorizationCodeFlow();
         TokenResponse tokenResponse = getTokenResponse(code, flow);
