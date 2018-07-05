@@ -33,7 +33,7 @@ public class AuthController {
         String url = "";
         if (IS_LOCALHOST.equals("localhost")){
             url = LOCALHOST;
-        } else if (IS_LOCALHOST.equals("herokus")){
+        } else if (IS_LOCALHOST.equals("heroku")){
             url = HEROKU;
         } else {
             url = AWS;
