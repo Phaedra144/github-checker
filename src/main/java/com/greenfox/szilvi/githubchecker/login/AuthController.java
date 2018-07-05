@@ -37,20 +37,21 @@ public class AuthController {
     @RequestMapping("/auth")
     public String getAccessToken(@RequestParam String code, Model model) throws IOException {
         String accessToken = authorization.getAccessToken(code);
+        System.setProperty(GITHUB_TOKEN, accessToken);
         System.out.println(accessToken);
         if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
             userHandling.saveNewUser(accessToken);
             return "index";
         } else {
             model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
-            System.setProperty(GITHUB_TOKEN, "");
+            userHandling.logout();
             return "login";
         }
     }
 
     @RequestMapping("/logout")
     public String logout(){
-        System.setProperty(GITHUB_TOKEN, "");
+        userHandling.logout();
         return "login";
     }
 }

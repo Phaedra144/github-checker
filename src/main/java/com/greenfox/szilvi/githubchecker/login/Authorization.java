@@ -32,10 +32,11 @@ public class Authorization {
     @Autowired
     UserHandling userHandling;
 
+    String accessToken;
+
     public String getAccessToken(String code) throws IOException {
         AuthorizationCodeFlow flow = getAuthorizationCodeFlow();
         TokenResponse tokenResponse = getTokenResponse(code, flow);
-        System.setProperty("accessToken", tokenResponse.getAccessToken());
         return tokenResponse.getAccessToken();
     }
 
@@ -60,16 +61,4 @@ public class Authorization {
                 ).execute();
     }
 
-    public boolean checkIfUserIsValid() {
-        User user = userHandling.getUserByToken(System.getProperty(GITHUB_TOKEN));
-        return user.getLogin().equals(userHandling.getAuthUser().getLogin());
-    }
-
-    public String checkTokenOnPage(String whereTo) {
-        if (System.getProperty(GITHUB_TOKEN) != "" && checkIfUserIsValid()) {
-            return whereTo;
-        } else {
-            return "login";
-        }
-    }
 }

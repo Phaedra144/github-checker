@@ -3,6 +3,7 @@ package com.greenfox.szilvi.githubchecker.commitcheck.web;
 import com.greenfox.szilvi.githubchecker.commitcheck.service.CommitCheckService;
 import com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao.GithubHandleRepo;
 import com.greenfox.szilvi.githubchecker.login.Authorization;
+import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,17 +25,17 @@ public class CommitCheckController {
     GithubHandleRepo classGithubRepo;
 
     @Autowired
-    Authorization authorization;
+    UserHandling userHandling;
 
     @GetMapping(value = {"", "/"})
     public String getMain() {
-        return authorization.checkTokenOnPage("index");
+        return userHandling.checkTokenOnPage("index");
     }
 
     @GetMapping("/checkcommit")
     public String getCommitChecker(Model model) {
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
-        return authorization.checkTokenOnPage("commitchecker");
+        return userHandling.checkTokenOnPage("commitchecker");
     }
 
     @PostMapping("/checkcommit")

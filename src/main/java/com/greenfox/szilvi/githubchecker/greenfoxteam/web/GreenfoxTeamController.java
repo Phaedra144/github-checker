@@ -4,6 +4,7 @@ import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm
 import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxTeamService;
 import com.greenfox.szilvi.githubchecker.login.Authorization;
+import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,14 +20,14 @@ import java.util.List;
 public class GreenfoxTeamController {
 
     @Autowired
-    Authorization authorization;
+    UserHandling userHandling;
 
     @Autowired
     GreenfoxTeamService greenfoxTeamService;
 
     @GetMapping("/addgfamembers")
     public String getMemberAdder(GreenfoxTeamForm greenfoxTeamForm){
-        return authorization.checkTokenOnPage("memberadder");
+        return userHandling.checkTokenOnPage("memberadder");
     }
 
     @PostMapping("/addmembers")

@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.greenfox.szilvi.githubchecker.general.Settings.GITHUB_TOKEN;
+
 @Service
 public class UserHandling {
 
@@ -47,8 +49,26 @@ public class UserHandling {
         return user;
     }
 
+    public String checkTokenOnPage(String whereTo) {
+        if (!System.getProperty(GITHUB_TOKEN).equals("") && checkIfUserIsValid()) {
+            return whereTo;
+        } else {
+            return "login";
+        }
+    }
+
+    public boolean checkIfUserIsValid() {
+        String token = System.getProperty(GITHUB_TOKEN);
+        User user = getUserByToken(token);
+        return user.getLogin().equals(getAuthUser().getLogin());
+    }
+
     public User getUserByToken(String token) {
         return userRepo.findByAccessToken(token);
+    }
+
+    public void logout() {
+        System.setProperty(GITHUB_TOKEN, "");
     }
 
     public List<MentorMemberDTO> getMentors() {
