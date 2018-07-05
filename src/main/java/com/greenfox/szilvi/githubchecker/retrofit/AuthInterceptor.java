@@ -11,6 +11,7 @@ import static com.greenfox.szilvi.githubchecker.general.Settings.*;
  * Created by Szilvi on 2017. 10. 06..
  */
 public class AuthInterceptor implements Interceptor {
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         String authToken = System.getProperty(GITHUB_TOKEN);
