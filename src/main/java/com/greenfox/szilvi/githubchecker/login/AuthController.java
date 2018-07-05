@@ -33,10 +33,10 @@ public class AuthController {
         String url = "";
         if (IS_LOCALHOST.equals("localhost")){
             url = LOCALHOST;
-        } else if (IS_LOCALHOST.equals("heroku")){
-            url = HEROKU;
-        } else {
+        } else if (IS_LOCALHOST.equals("aws")){
             url = AWS;
+        } else {
+            url = HEROKU;
         }
         return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=repo%20admin:org";
     }
