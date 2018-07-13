@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;
@@ -45,18 +46,19 @@ public class AuthController {
     }
 
     @RequestMapping("/auth")
-    public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse, Model model) throws IOException {
+    public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse, HttpServletRequest request, Model model) throws IOException {
         String accessToken = authorization.getAccessToken(code);
-        CookieUtil.create(httpServletResponse, GITHUB_TOKEN, accessToken, false, -1, "localhost");
-        userHandling.saveNewUser(accessToken);
+        CookieUtil.create(httpServletResponse, GITHUB_TOKEN, accessToken, false, 86400000, "localhost");
+        System.out.println(CookieUtil.getValue(request, GITHUB_TOKEN));
+//        userHandling.saveNewUser(accessToken);
         System.out.println(accessToken);
-        if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
+//        if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
             return "index";
-        } else {
-            model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
-            userHandling.logout(httpServletResponse);
-            return "login";
-        }
+//        } else {
+//            model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
+//            userHandling.logout(httpServletResponse);
+//            return "login";
+//        }
     }
 
     @RequestMapping("/logout")

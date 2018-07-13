@@ -18,7 +18,7 @@ public interface CommitCheckAPI {
     @GET("repos/{owner}/{repo}/commits?&per_page=100")
     Call<List<GfCommits>> getRepoCommits(@Path("owner") String owner, @Path("repo") String repo);
 
-    @GET("repos/{owner}/{repo}/comments")
+    @GET("repos/{owner}/{repo}/comments?&per_page=150")
     Call<List<Comment>>getCommentsOnRepos(@Path("owner") String owner, @Path("repo") String repo);
 
     @GET("/repos/{owner}/{repo}/forks?&per_page=150")
