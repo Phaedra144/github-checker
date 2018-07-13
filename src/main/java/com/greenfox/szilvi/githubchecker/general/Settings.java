@@ -13,4 +13,6 @@ public class Settings {
     public static String HEROKU = "https://github-checker.herokuapp.com/auth";
     public static String GITHUB_OAUTH_ENCODED_URL = "https://github.com/login/oauth/access_token";
     public static String GITHUB_OAUTH_AUTHORIZATION_URL = "https://github.com/login/oauth/authorize";
+    public static int ONE_DAY = 86400000;
+    public static String COOKIE_DOMAIN = System.getenv("COOKIE_DOMAIN");
 }

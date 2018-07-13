@@ -47,9 +47,9 @@ public class AuthController {
     }
 
     @RequestMapping("/auth")
-    public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse, Model model) throws IOException {
+    public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse) throws IOException {
         String accessToken = authorization.getAccessToken(code);
-        CookieUtil.create(httpServletResponse, GITHUB_TOKEN, accessToken, false, 86400000, "localhost");
+        CookieUtil.create(httpServletResponse, GITHUB_TOKEN, accessToken, false, ONE_DAY, COOKIE_DOMAIN);
 
         System.out.println(accessToken);
         return "redirect:/saveUser";
