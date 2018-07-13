@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +29,14 @@ public class CommitCheckController {
     UserHandling userHandling;
 
     @GetMapping(value = {"", "/"})
-    public String getMain() {
-        return userHandling.checkTokenOnPage("index");
+    public String getMain(HttpServletRequest httpServletRequest) {
+        return userHandling.checkTokenOnPage("index", httpServletRequest);
     }
 
     @GetMapping("/checkcommit")
-    public String getCommitChecker(Model model) {
+    public String getCommitChecker(HttpServletRequest httpServletRequest, Model model) {
         model.addAttribute("classes", classGithubRepo.getDistinctClasses());
-        return userHandling.checkTokenOnPage("commitchecker");
+        return userHandling.checkTokenOnPage("commitchecker", httpServletRequest);
     }
 
     @PostMapping("/checkcommit")

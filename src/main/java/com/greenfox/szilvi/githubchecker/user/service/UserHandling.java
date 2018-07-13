@@ -1,5 +1,6 @@
 package com.greenfox.szilvi.githubchecker.user.service;
 
+import com.greenfox.szilvi.githubchecker.login.CookieUtil;
 import com.greenfox.szilvi.githubchecker.user.model.MentorMemberDTO;
 import com.greenfox.szilvi.githubchecker.user.model.UserDTO;
 import com.greenfox.szilvi.githubchecker.user.persistance.dao.UserRepo;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,16 +52,16 @@ public class UserHandling {
         return user;
     }
 
-    public String checkTokenOnPage(String whereTo) {
-        if (!System.getProperty(GITHUB_TOKEN).equals("") && checkIfUserIsValid()) {
+    public String checkTokenOnPage(String whereTo, HttpServletRequest httpServletRequest) {
+        if (CookieUtil.getValue(httpServletRequest, GITHUB_TOKEN).equals("") && checkIfUserIsValid(httpServletRequest)) {
             return whereTo;
         } else {
             return "login";
         }
     }
 
-    public boolean checkIfUserIsValid() {
-        String token = System.getProperty(GITHUB_TOKEN);
+    public boolean checkIfUserIsValid(HttpServletRequest httpServletRequest) {
+        String token = CookieUtil.getValue(httpServletRequest, GITHUB_TOKEN);
         User user = getUserByToken(token);
         return user.getLogin().equals(getAuthUser().getLogin());
     }
@@ -67,8 +70,8 @@ public class UserHandling {
         return userRepo.findByAccessToken(token);
     }
 
-    public void logout() {
-        System.setProperty(GITHUB_TOKEN, "");
+    public void logout(HttpServletResponse httpServletResponse) {
+        CookieUtil.clear(httpServletResponse, GITHUB_TOKEN);
     }
 
     public List<MentorMemberDTO> getMentors() {

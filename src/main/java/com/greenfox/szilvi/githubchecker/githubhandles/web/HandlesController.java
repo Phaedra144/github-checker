@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -20,8 +21,8 @@ public class HandlesController {
     HandlesService handlesService;
 
     @GetMapping("/addhandles")
-    public String getGhHandleAdder(){
-        return userHandling.checkTokenOnPage("gh_handles");
+    public String getGhHandleAdder(HttpServletRequest httpServletRequest){
+        return userHandling.checkTokenOnPage("gh_handles", httpServletRequest);
     }
 
     @PostMapping("/addhandles")

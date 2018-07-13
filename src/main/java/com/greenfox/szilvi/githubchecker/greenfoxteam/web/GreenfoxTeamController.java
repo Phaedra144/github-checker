@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -26,8 +27,8 @@ public class GreenfoxTeamController {
     GreenfoxTeamService greenfoxTeamService;
 
     @GetMapping("/addgfamembers")
-    public String getMemberAdder(GreenfoxTeamForm greenfoxTeamForm){
-        return userHandling.checkTokenOnPage("memberadder");
+    public String getMemberAdder(GreenfoxTeamForm greenfoxTeamForm, HttpServletRequest httpServletRequest){
+        return userHandling.checkTokenOnPage("memberadder", httpServletRequest);
     }
 
     @PostMapping("/addmembers")
