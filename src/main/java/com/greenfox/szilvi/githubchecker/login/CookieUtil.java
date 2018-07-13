@@ -5,10 +5,12 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class CookieUtil {
-    public static void create(HttpServletResponse httpServletResponse, String name, String value, boolean secure, int maxAge, String domain) {
-        Cookie cookie = new Cookie(name, value);
+    public static void create(HttpServletResponse httpServletResponse, String name, String value, boolean secure, int maxAge, String domain) throws UnsupportedEncodingException {
+        Cookie cookie = new Cookie(name, URLEncoder.encode(value, "UTF-8"));
         cookie.setSecure(secure);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);

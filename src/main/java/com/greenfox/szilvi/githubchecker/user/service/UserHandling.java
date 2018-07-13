@@ -27,10 +27,10 @@ public class UserHandling {
     @Autowired
     UserRepo userRepo;
 
-    public UserDTO getAuthUser() {
+    public UserDTO getAuthUser(String accessToken) {
         UserDTO userDTO = new UserDTO();
         try {
-            Call<UserDTO> userDTOCall = userAPIService.getUserAPI().getUser();
+            Call<UserDTO> userDTOCall = userAPIService.getUserAPI().getUser("Bearer " + accessToken);
             userDTO = userDTOCall.execute().body();
         } catch (IOException ex) {
             System.out.println("Something went wrong when querying user!");
@@ -38,14 +38,13 @@ public class UserHandling {
         return userDTO;
     }
 
-    public void saveNewUser(String accessToken) {
-        User user = userDTOtoNewUser();
+    public void saveNewUser(String accessToken, UserDTO userDTO) {
+        User user = userDTOtoNewUser(userDTO);
         user.setAccessToken(accessToken);
         userRepo.save(user);
     }
 
-    public User userDTOtoNewUser() {
-        UserDTO userDTO = getAuthUser();
+    public User userDTOtoNewUser(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setLogin(userDTO.getLogin());
@@ -63,7 +62,7 @@ public class UserHandling {
     public boolean checkIfUserIsValid(HttpServletRequest httpServletRequest) {
         String token = CookieUtil.getValue(httpServletRequest, GITHUB_TOKEN);
         User user = getUserByToken(token);
-        return user.getLogin().equals(getAuthUser().getLogin());
+        return user.getLogin().equals(getAuthUser(token).getLogin());
     }
 
     public User getUserByToken(String token) {
@@ -74,10 +73,10 @@ public class UserHandling {
         CookieUtil.clear(httpServletResponse, GITHUB_TOKEN);
     }
 
-    public List<MentorMemberDTO> getMentors() {
+    public List<MentorMemberDTO> getMentors(String token) {
         List<MentorMemberDTO> mentorMemberDTOList = new ArrayList<>();
         try {
-            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam();
+            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam("Bearer " + token);
             mentorMemberDTOList = memberDTOcall.execute().body();
         } catch (IOException ex) {
             System.out.println("Something went wrong when querying user!");
@@ -85,8 +84,8 @@ public class UserHandling {
         return mentorMemberDTOList;
     }
 
-    public boolean checkIfUserMemberOfMentors(UserDTO user) {
-        List<MentorMemberDTO> mentors = getMentors();
+    public boolean checkIfUserMemberOfMentors(UserDTO user, String token) {
+        List<MentorMemberDTO> mentors = getMentors(token);
         for (MentorMemberDTO mentor : mentors) {
             if (user.getLogin().equals(mentor.getLogin())){
                 return true;

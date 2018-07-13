@@ -1,5 +1,7 @@
 package com.greenfox.szilvi.githubchecker.login;
 
+import com.greenfox.szilvi.githubchecker.user.model.UserDTO;
+import com.greenfox.szilvi.githubchecker.user.persistance.entity.User;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;
-import java.io.IOException;
 
 
 @Controller
@@ -28,16 +30,16 @@ public class AuthController {
     UserHandling userHandling;
 
     @RequestMapping("/login")
-    public String renderLogin(){
+    public String renderLogin() {
         return "login";
     }
 
     @RequestMapping("/oauth")
-    public String redirecttoOauth(){
+    public String redirecttoOauth() {
         String url = "";
-        if (IS_LOCALHOST.equals("localhost")){
+        if (IS_LOCALHOST.equals("localhost")) {
             url = LOCALHOST;
-        } else if (IS_LOCALHOST.equals("aws")){
+        } else if (IS_LOCALHOST.equals("aws")) {
             url = AWS;
         } else {
             url = HEROKU;
@@ -46,23 +48,31 @@ public class AuthController {
     }
 
     @RequestMapping("/auth")
-    public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse, HttpServletRequest request, Model model) throws IOException {
+    public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse, Model model) throws IOException {
         String accessToken = authorization.getAccessToken(code);
         CookieUtil.create(httpServletResponse, GITHUB_TOKEN, accessToken, false, 86400000, "localhost");
-        System.out.println(CookieUtil.getValue(request, GITHUB_TOKEN));
-//        userHandling.saveNewUser(accessToken);
+
         System.out.println(accessToken);
-//        if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
+        return "redirect:/saveUser";
+    }
+
+    @RequestMapping("/saveUser")
+    public String saveUser(HttpServletRequest request, HttpServletResponse response, Model model) {
+        String accessToken = CookieUtil.getValue(request, GITHUB_TOKEN);
+        System.out.println(accessToken);
+        UserDTO recentUserDTO = userHandling.getAuthUser(accessToken);
+        userHandling.saveNewUser(accessToken, recentUserDTO);
+        if (userHandling.checkIfUserMemberOfMentors(recentUserDTO, accessToken)) {
             return "index";
-//        } else {
-//            model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
-//            userHandling.logout(httpServletResponse);
-//            return "login";
-//        }
+        } else {
+            model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
+            userHandling.logout(response);
+            return "login";
+        }
     }
 
     @RequestMapping("/logout")
-    public String logout(HttpServletResponse httpServletResponse){
+    public String logout(HttpServletResponse httpServletResponse) {
         userHandling.logout(httpServletResponse);
         return "login";
     }
