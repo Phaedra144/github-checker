@@ -52,7 +52,7 @@ public class UserHandling {
     }
 
     public String checkTokenOnPage(String whereTo, HttpServletRequest httpServletRequest) {
-        if (CookieUtil.getValue(httpServletRequest, GITHUB_TOKEN)!= null) {
+        if (CookieUtil.getValue(httpServletRequest, GITHUB_TOKEN)!= null && checkIfUserIsValid(httpServletRequest)) {
             return whereTo;
         } else {
             return "login";

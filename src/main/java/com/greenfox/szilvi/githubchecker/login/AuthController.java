@@ -1,7 +1,6 @@
 package com.greenfox.szilvi.githubchecker.login;
 
 import com.greenfox.szilvi.githubchecker.user.model.UserDTO;
-import com.greenfox.szilvi.githubchecker.user.persistance.entity.User;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +62,7 @@ public class AuthController {
         UserDTO recentUserDTO = userHandling.getAuthUser(accessToken);
         userHandling.saveNewUser(accessToken, recentUserDTO);
         if (userHandling.checkIfUserMemberOfMentors(recentUserDTO, accessToken)) {
-            return "index";
+            return "redirect:/";
         } else {
             model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
             userHandling.logout(response);
