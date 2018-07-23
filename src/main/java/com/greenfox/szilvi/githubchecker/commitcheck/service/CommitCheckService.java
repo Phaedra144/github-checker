@@ -19,18 +19,14 @@ import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 @Service
 public class CommitCheckService {
 
+    @Autowired
     GithubHandleRepo classGithubRepo;
 
+    @Autowired
     CommitCheckAPIService commitCheckAPIService;
 
-    CheckDates checkDates;
-
     @Autowired
-    public CommitCheckService(GithubHandleRepo classGithubRepo, CommitCheckAPIService commitCheckAPIService, CheckDates checkDates) {
-        this.classGithubRepo = classGithubRepo;
-        this.commitCheckAPIService = commitCheckAPIService;
-        this.checkDates = checkDates;
-    }
+    CheckDates checkDates;
 
     public List<String> checkRepos(List<String> ghHandles) {
         if(ghHandles.get(0).substring(0, 2).equals(",,")){
@@ -45,25 +41,25 @@ public class CommitCheckService {
         return firstGhHandle.substring(2);
     }
 
-    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(List<String> classRepos, String startDate, String endDate, String language, boolean isTodo, boolean isWanderer) throws IOException {
+    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(String token, List<String> classRepos, String startDate, String endDate, String language, boolean isTodo, boolean isWanderer) throws IOException {
 
         HashMap<String, List<Integer>> githubThingsHashMap = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
             List<Integer> counts = new ArrayList<>();
 
-            List<GfCommits> gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate);
+            List<GfCommits> gfCommits = getPreviousWeekCommits(token, classRepos.get(i), startDate, endDate);
 
             int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
             int gfCommitsSize = gfCommits == null ? 0 : gfCommits.size();
 
-            int gfComments = getComments(classRepos.get(i)).size();
+            int gfComments = getComments(token, classRepos.get(i)).size();
 
             int todoCommits = 0;
 
-            if (isTodo) todoCommits = getHashMapCommits(getExtraReposAndOwners(language, TODO_APP), classRepos.get(i)).size();
+            if (isTodo) todoCommits = getHashMapCommits(token, getExtraReposAndOwners(token, language, TODO_APP), classRepos.get(i)).size();
 
             int wandererCommits = 0;
-            if (isWanderer) wandererCommits = getHashMapCommits(getExtraReposAndOwners(language, WANDERER), classRepos.get(i)).size();
+            if (isWanderer) wandererCommits = getHashMapCommits(token, getExtraReposAndOwners(token, language, WANDERER), classRepos.get(i)).size();
 
             counts.add(noCommitDays);
             counts.add(gfCommitsSize);
@@ -76,22 +72,22 @@ public class CommitCheckService {
         return githubThingsHashMap;
     }
 
-    public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
+    public List<GfCommits> getPreviousWeekCommits(String token, String repoName, String startDate, String endDate) throws IOException {
         startDate = getStringStartDate(startDate);
         endDate = getStringEndDate(endDate);
-        Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommitsForPeriod(GITHUB_ORG, repoName, startDate, endDate);
+        Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommitsForPeriod(token, GITHUB_ORG, repoName, startDate, endDate);
         return gfCommitsCall.execute().body();
     }
 
-    public List<Comment> getComments(String repoName) throws IOException {
-        Call<List<Comment>> gfComments = commitCheckAPIService.getCommitCheckAPI().getCommentsOnRepos(GITHUB_ORG, repoName);
+    public List<Comment> getComments(String token, String repoName) throws IOException {
+        Call<List<Comment>> gfComments = commitCheckAPIService.getCommitCheckAPI().getCommentsOnRepos(token, GITHUB_ORG, repoName);
         return gfComments.execute().body();
     }
 
-    public List<GfCommits> getHashMapCommits(HashMap<String, String> inputHashMap, String repo) throws IOException {
+    public List<GfCommits> getHashMapCommits(String token, HashMap<String, String> inputHashMap, String repo) throws IOException {
         for (Map.Entry entry : inputHashMap.entrySet()) {
             if (((String)entry.getKey()).equals(repo)){
-                Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommits((String)entry.getKey(), (String)entry.getValue());
+                Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommits(token, (String)entry.getKey(), (String)entry.getValue());
                 return gfCommitsCall.execute().body();
             }
         }
@@ -113,8 +109,10 @@ public class CommitCheckService {
         return totals;
     }
 
-    private HashMap<String, String> getExtraReposAndOwners(String language, String repoType) throws IOException {
-        Call<List<ForkedRepo>> gfForked = commitCheckAPIService.getCommitCheckAPI().getForkedRepos(GITHUB_ORG, getRepoType(repoType, language));
+
+
+    private HashMap<String, String> getExtraReposAndOwners(String token, String language, String repoType) throws IOException {
+        Call<List<ForkedRepo>> gfForked = commitCheckAPIService.getCommitCheckAPI().getForkedRepos(token, GITHUB_ORG, getRepoType(repoType, language));
         List<ForkedRepo> forkedRepos = gfForked.execute().body();
         HashMap<String, String> ownersAndRepos = new HashMap<>();
         for (ForkedRepo forkedRepo : forkedRepos) {
@@ -176,5 +174,13 @@ public class CommitCheckService {
             return repoType + transformedLanguage;
         }
         return repoType;
+    }
+
+    public List<ClassGithub> findAllByClassName(String gfclass) {
+        return classGithubRepo.findAllByClassName(gfclass);
+    }
+
+    public List<String> getDistinctClasses() {
+        return classGithubRepo.getDistinctClasses();
     }
 }

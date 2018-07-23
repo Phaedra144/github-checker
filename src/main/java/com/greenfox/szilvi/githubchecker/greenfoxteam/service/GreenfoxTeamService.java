@@ -23,20 +23,20 @@ public class GreenfoxTeamService {
     @Autowired
     GreenfoxTeamAPIService greenfoxTeamAPIService;
 
-    public List<GreenfoxTeamStatus> addNewMembersToGf(String members, String teamName) throws IOException {
+    public List<GreenfoxTeamStatus> addNewMembersToGf(String members, String teamName, String token) throws IOException {
         List<String> ghHandles = handlesService.handleListOfHandles(members);
         List<GreenfoxTeamStatus> memberStatusResponseList = new ArrayList<>();
-        callingToAddMembersToOrgAndTeam(ghHandles, teamName, memberStatusResponseList);
+        callingToAddMembersToOrgAndTeam(ghHandles, teamName, memberStatusResponseList, token);
         return  memberStatusResponseList;
     }
 
-    private void callingToAddMembersToOrgAndTeam(List<String> ghHandles, String teamName, List<GreenfoxTeamStatus> memberStatusResponseList) throws IOException {
+    private void callingToAddMembersToOrgAndTeam(List<String> ghHandles, String teamName, List<GreenfoxTeamStatus> memberStatusResponseList, String token) throws IOException {
         for (String ghHandle : ghHandles){
-            Call<GreenfoxTeamStatus> addingMemberResponse = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToOrg(GITHUB_ORG, ghHandle);
+            Call<GreenfoxTeamStatus> addingMemberResponse = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToOrg(token, GITHUB_ORG, ghHandle);
             GreenfoxTeamStatus memberStatusResponse = addingMemberResponse.execute().body();
             checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, ghHandle);
 
-            Call<GreenfoxTeamStatus> addMemberToTeam = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToTeam(getIdOfTeam(teamName), ghHandle);
+            Call<GreenfoxTeamStatus> addMemberToTeam = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToTeam(token, getIdOfTeam(token, teamName), ghHandle);
             GreenfoxTeamStatus memberStatusResponseToTeam = addMemberToTeam.execute().body();
             checkStatusAndAddToList(memberStatusResponseList, memberStatusResponseToTeam, ghHandle);
         }
@@ -52,8 +52,8 @@ public class GreenfoxTeamService {
         memberStatusResponseList.add(memberStatusResponse);
     }
 
-    private int getIdOfTeam(String teamName) throws IOException {
-        Call<List<GreenfoxTeamResponse>> getTeams = greenfoxTeamAPIService.getGreenfoxTeamAPI().getTeamsOfOrg(GITHUB_ORG);
+    private int getIdOfTeam(String token, String teamName) throws IOException {
+        Call<List<GreenfoxTeamResponse>> getTeams = greenfoxTeamAPIService.getGreenfoxTeamAPI().getTeamsOfOrg(token, GITHUB_ORG);
         List<GreenfoxTeamResponse> gfTeams = getTeams.execute().body();
         int teamId = 0;
         for (GreenfoxTeamResponse gfTeam : gfTeams){

@@ -3,6 +3,7 @@ package com.greenfox.szilvi.githubchecker.commitcheck.web;
 import com.greenfox.szilvi.githubchecker.commitcheck.service.CommitCheckService;
 import com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao.GithubHandleRepo;
 import com.greenfox.szilvi.githubchecker.login.Authorization;
+import com.greenfox.szilvi.githubchecker.login.CookieUtil;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,14 +17,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.greenfox.szilvi.githubchecker.general.Settings.GITHUB_TOKEN;
+
 @Controller
 public class CommitCheckController {
 
     @Autowired
     CommitCheckService commitCheckService;
-
-    @Autowired
-    GithubHandleRepo classGithubRepo;
 
     @Autowired
     UserHandling userHandling;
@@ -35,20 +35,20 @@ public class CommitCheckController {
 
     @GetMapping("/checkcommit")
     public String getCommitChecker(HttpServletRequest httpServletRequest, Model model) {
-        model.addAttribute("classes", classGithubRepo.getDistinctClasses());
+        model.addAttribute("classes", commitCheckService.getDistinctClasses());
         return userHandling.checkTokenOnPage("commitchecker", httpServletRequest);
     }
 
     @PostMapping("/checkcommit")
-    public String checkCommits(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false, value = "todoApp") boolean isTodo, @RequestParam(required = false, value = "wandererGame") boolean isWanderer, Model model) throws IOException {
+    public String checkCommits(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, @RequestParam(required = false, value = "todoApp") boolean isTodo, @RequestParam(required = false, value = "wandererGame") boolean isWanderer, HttpServletRequest request, Model model) throws IOException {
 
         if (handlingError(gfclass, startDate, endDate, model)) return "commitchecker";
 
-        List<String> ghHandles = commitCheckService.ghHandlesToString(classGithubRepo.findAllByClassName(gfclass));
+        List<String> ghHandles = commitCheckService.ghHandlesToString(commitCheckService.findAllByClassName(gfclass));
 
-        HashMap<String, List<Integer>> repoHashMap = commitCheckService.fillMapWithRepoRelevantStats(commitCheckService.checkRepos(ghHandles), startDate, endDate, commitCheckService.getGfLanguage(gfclass), isTodo, isWanderer);
+        HashMap<String, List<Integer>> repoHashMap = commitCheckService.fillMapWithRepoRelevantStats(CookieUtil.getValue(request, GITHUB_TOKEN), commitCheckService.checkRepos(ghHandles), startDate, endDate, commitCheckService.getGfLanguage(gfclass), isTodo, isWanderer);
 
-        model.addAttribute("classes", classGithubRepo.getDistinctClasses());
+        model.addAttribute("classes", commitCheckService.getDistinctClasses());
         model.addAttribute("gfclass", gfclass);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
@@ -62,7 +62,7 @@ public class CommitCheckController {
     private boolean handlingError(@RequestParam(required = false) String gfclass, @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate, Model model) {
         if (gfclass.equals("") || startDate.equals("") || endDate.equals("")) {
             model.addAttribute("error", "You are missing something, try again!");
-            model.addAttribute("classes", classGithubRepo.getDistinctClasses());
+            model.addAttribute("classes", commitCheckService.getDistinctClasses());
             return true;
         }
         return false;
