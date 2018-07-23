@@ -23,7 +23,7 @@ public class GreenfoxTeamService {
     @Autowired
     GreenfoxTeamAPIService greenfoxTeamAPIService;
 
-    public List<GreenfoxTeamStatus> addNewMembersToGf(String members, String teamName, String token) throws IOException {
+    public List<GreenfoxTeamStatus> addNewMembersToGf(String token, String members, String teamName) throws IOException {
         List<String> ghHandles = handlesService.handleListOfHandles(members);
         List<GreenfoxTeamStatus> memberStatusResponseList = new ArrayList<>();
         callingToAddMembersToOrgAndTeam(ghHandles, teamName, memberStatusResponseList, token);

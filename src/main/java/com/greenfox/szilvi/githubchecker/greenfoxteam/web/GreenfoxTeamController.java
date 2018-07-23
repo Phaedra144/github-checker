@@ -39,7 +39,7 @@ public class GreenfoxTeamController {
         if(bindingResult.hasErrors()){
             return "memberadder";
         }
-        List<GreenfoxTeamStatus> memberStatusResponse = greenfoxTeamService.addNewMembersToGf(greenfoxTeamForm.getMembers(), greenfoxTeamForm.getTeamName(), CookieUtil.getValue(request, GITHUB_TOKEN));
+        List<GreenfoxTeamStatus> memberStatusResponse = greenfoxTeamService.addNewMembersToGf("Bearer " + CookieUtil.getValue(request, GITHUB_TOKEN), greenfoxTeamForm.getMembers(), greenfoxTeamForm.getTeamName());
         model.addAttribute("responses", memberStatusResponse);
         return "memberadder";
     }

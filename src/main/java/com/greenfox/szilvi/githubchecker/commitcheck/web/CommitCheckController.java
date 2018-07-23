@@ -46,7 +46,7 @@ public class CommitCheckController {
 
         List<String> ghHandles = commitCheckService.ghHandlesToString(commitCheckService.findAllByClassName(gfclass));
 
-        HashMap<String, List<Integer>> repoHashMap = commitCheckService.fillMapWithRepoRelevantStats(CookieUtil.getValue(request, GITHUB_TOKEN), commitCheckService.checkRepos(ghHandles), startDate, endDate, commitCheckService.getGfLanguage(gfclass), isTodo, isWanderer);
+        HashMap<String, List<Integer>> repoHashMap = commitCheckService.fillMapWithRepoRelevantStats("Bearer " + CookieUtil.getValue(request, GITHUB_TOKEN), commitCheckService.checkRepos(ghHandles), startDate, endDate, commitCheckService.getGfLanguage(gfclass), isTodo, isWanderer);
 
         model.addAttribute("classes", commitCheckService.getDistinctClasses());
         model.addAttribute("gfclass", gfclass);
