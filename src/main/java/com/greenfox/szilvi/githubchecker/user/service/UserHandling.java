@@ -44,7 +44,7 @@ public class UserHandling {
         userRepo.save(user);
     }
 
-    public User userDTOtoNewUser(UserDTO userDTO) {
+    private User userDTOtoNewUser(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setLogin(userDTO.getLogin());
@@ -59,39 +59,17 @@ public class UserHandling {
         }
     }
 
-    public boolean checkIfUserIsValid(HttpServletRequest httpServletRequest) {
+    private boolean checkIfUserIsValid(HttpServletRequest httpServletRequest) {
         String token = CookieUtil.getValue(httpServletRequest, GITHUB_TOKEN);
         User user = getUserByToken(token);
         return user.getLogin().equals(getAuthUser(token).getLogin());
     }
 
-    public User getUserByToken(String token) {
+    private User getUserByToken(String token) {
         return userRepo.findByAccessToken(token);
     }
 
     public void logout(HttpServletResponse httpServletResponse) {
         CookieUtil.clear(httpServletResponse, GITHUB_TOKEN);
     }
-
-    public List<MentorMemberDTO> getMentors(String token) {
-        List<MentorMemberDTO> mentorMemberDTOList = new ArrayList<>();
-        try {
-            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam("Bearer " + token);
-            mentorMemberDTOList = memberDTOcall.execute().body();
-        } catch (IOException ex) {
-            System.out.println("Something went wrong when querying user!");
-        }
-        return mentorMemberDTOList;
-    }
-
-    public boolean checkIfUserMemberOfMentors(UserDTO user, String token) {
-        List<MentorMemberDTO> mentors = getMentors(token);
-        for (MentorMemberDTO mentor : mentors) {
-            if (user.getLogin().equals(mentor.getLogin())){
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
