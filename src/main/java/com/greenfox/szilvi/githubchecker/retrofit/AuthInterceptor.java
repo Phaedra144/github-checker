@@ -6,7 +6,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 
 
 public class AuthInterceptor implements Interceptor {

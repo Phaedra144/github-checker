@@ -49,29 +49,33 @@ public class CommitCheckService {
 
         HashMap<String, List<Integer>> githubThingsHashMap = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
-            List<Integer> counts = new ArrayList<>();
+            try {
+                List<Integer> counts = new ArrayList<>();
+                String classRepo = classRepos.get(i);
+                List<GfCommits> gfCommits = getPreviousWeekCommits(classRepo, startDate, endDate);
 
-            List<GfCommits> gfCommits = getPreviousWeekCommits(classRepos.get(i), startDate, endDate);
+                int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
+                int gfCommitsSize = gfCommits == null ? 0 : gfCommits.size();
 
-            int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
-            int gfCommitsSize = gfCommits == null ? 0 : gfCommits.size();
+                int gfComments = getComments(classRepo).size();
 
-            int gfComments = getComments(classRepos.get(i)).size();
+                int todoCommits = 0;
 
-            int todoCommits = 0;
+                if (isTodo) todoCommits = getHashMapCommits( getExtraReposAndOwners(language, TODO_APP), classRepo).size();
 
-            if (isTodo) todoCommits = getHashMapCommits(getExtraReposAndOwners(language, TODO_APP), classRepos.get(i)).size();
+                int wandererCommits = 0;
+                if (isWanderer) wandererCommits = getHashMapCommits(getExtraReposAndOwners(language, WANDERER), classRepo).size();
 
-            int wandererCommits = 0;
-            if (isWanderer) wandererCommits = getHashMapCommits(getExtraReposAndOwners(language, WANDERER), classRepos.get(i)).size();
+                counts.add(noCommitDays);
+                counts.add(gfCommitsSize);
+                counts.add(gfComments);
+                counts.add(todoCommits);
+                counts.add(wandererCommits);
 
-            counts.add(noCommitDays);
-            counts.add(gfCommitsSize);
-            counts.add(gfComments);
-            counts.add(todoCommits);
-            counts.add(wandererCommits);
-            
-            githubThingsHashMap.put(classRepos.get(i), counts);
+                githubThingsHashMap.put(classRepo, counts);
+            } catch (Exception e) {
+                System.out.println("There was a problem with this github handle: " + classRepos.get(i));
+            }
         }
         return githubThingsHashMap;
     }

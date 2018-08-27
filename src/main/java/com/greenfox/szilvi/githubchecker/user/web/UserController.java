@@ -24,7 +24,7 @@ public class UserController {
         String accessToken = userHandling.findLastUser().getAccessToken();
         System.out.println(accessToken);
         UserDTO recentUserDTO = userHandling.getAuthUser();
-        userHandling.saveNewUser(recentUserDTO);
+        userHandling.updateUser(recentUserDTO);
         if (mentorMemberService.checkIfUserMemberOfMentors(recentUserDTO, accessToken)) {
             return "redirect:/";
         } else {

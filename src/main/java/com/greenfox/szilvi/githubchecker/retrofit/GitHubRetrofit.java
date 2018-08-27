@@ -19,11 +19,10 @@ public class GitHubRetrofit {
 
     public Retrofit getRetrofit() {
         OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(getAuthInterceptor()).build();
-        Retrofit retrofit = new Retrofit.Builder()
+        return new Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient)
                 .build();
-        return retrofit;
     }
 }

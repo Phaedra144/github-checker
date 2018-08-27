@@ -27,7 +27,7 @@ public class MentorMemberService {
     public List<MentorMemberDTO> getMentors(String token) {
         List<MentorMemberDTO> mentorMemberDTOList = new ArrayList<>();
         try {
-            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam("Bearer " + token);
+            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam("token " + token);
             mentorMemberDTOList = memberDTOcall.execute().body();
         } catch (IOException ex) {
             System.out.println("Something went wrong when querying user!");

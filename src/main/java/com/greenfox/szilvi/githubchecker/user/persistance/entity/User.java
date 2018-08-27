@@ -12,7 +12,6 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     String login;
     String accessToken;

@@ -21,6 +21,14 @@ public class UserHandling {
 
     String TOKEN = findLastUser().getAccessToken();
 
+    public User findLastUser() {
+        try {
+            return userRepo.findLastUser();
+        } catch (NullPointerException ex) {
+            return new User();
+        }
+    }
+
     public UserDTO getAuthUser() {
         UserDTO userDTO = new UserDTO();
         try {
@@ -32,7 +40,12 @@ public class UserHandling {
         return userDTO;
     }
 
-    public void saveNewUser(UserDTO recentUserDTO) {
+    public void saveNewUserWithAccessTokenOnly(String accessToken) {
+        userRepo.save(new User(accessToken));
+        TOKEN = "token " + accessToken;
+    }
+
+    public void updateUser(UserDTO recentUserDTO) {
         User user = userDTOtoNewUser(recentUserDTO);
         userRepo.save(user);
     }
@@ -61,19 +74,6 @@ public class UserHandling {
 
     public User getUserByToken() {
         return userRepo.findByAccessToken(TOKEN);
-    }
-
-    public void saveNewUserWithAccessTokenOnly(String accessToken) {
-        userRepo.save(new User(accessToken));
-        TOKEN = "token " + accessToken;
-    }
-
-    public User findLastUser() {
-        try {
-            return userRepo.findLastUser();
-        } catch (NullPointerException ex) {
-            return new User();
-        }
     }
 
     public void logout() {
