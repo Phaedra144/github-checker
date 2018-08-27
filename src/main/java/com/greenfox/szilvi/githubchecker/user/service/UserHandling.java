@@ -1,6 +1,5 @@
 package com.greenfox.szilvi.githubchecker.user.service;
 
-import com.greenfox.szilvi.githubchecker.user.model.MentorMemberDTO;
 import com.greenfox.szilvi.githubchecker.user.model.UserDTO;
 import com.greenfox.szilvi.githubchecker.user.persistance.dao.UserRepo;
 import com.greenfox.szilvi.githubchecker.user.persistance.entity.User;
@@ -10,10 +9,6 @@ import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.greenfox.szilvi.githubchecker.general.Settings.GITHUB_TOKEN;
 
 @Service
 public class UserHandling {
@@ -24,10 +19,12 @@ public class UserHandling {
     @Autowired
     UserRepo userRepo;
 
+    String TOKEN = findLastUser().getAccessToken();
+
     public UserDTO getAuthUser() {
         UserDTO userDTO = new UserDTO();
         try {
-            Call<UserDTO> userDTOCall = userAPIService.getUserAPI().getUser();
+            Call<UserDTO> userDTOCall = userAPIService.getUserAPI().getUser(TOKEN);
             userDTO = userDTOCall.execute().body();
         } catch (IOException ex) {
             System.out.println("Something went wrong when querying user!");
@@ -35,22 +32,22 @@ public class UserHandling {
         return userDTO;
     }
 
-    public void saveNewUser(String accessToken) {
-        User user = userDTOtoNewUser();
-        user.setAccessToken(accessToken);
+    public void saveNewUser(UserDTO recentUserDTO) {
+        User user = userDTOtoNewUser(recentUserDTO);
         userRepo.save(user);
     }
 
-    public User userDTOtoNewUser() {
-        UserDTO userDTO = getAuthUser();
-        User user = new User();
+    public User userDTOtoNewUser(UserDTO userDTO) {
+        User user = findLastUser();
+        userRepo.delete(user);
         user.setId(userDTO.getId());
         user.setLogin(userDTO.getLogin());
+        user.setAccessToken(TOKEN);
         return user;
     }
 
     public String checkTokenOnPage(String whereTo) {
-        if (!System.getProperty(GITHUB_TOKEN).equals("") && checkIfUserIsValid()) {
+        if (TOKEN != null && checkIfUserIsValid()) {
             return whereTo;
         } else {
             return "login";
@@ -58,38 +55,28 @@ public class UserHandling {
     }
 
     public boolean checkIfUserIsValid() {
-        String token = System.getProperty(GITHUB_TOKEN);
-        User user = getUserByToken(token);
+        User user = getUserByToken();
         return user.getLogin().equals(getAuthUser().getLogin());
     }
 
-    public User getUserByToken(String token) {
-        return userRepo.findByAccessToken(token);
+    public User getUserByToken() {
+        return userRepo.findByAccessToken(TOKEN);
+    }
+
+    public void saveNewUserWithAccessTokenOnly(String accessToken) {
+        userRepo.save(new User(accessToken));
+        TOKEN = "token " + accessToken;
+    }
+
+    public User findLastUser() {
+        try {
+            return userRepo.findLastUser();
+        } catch (NullPointerException ex) {
+            return new User();
+        }
     }
 
     public void logout() {
-        System.setProperty(GITHUB_TOKEN, "");
+        TOKEN = "";
     }
-
-    public List<MentorMemberDTO> getMentors() {
-        List<MentorMemberDTO> mentorMemberDTOList = new ArrayList<>();
-        try {
-            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam();
-            mentorMemberDTOList = memberDTOcall.execute().body();
-        } catch (IOException ex) {
-            System.out.println("Something went wrong when querying user!");
-        }
-        return mentorMemberDTOList;
-    }
-
-    public boolean checkIfUserMemberOfMentors(UserDTO user) {
-        List<MentorMemberDTO> mentors = getMentors();
-        for (MentorMemberDTO mentor : mentors) {
-            if (user.getLogin().equals(mentor.getLogin())){
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

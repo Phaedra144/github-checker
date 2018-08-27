@@ -29,36 +29,15 @@ public class AuthController {
     }
 
     @RequestMapping("/oauth")
-    public String redirecttoOauth(){
-        String url = "";
-        if (IS_LOCALHOST.equals("localhost")){
-            url = LOCALHOST;
-        } else if (IS_LOCALHOST.equals("aws")){
-            url = AWS;
-        } else {
-            url = HEROKU;
-        }
-        return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + url + "&scope=repo%20admin:org";
+    public String redirecttoOauth() {
+        return "redirect:https://github.com/login/oauth/authorize?client_id=" + clientId + "&redirect_uri=" + AUTH_URL + "&scope=repo%20admin:org";
     }
 
     @RequestMapping("/auth")
     public String getAccessToken(@RequestParam String code, Model model) throws IOException {
         String accessToken = authorization.getAccessToken(code);
-        System.setProperty(GITHUB_TOKEN, accessToken);
-        userHandling.saveNewUser(accessToken);
+        userHandling.saveNewUserWithAccessTokenOnly(accessToken);
         System.out.println(accessToken);
-        if (userHandling.checkIfUserMemberOfMentors(userHandling.getAuthUser())){
-            return "index";
-        } else {
-            model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
-            userHandling.logout();
-            return "login";
-        }
-    }
-
-    @RequestMapping("/logout")
-    public String logout(){
-        userHandling.logout();
-        return "login";
+        return "redirect:/validate";
     }
 }

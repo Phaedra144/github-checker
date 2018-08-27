@@ -2,6 +2,7 @@ package com.greenfox.szilvi.githubchecker.general;
 
 public class Settings {
 
+    public static String AUTH_URL = System.getenv("AUTH_URL");
     public static String IS_LOCALHOST = System.getenv("IS_LOCALHOST");
     public static String GITHUB_TOKEN = "accessToken";
     public static String GITHUB_ORG = "green-fox-academy";

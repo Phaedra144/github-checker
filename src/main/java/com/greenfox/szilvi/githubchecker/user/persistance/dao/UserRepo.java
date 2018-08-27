@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface UserRepo extends CrudRepository<User, Long> {
     User findByAccessToken(String accessToken);
 
-    @Query(value = "SELECT * FROM app_user ORDER BY id DESC, limit 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM app_user ORDER BY id DESC LIMIT 1", nativeQuery = true)
     User findLastUser();
 }
