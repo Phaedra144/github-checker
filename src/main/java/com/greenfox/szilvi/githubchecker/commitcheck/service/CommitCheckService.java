@@ -152,11 +152,11 @@ public class CommitCheckService {
 
     public String getGfLanguage(String gfclass) {
         String language = "";
-        if (gfclass.equals("becool") || gfclass.equals("please")){
+        if (gfclass.equalsIgnoreCase("badboi") || gfclass.equalsIgnoreCase("teapot") || gfclass.equalsIgnoreCase("seagal") || gfclass.equals("becool") || gfclass.equals("please")){
             language = "Java";
         } else if (gfclass.equals("pebble") || gfclass.equals("asbest")){
             language = "C#";
-        } else if (gfclass.equals("ace")) {
+        } else if (gfclass.equals("ace") || gfclass.equals("secret") || gfclass.equalsIgnoreCase("coffee")) {
             language = "TypeScript";
         } else if (gfclass.equals("badcat")){
             language = "JavaScript";
