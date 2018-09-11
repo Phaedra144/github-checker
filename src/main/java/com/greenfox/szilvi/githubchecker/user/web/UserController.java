@@ -21,7 +21,7 @@ public class UserController {
 
     @RequestMapping("/validate")
     public String saveUser(Model model) {
-        String accessToken = userHandling.findLastUser().getAccessToken();
+        String accessToken = userHandling.findLastAuth().getAccessToken();
         System.out.println(accessToken);
         UserDTO recentUserDTO = userHandling.getAuthUser();
         userHandling.updateUser(recentUserDTO);

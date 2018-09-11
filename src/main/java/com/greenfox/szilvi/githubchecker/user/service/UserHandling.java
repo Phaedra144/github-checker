@@ -1,7 +1,9 @@
 package com.greenfox.szilvi.githubchecker.user.service;
 
 import com.greenfox.szilvi.githubchecker.user.model.UserDTO;
+import com.greenfox.szilvi.githubchecker.user.persistance.dao.AuthRepo;
 import com.greenfox.szilvi.githubchecker.user.persistance.dao.UserRepo;
+import com.greenfox.szilvi.githubchecker.user.persistance.entity.Auth;
 import com.greenfox.szilvi.githubchecker.user.persistance.entity.User;
 import com.greenfox.szilvi.githubchecker.user.web.UserAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +21,16 @@ public class UserHandling {
     @Autowired
     UserRepo userRepo;
 
-    String TOKEN = findLastUser().getAccessToken();
+    @Autowired
+    AuthRepo authRepo;
 
-    public User findLastUser() {
+    String TOKEN = findLastAuth().getAccessToken();
+
+    public Auth findLastAuth() {
         try {
-            return userRepo.findLastUser();
+            return authRepo.findLastAuth();
         } catch (NullPointerException ex) {
-            return new User();
+            return new Auth();
         }
     }
 
@@ -40,23 +45,17 @@ public class UserHandling {
         return userDTO;
     }
 
-    public void saveNewUserWithAccessTokenOnly(String accessToken) {
-        userRepo.save(new User(accessToken));
+    public void saveNewAuthWithAccessTokenOnly(String accessToken) {
+        authRepo.save(new Auth(accessToken));
         TOKEN = "token " + accessToken;
     }
 
-    public void updateUser(UserDTO recentUserDTO) {
-        User user = userDTOtoNewUser(recentUserDTO);
-        userRepo.save(user);
-    }
-
-    public User userDTOtoNewUser(UserDTO userDTO) {
-        User user = findLastUser();
-        userRepo.delete(user);
+    public void updateUser(UserDTO userDTO) {
+        User user = new User();
         user.setId(userDTO.getId());
         user.setLogin(userDTO.getLogin());
         user.setAccessToken(TOKEN);
-        return user;
+        userRepo.save(user);
     }
 
     public String checkTokenOnPage(String whereTo) {

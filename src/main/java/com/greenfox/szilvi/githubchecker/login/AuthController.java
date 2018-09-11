@@ -4,7 +4,6 @@ import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;
@@ -34,9 +33,9 @@ public class AuthController {
     }
 
     @RequestMapping("/auth")
-    public String getAccessToken(@RequestParam String code, Model model) throws IOException {
+    public String getAccessToken(@RequestParam String code) throws IOException {
         String accessToken = authorization.getAccessToken(code);
-        userHandling.saveNewUserWithAccessTokenOnly(accessToken);
+        userHandling.saveNewAuthWithAccessTokenOnly(accessToken);
         System.out.println(accessToken);
         return "redirect:/validate";
     }
