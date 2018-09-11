@@ -3,8 +3,7 @@ package com.greenfox.szilvi.githubchecker.user.persistance.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -12,8 +11,8 @@ import javax.persistence.Id;
 public class Auth {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    String login;
     String accessToken;
 
     public Auth() {

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +16,9 @@ public class User {
     long id;
     String login;
     String accessToken;
+    @OneToOne
+    @JoinColumn(name = "auth_id")
+    Auth auth;
 
     public User(String accessToken) {
         this.accessToken = accessToken;

@@ -50,11 +50,12 @@ public class UserHandling {
         TOKEN = "token " + accessToken;
     }
 
-    public void updateUser(UserDTO userDTO) {
+    public void updateUser(UserDTO userDTO, Auth auth) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setLogin(userDTO.getLogin());
         user.setAccessToken(TOKEN);
+        user.setAuth(auth);
         userRepo.save(user);
     }
 
@@ -76,6 +77,6 @@ public class UserHandling {
     }
 
     public void logout() {
-        TOKEN = "";
+        TOKEN = null;
     }
 }

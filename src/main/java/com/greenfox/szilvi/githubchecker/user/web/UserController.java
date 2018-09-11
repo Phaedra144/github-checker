@@ -2,6 +2,7 @@
 package com.greenfox.szilvi.githubchecker.user.web;
 
 import com.greenfox.szilvi.githubchecker.user.model.UserDTO;
+import com.greenfox.szilvi.githubchecker.user.persistance.entity.Auth;
 import com.greenfox.szilvi.githubchecker.user.service.MentorMemberService;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,11 @@ public class UserController {
 
     @RequestMapping("/validate")
     public String saveUser(Model model) {
-        String accessToken = userHandling.findLastAuth().getAccessToken();
+        Auth lastAuth = userHandling.findLastAuth();
+        String accessToken = lastAuth.getAccessToken();
         System.out.println(accessToken);
         UserDTO recentUserDTO = userHandling.getAuthUser();
-        userHandling.updateUser(recentUserDTO);
+        userHandling.updateUser(recentUserDTO, lastAuth);
         if (mentorMemberService.checkIfUserMemberOfMentors(recentUserDTO, accessToken)) {
             return "redirect:/";
         } else {
