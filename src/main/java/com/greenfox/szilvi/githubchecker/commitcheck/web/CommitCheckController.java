@@ -1,9 +1,7 @@
 package com.greenfox.szilvi.githubchecker.commitcheck.web;
 
 import com.greenfox.szilvi.githubchecker.commitcheck.service.CommitCheckService;
-import com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao.GithubHandleRepo;
-import com.greenfox.szilvi.githubchecker.login.Authorization;
-import com.greenfox.szilvi.githubchecker.login.CookieUtil;
+import com.greenfox.szilvi.githubchecker.general.CookieUtil;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.greenfox.szilvi.githubchecker.general.Settings.GITHUB_TOKEN;
 
 @Controller
 public class CommitCheckController {
@@ -46,7 +42,7 @@ public class CommitCheckController {
 
         List<String> ghHandles = commitCheckService.ghHandlesToString(commitCheckService.findAllByClassName(gfclass));
 
-        HashMap<String, List<Integer>> repoHashMap = commitCheckService.fillMapWithRepoRelevantStats("Bearer " + CookieUtil.getValue(request, GITHUB_TOKEN), commitCheckService.checkRepos(ghHandles), startDate, endDate, commitCheckService.getGfLanguage(gfclass), isTodo, isWanderer);
+        HashMap<String, List<Integer>> repoHashMap = commitCheckService.fillMapWithRepoRelevantStats(commitCheckService.checkRepos(ghHandles), startDate, endDate, commitCheckService.getGfLanguage(gfclass), isTodo, isWanderer);
 
         model.addAttribute("classes", commitCheckService.getDistinctClasses());
         model.addAttribute("gfclass", gfclass);

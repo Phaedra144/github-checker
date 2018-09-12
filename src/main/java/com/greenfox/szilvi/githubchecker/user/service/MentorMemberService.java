@@ -17,18 +17,6 @@ public class MentorMemberService {
     @Autowired
     UserAPIService userAPIService;
 
-
-    public List<MentorMemberDTO> getMentors(String token) {
-        List<MentorMemberDTO> mentorMemberDTOList = new ArrayList<>();
-        try {
-            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam("Bearer " + token);
-            mentorMemberDTOList = memberDTOcall.execute().body();
-        } catch (IOException ex) {
-            System.out.println("Something went wrong when querying user!");
-        }
-        return mentorMemberDTOList;
-    }
-
     public boolean checkIfUserMemberOfMentors(UserDTO user, String token) {
         List<MentorMemberDTO> mentors = getMentors(token);
         for (MentorMemberDTO mentor : mentors) {
@@ -37,5 +25,16 @@ public class MentorMemberService {
             }
         }
         return false;
+    }
+
+    public List<MentorMemberDTO> getMentors(String token) {
+        List<MentorMemberDTO> mentorMemberDTOList = new ArrayList<>();
+        try {
+            Call<List<MentorMemberDTO>> memberDTOcall = userAPIService.getUserAPI().getMembersOfMentorsTeam("token " + token);
+            mentorMemberDTOList = memberDTOcall.execute().body();
+        } catch (IOException ex) {
+            System.out.println("Something went wrong when querying user!");
+        }
+        return mentorMemberDTOList;
     }
 }

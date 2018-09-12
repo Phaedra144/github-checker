@@ -1,7 +1,7 @@
 package com.greenfox.szilvi.githubchecker.user.web;
 
-import com.greenfox.szilvi.githubchecker.login.CookieUtil;
 import com.greenfox.szilvi.githubchecker.user.model.UserDTO;
+import com.greenfox.szilvi.githubchecker.user.persistance.entity.Auth;
 import com.greenfox.szilvi.githubchecker.user.service.MentorMemberService;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.greenfox.szilvi.githubchecker.general.Settings.GITHUB_TOKEN;
 
 @Controller
 public class UserController {
@@ -23,18 +22,18 @@ public class UserController {
     @Autowired
     MentorMemberService mentorMemberService;
 
-    @RequestMapping("/saveUser")
-    public String saveUser(HttpServletRequest request, HttpServletResponse response, Model model) {
-        String accessToken = CookieUtil.getValue(request, GITHUB_TOKEN);
+    @RequestMapping("/validate")
+    public String saveUser(Model model, HttpServletResponse httpServletResponse) {
+        Auth lastAuth = userHandling.findLastAuth();
+        String accessToken = lastAuth.getAccessToken();
         System.out.println(accessToken);
-        UserDTO recentUserDTO = userHandling.getAuthUser(accessToken);
-        userHandling.saveNewUser(accessToken, recentUserDTO);
+        UserDTO recentUserDTO = userHandling.getAuthUser();
+        userHandling.saveUser(recentUserDTO, lastAuth, httpServletResponse);
         if (mentorMemberService.checkIfUserMemberOfMentors(recentUserDTO, accessToken)) {
             return "redirect:/";
         } else {
             model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
-            userHandling.logout(response);
-            return "login";
+            return "redirect:/logout";
         }
     }
 

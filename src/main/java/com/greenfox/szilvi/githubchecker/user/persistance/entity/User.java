@@ -3,9 +3,8 @@ package com.greenfox.szilvi.githubchecker.user.persistance.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,5 +16,14 @@ public class User {
     long id;
     String login;
     String accessToken;
+    @OneToOne
+    @JoinColumn(name = "auth_id")
+    Auth auth;
 
+    public User(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public User() {
+    }
 }

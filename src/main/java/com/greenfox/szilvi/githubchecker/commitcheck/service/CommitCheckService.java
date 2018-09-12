@@ -1,18 +1,22 @@
 package com.greenfox.szilvi.githubchecker.commitcheck.service;
 
-import com.greenfox.szilvi.githubchecker.commitcheck.web.CommitCheckAPIService;
-import com.greenfox.szilvi.githubchecker.githubhandles.persistance.entity.ClassGithub;
 import com.greenfox.szilvi.githubchecker.commitcheck.model.Comment;
 import com.greenfox.szilvi.githubchecker.commitcheck.model.ForkedRepo;
 import com.greenfox.szilvi.githubchecker.commitcheck.model.GfCommits;
+import com.greenfox.szilvi.githubchecker.commitcheck.web.CommitCheckAPIService;
 import com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao.GithubHandleRepo;
+import com.greenfox.szilvi.githubchecker.githubhandles.persistance.entity.ClassGithub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 
 
@@ -29,7 +33,7 @@ public class CommitCheckService {
     CheckDates checkDates;
 
     public List<String> checkRepos(List<String> ghHandles) {
-        if(ghHandles.get(0).substring(0, 2).equals(",,")){
+        if (ghHandles.get(0).substring(0, 2).equals(",,")) {
             String firstGhHandle = cutFirstChar(ghHandles.get(0));
             ghHandles.remove(0);
             ghHandles.add(0, firstGhHandle);
@@ -41,26 +45,28 @@ public class CommitCheckService {
         return firstGhHandle.substring(2);
     }
 
-    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(String token, List<String> classRepos, String startDate, String endDate, String language, boolean isTodo, boolean isWanderer) throws IOException {
+    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(List<String> classRepos, String startDate, String endDate, String language, boolean isTodo, boolean isWanderer) throws IOException {
 
         HashMap<String, List<Integer>> githubThingsHashMap = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
             try {
                 List<Integer> counts = new ArrayList<>();
                 String classRepo = classRepos.get(i);
-                List<GfCommits> gfCommits = getPreviousWeekCommits(token, classRepo, startDate, endDate);
+                List<GfCommits> gfCommits = getPreviousWeekCommits(classRepo, startDate, endDate);
 
                 int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
                 int gfCommitsSize = gfCommits == null ? 0 : gfCommits.size();
 
-                int gfComments = getComments(token, classRepo).size();
+                int gfComments = getComments(classRepo).size();
 
                 int todoCommits = 0;
 
-                if (isTodo) todoCommits = getHashMapCommits(token, getExtraReposAndOwners(token, language, TODO_APP), classRepo).size();
+                if (isTodo)
+                    todoCommits = getHashMapCommits(getExtraReposAndOwners(language, TODO_APP), classRepo).size();
 
                 int wandererCommits = 0;
-                if (isWanderer) wandererCommits = getHashMapCommits(token, getExtraReposAndOwners(token, language, WANDERER), classRepo).size();
+                if (isWanderer)
+                    wandererCommits = getHashMapCommits(getExtraReposAndOwners(language, WANDERER), classRepo).size();
 
                 counts.add(noCommitDays);
                 counts.add(gfCommitsSize);
@@ -76,22 +82,22 @@ public class CommitCheckService {
         return githubThingsHashMap;
     }
 
-    public List<GfCommits> getPreviousWeekCommits(String token, String repoName, String startDate, String endDate) throws IOException {
+    public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
         startDate = getStringStartDate(startDate);
         endDate = getStringEndDate(endDate);
-        Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommitsForPeriod(token, GITHUB_ORG, repoName, startDate, endDate);
+        Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommitsForPeriod(GITHUB_ORG, repoName, startDate, endDate);
         return gfCommitsCall.execute().body();
     }
 
-    public List<Comment> getComments(String token, String repoName) throws IOException {
-        Call<List<Comment>> gfComments = commitCheckAPIService.getCommitCheckAPI().getCommentsOnRepos(token, GITHUB_ORG, repoName);
+    public List<Comment> getComments(String repoName) throws IOException {
+        Call<List<Comment>> gfComments = commitCheckAPIService.getCommitCheckAPI().getCommentsOnRepos(GITHUB_ORG, repoName);
         return gfComments.execute().body();
     }
 
-    public List<GfCommits> getHashMapCommits(String token, HashMap<String, String> inputHashMap, String repo) throws IOException {
+    public List<GfCommits> getHashMapCommits(HashMap<String, String> inputHashMap, String repo) throws IOException {
         for (Map.Entry entry : inputHashMap.entrySet()) {
             if (((String)entry.getKey()).equals(repo)){
-                Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommits(token, (String)entry.getKey(), (String)entry.getValue());
+                Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommits((String)entry.getKey(), (String)entry.getValue());
                 return gfCommitsCall.execute().body();
             }
         }
@@ -113,14 +119,12 @@ public class CommitCheckService {
         return totals;
     }
 
-
-
-    private HashMap<String, String> getExtraReposAndOwners(String token, String language, String repoType) throws IOException {
-        Call<List<ForkedRepo>> gfForked = commitCheckAPIService.getCommitCheckAPI().getForkedRepos(token, GITHUB_ORG, getRepoType(repoType, language));
+    private HashMap<String, String> getExtraReposAndOwners(String language, String repoType) throws IOException {
+        Call<List<ForkedRepo>> gfForked = commitCheckAPIService.getCommitCheckAPI().getForkedRepos(GITHUB_ORG, getRepoType(repoType, language));
         List<ForkedRepo> forkedRepos = gfForked.execute().body();
         HashMap<String, String> ownersAndRepos = new HashMap<>();
         for (ForkedRepo forkedRepo : forkedRepos) {
-            if (forkedRepo.getLanguage() != null && forkedRepo.getLanguage().equals(language)){
+            if (forkedRepo.getLanguage() != null && forkedRepo.getLanguage().equals(language)) {
                 String[] repoNameParts = forkedRepo.getFull_name().split("/");
                 ownersAndRepos.put(repoNameParts[0], repoNameParts[1]);
             }
@@ -130,7 +134,7 @@ public class CommitCheckService {
 
     public List<String> ghHandlesToString(List<ClassGithub> ghHandlesByClass) {
         List<String> ghHandles = new ArrayList<>();
-        for (ClassGithub ch:ghHandlesByClass) {
+        for (ClassGithub ch : ghHandlesByClass) {
             ghHandles.add(ch.getGithubHandle());
         }
         return ghHandles;
@@ -150,13 +154,13 @@ public class CommitCheckService {
 
     public String getGfLanguage(String gfclass) {
         String language = "";
-        if (gfclass.equals("becool") || gfclass.equals("please")){
+        if (gfclass.equalsIgnoreCase("badboi") || gfclass.equalsIgnoreCase("teapot") || gfclass.equalsIgnoreCase("seagal") || gfclass.equals("becool") || gfclass.equals("please")) {
             language = "Java";
-        } else if (gfclass.equals("pebble") || gfclass.equals("asbest")){
+        } else if (gfclass.equals("pebble") || gfclass.equals("asbest")) {
             language = "C#";
-        } else if (gfclass.equals("ace")) {
+        } else if (gfclass.equals("ace") || gfclass.equals("secret") || gfclass.equalsIgnoreCase("coffee")) {
             language = "TypeScript";
-        } else if (gfclass.equals("badcat")){
+        } else if (gfclass.equals("badcat")) {
             language = "JavaScript";
         }
         return language;
@@ -166,13 +170,13 @@ public class CommitCheckService {
         String transformedLanguage = "";
         if (repoType.equals("wanderer-")) {
             switch (language.toLowerCase()) {
-                case "java" :
+                case "java":
                     transformedLanguage = "java";
                     break;
-                case "c#" :
+                case "c#":
                     transformedLanguage = "cs";
                     break;
-                case "typescript" :
+                case "typescript":
                     transformedLanguage = "typescript";
             }
             return repoType + transformedLanguage;

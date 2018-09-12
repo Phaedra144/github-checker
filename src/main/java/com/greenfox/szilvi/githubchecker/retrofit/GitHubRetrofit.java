@@ -11,19 +11,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Service
 public class GitHubRetrofit {
 
-//    @Bean
-//    public AuthInterceptor getAuthInterceptor() {
-//        return new AuthInterceptor();
-//    }
+    @Bean
+    public AuthInterceptor getAuthInterceptor() {
+        return new AuthInterceptor();
+    }
 
 
     public Retrofit getRetrofit() {
-        OkHttpClient httpClient = new OkHttpClient.Builder().build();
-        Retrofit retrofit = new Retrofit.Builder()
+        OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(getAuthInterceptor()).build();
+        return new Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient)
                 .build();
-        return retrofit;
     }
 }

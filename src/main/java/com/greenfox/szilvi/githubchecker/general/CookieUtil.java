@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.login;
+package com.greenfox.szilvi.githubchecker.general;
 
 import org.springframework.web.util.WebUtils;
 

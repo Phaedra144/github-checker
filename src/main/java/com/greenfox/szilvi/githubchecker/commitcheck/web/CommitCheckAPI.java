@@ -14,14 +14,14 @@ import java.util.List;
 public interface CommitCheckAPI {
 
     @GET("repos/{owner}/{repo}/commits?&per_page=100")
-    Call<List<GfCommits>> getRepoCommitsForPeriod(@Header("Authorization") String token, @Path("owner") String owner, @Path("repo") String repo, @Query("since") String startDate, @Query("until") String endDate);
+    Call<List<GfCommits>> getRepoCommitsForPeriod(@Path("owner") String owner, @Path("repo") String repo, @Query("since") String startDate, @Query("until") String endDate);
 
     @GET("repos/{owner}/{repo}/commits?&per_page=100")
-    Call<List<GfCommits>> getRepoCommits(@Header("Authorization") String token, @Path("owner") String owner, @Path("repo") String repo);
+    Call<List<GfCommits>> getRepoCommits(@Path("owner") String owner, @Path("repo") String repo);
 
     @GET("repos/{owner}/{repo}/comments?&per_page=150")
-    Call<List<Comment>>getCommentsOnRepos(@Header("Authorization") String token, @Path("owner") String owner, @Path("repo") String repo);
+    Call<List<Comment>>getCommentsOnRepos(@Path("owner") String owner, @Path("repo") String repo);
 
     @GET("/repos/{owner}/{repo}/forks?&per_page=150")
-    Call<List<ForkedRepo>>getForkedRepos(@Header("Authorization") String token, @Path("owner") String owner, @Path("repo") String repo);
+    Call<List<ForkedRepo>>getForkedRepos(@Path("owner") String owner, @Path("repo") String repo);
 }

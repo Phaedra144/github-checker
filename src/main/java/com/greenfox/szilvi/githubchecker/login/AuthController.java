@@ -1,5 +1,6 @@
 package com.greenfox.szilvi.githubchecker.login;
 
+import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.greenfox.szilvi.githubchecker.general.Settings.*;
+import static com.greenfox.szilvi.githubchecker.general.Settings.AUTH_URL;
 
 
 @Controller
@@ -20,6 +21,9 @@ public class AuthController {
 
     @Autowired
     Authorization authorization;
+
+    @Autowired
+    UserHandling userHandling;
 
     @RequestMapping("/login")
     public String renderLogin() {
@@ -34,9 +38,8 @@ public class AuthController {
     @RequestMapping("/auth")
     public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse) throws IOException {
         String accessToken = authorization.getAccessToken(code);
-        CookieUtil.create(httpServletResponse, GITHUB_TOKEN, accessToken, false, ONE_DAY, COOKIE_DOMAIN);
-
+        userHandling.saveNewAuthWithAccessTokenOnly(accessToken);
         System.out.println(accessToken);
-        return "redirect:/saveUser";
+        return "redirect:/validate";
     }
 }
