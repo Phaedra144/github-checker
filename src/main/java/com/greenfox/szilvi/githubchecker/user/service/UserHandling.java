@@ -14,6 +14,7 @@ import retrofit2.Call;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.greenfox.szilvi.githubchecker.general.Settings.COOKIE_DOMAIN;
 import static com.greenfox.szilvi.githubchecker.general.Settings.ONE_DAY;
@@ -38,6 +39,14 @@ public class UserHandling {
             return authRepo.findLastAuth();
         } catch (NullPointerException ex) {
             return new Auth();
+        }
+    }
+
+    public User findLastUser() {
+        try {
+            return userRepo.findLastUser();
+        } catch (NullPointerException ex) {
+            return new User();
         }
     }
 
@@ -68,27 +77,27 @@ public class UserHandling {
     }
 
     public String checkTokenOnPage(String whereTo, HttpServletRequest httpServletRequest) {
-        if (CookieUtil.getValue(httpServletRequest, USER_SESSION)!= null && checkIfUserIsValid()) {
+          User user = getUserById(httpServletRequest);
+        if (user != null && checkIfUserIsValid(user)) {
             return whereTo;
         } else {
             return "login";
         }
     }
 
-    private boolean checkIfUserIsValid() {
-        User user = getUserByToken();
+    private boolean checkIfUserIsValid(User user) {
         return user.getLogin().equals(getAuthUser().getLogin());
     }
 
-    public User getUserByToken() {
-        return userRepo.findByAccessToken(TOKEN);
-    }
-
     public User getUserById(HttpServletRequest httpServletRequest) {
-        return userRepo.findById(Long.parseLong(CookieUtil.getValue(httpServletRequest, USER_SESSION)));
+        Optional<String> userId = Optional.ofNullable(CookieUtil.getValue(httpServletRequest, USER_SESSION));
+        if(userId.isPresent()){
+            return userRepo.findById(Long.parseLong(userId.get()));
+        }
+        return null;
     }
 
     public void logout(HttpServletResponse httpServletResponse) {
-        CookieUtil.clear(httpServletResponse, USER_SESSION);
+        CookieUtil.clear(httpServletResponse, USER_SESSION, COOKIE_DOMAIN);
     }
 }

@@ -36,7 +36,7 @@ public class AuthController {
     }
 
     @RequestMapping("/auth")
-    public String getAccessToken(@RequestParam String code, HttpServletResponse httpServletResponse) throws IOException {
+    public String getAccessToken(@RequestParam String code) throws IOException {
         String accessToken = authorization.getAccessToken(code);
         userHandling.saveNewAuthWithAccessTokenOnly(accessToken);
         System.out.println(accessToken);

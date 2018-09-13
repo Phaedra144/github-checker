@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -28,8 +27,8 @@ public class UserController {
         String accessToken = lastAuth.getAccessToken();
         System.out.println(accessToken);
         UserDTO recentUserDTO = userHandling.getAuthUser();
-        userHandling.saveUser(recentUserDTO, lastAuth, httpServletResponse);
         if (mentorMemberService.checkIfUserMemberOfMentors(recentUserDTO, accessToken)) {
+            userHandling.saveUser(recentUserDTO, lastAuth, httpServletResponse);
             return "redirect:/";
         } else {
             model.addAttribute("notMentor", "Oooops, sorry, but only mentors can access this app!");
