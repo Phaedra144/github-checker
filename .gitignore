@@ -10,3 +10,8 @@ out
 .gradle
 !gradle-wrapper.properties
 /build
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

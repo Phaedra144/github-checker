@@ -90,7 +90,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:onclick="|window.open('https://github.com/greenfox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${repoHashMap}">
+                                <tr th:onclick="|window.open('https://github.com/green-fox-academy/${mapEntry.key}/commits/master')|" th:each="mapEntry : ${repoHashMap}">
                                     <td th:text="${mapEntry.key}">ghhandle</td>
                                     <td th:text="${mapEntry.value.get(0)}">not committed days</td>
                                     <td th:text="${mapEntry.value.get(1)}">commits</td>
