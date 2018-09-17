@@ -57,6 +57,8 @@ public class UserHandling {
             userDTO = userDTOCall.execute().body();
         } catch (IOException ex) {
             System.out.println("Something went wrong when querying user!");
+        } catch (NullPointerException ex) {
+            System.out.println("");
         }
         return userDTO;
     }
@@ -78,15 +80,11 @@ public class UserHandling {
 
     public String checkTokenOnPage(String whereTo, HttpServletRequest httpServletRequest) {
           User user = getUserById(httpServletRequest);
-        if (user != null && checkIfUserIsValid(user)) {
+        if (user != null) {
             return whereTo;
         } else {
             return "login";
         }
-    }
-
-    private boolean checkIfUserIsValid(User user) {
-        return user.getLogin().equals(getAuthUser().getLogin());
     }
 
     public User getUserById(HttpServletRequest httpServletRequest) {

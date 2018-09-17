@@ -18,6 +18,6 @@ public interface GreenfoxTeamAPI {
     @PUT("teams/{id}/memberships/{username}")
     Call<GreenfoxTeamStatus> addMemberToTeam(@Path("id") int id, @Path("username") String username);
 
-    @GET("orgs/{org}/teams")
+    @GET("orgs/{org}/teams?per_page=100")
     Call<List<GreenfoxTeamResponse>>getTeamsOfOrg(@Path("org") String org);
 }

@@ -86,6 +86,7 @@ public class CommitCheckService {
         startDate = getStringStartDate(startDate);
         endDate = getStringEndDate(endDate);
         Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommitsForPeriod(GITHUB_ORG, repoName, startDate, endDate);
+        System.out.println(gfCommitsCall.request().headers());
         return gfCommitsCall.execute().body();
     }
 
