@@ -18,7 +18,7 @@ apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'github-checker'
-    version = '1.1.2-SNAPSHOT'
+    archiveName = "${baseName}.${extension}"
 }
 
 sourceCompatibility = 1.8

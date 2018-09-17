@@ -13,7 +13,7 @@ public class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         UserHandling userHandling = new UserHandling();
-        String accessToken = userHandling.findLastUser().getAccessToken();
+        String accessToken = userHandling.findLastAuth().getAccessToken();
         Request.Builder builder = chain.request().newBuilder();
         if(accessToken != null){
             builder.addHeader("Authorization", "token " + accessToken);
