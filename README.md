@@ -45,18 +45,12 @@ For local use you have to setup the below environment variables:
 Note: Elastic Beanstalk now supports AWS CodeCommit; a fully-managed source control service. To learn more, see Docs: https://aws.amazon.com/codecommit/
 Do you wish to continue with CodeCommit? (y/n)(default is n): y`
 
-  - Choose Create new Repository.
+  - Choose repository.
 
   `Select a repository
   1) my-repo
   2) [ Create new Repository ]
   (default is 2): 2`
-
-  - Type a repository name or press Enter to accept the default name.
-
-  `Enter Repository Name
-  (default is "codecommit-origin"): my-app
-  Successfully created repository: my-app`
 
   - Choose an existing branch for your commits, or use the EB CLI to create a new branch.
 
