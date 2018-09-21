@@ -33,16 +33,17 @@ public class GreenfoxTeamController {
     GreenfoxDbService greenfoxDbService;
 
     @GetMapping("/addmembers")
-    public String getMemberAdder(HttpServletRequest httpServletRequest){
+    public String getMemberAdder(HttpServletRequest httpServletRequest, Model model){
+        model.addAttribute("greenfoxTeamForm", new GreenfoxTeamForm());
         return userHandling.checkTokenOnPage("members", httpServletRequest);
     }
 
     @PostMapping("/addmembers")
-    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm,String cohortName, String className, BindingResult bindingResult, Model model) throws IOException {
+    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm,BindingResult bindingResult, Model model) throws IOException {
         if(bindingResult.hasErrors()){
             return "members";
         }
-        greenfoxDbService.saveToDb(greenfoxTeamForm, cohortName, className);
+        greenfoxDbService.saveToDb(greenfoxTeamForm);
         List<GreenfoxTeamStatus> memberStatusResponse = greenfoxTeamService.addNewMembersToGf(greenfoxTeamForm.getMembers(), greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
         model.addAttribute("responses", memberStatusResponse);
         return "members";

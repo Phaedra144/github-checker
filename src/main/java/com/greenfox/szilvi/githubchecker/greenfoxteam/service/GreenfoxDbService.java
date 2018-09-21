@@ -27,9 +27,9 @@ public class GreenfoxDbService {
         }
     }
 
-    public void saveToDb(@Valid GreenfoxTeamForm greenfoxTeamForm, String cohortName, String className) {
+    public void saveToDb(@Valid GreenfoxTeamForm greenfoxTeamForm) {
         List<String> ghHandles = greenfoxTeamService.handleListOfHandles(greenfoxTeamForm.getMembers());
-        saveGhHandlesToClass(ghHandles, cohortName, className);
+        saveGhHandlesToClass(ghHandles, greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
     }
 
     public List<ClassGithub> getAllHandles() {
