@@ -1,6 +1,6 @@
-package com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao;
+package com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.dao;
 
-import com.greenfox.szilvi.githubchecker.githubhandles.persistance.entity.ClassGithub;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity.ClassGithub;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

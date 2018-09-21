@@ -15,6 +15,8 @@ public class GreenfoxTeamForm {
 
     @NotNull(message = "You must add at least one member here!")
     String members;
-    @NotNull(message = "You must provide a valid team name!")
-    String teamName;
+    @NotNull(message = "You must provide a cohort name!")
+    String cohortName ;
+    @NotNull(message = "You must provide a class name!")
+    String className;
 }

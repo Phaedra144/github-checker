@@ -1,41 +1,35 @@
-package com.greenfox.szilvi.githubchecker.githubhandles.service;
+package com.greenfox.szilvi.githubchecker.greenfoxteam.service;
 
-import com.greenfox.szilvi.githubchecker.githubhandles.persistance.entity.ClassGithub;
-import com.greenfox.szilvi.githubchecker.githubhandles.persistance.dao.GithubHandleRepo;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity.ClassGithub;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.dao.GithubHandleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class HandlesService {
+public class GreenfoxDbService {
 
     @Autowired
     GithubHandleRepo githubHandleRepo;
 
-    public List<String> handleListOfHandles(String ghHandles){
-        String splitter = "";
-        for(char strChar:ghHandles.toCharArray()){
-            if(!splitter.contains(" ")){
-                if(!splitter.contains("\r") || !splitter.contains("\n")){
-                    if (strChar == ' ' || strChar == '\r' || strChar == '\n'){
-                        splitter = splitter + strChar;
-                    }
-                }
-            }
-        }
-        ArrayList<String> theHandles = new ArrayList<String>(Arrays.asList(ghHandles.split(splitter)));
-
-        return theHandles.size() > 1 ? theHandles : new ArrayList<>(Arrays.asList(ghHandles));
-    }
+    @Autowired
+    GreenfoxTeamService greenfoxTeamService;
 
 
     public void saveGhHandlesToClass(List<String> ghHandles, String cohortName, String className) {
         for (String ghHandle:ghHandles) {
             githubHandleRepo.save(new ClassGithub(cohortName, className, ghHandle));
         }
+    }
+
+    public void saveToDb(@Valid GreenfoxTeamForm greenfoxTeamForm, String cohortName, String className) {
+        List<String> ghHandles = greenfoxTeamService.handleListOfHandles(greenfoxTeamForm.getMembers());
+        saveGhHandlesToClass(ghHandles, cohortName, className);
     }
 
     public List<ClassGithub> getAllHandles() {

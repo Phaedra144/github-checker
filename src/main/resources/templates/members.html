@@ -32,14 +32,18 @@
             <h1 class="page-header">Green Fox Github Checker</h1>
         </div>
         <p>You can add members to Green Fox organization. </p>
-        <p>These persons can be added to a team immediately, if you do not want it, please write "None"! </p>
-        <p>The name of the team must be an already created one. Name of the members must be separated by spaces!</p>
+        <p>Please make sure that team name is <b>already created on github</b> and follows this format: &lt;Cohort name&gt;-&lt;Class name&gt;</p>
         <form th:action="@{/addmembers}" th:object="${greenfoxTeamForm}" method="post">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="team">Team name</label>
-                    <input th:field="*{teamName}" type="text" class="form-control" id="team" placeholder="Team name"/>
-                    <label class="error" th:if="${#fields.hasErrors('teamName')}" th:errors="*{teamName}"></label>
+                    <label for="cohort">Cohort name</label>
+                    <input th:field="*{cohortName}" type="text" class="form-control" id="cohort" placeholder="Cohort name"/>
+                    <label class="error" th:if="${#fields.hasErrors('cohortName')}" th:errors="*{cohortName}"></label>
+                </div>
+                <div class="form-group">
+                    <label for="class">Class name</label>
+                    <input th:field="*{className}" type="text" class="form-control" id="class" placeholder="Class name"/>
+                    <label class="error" th:if="${#fields.hasErrors('className')}" th:errors="*{className}"></label>
                 </div>
                 <div class="form-group">
                     <label for="members">Add members separated by " "</label>
@@ -51,6 +55,30 @@
         </form>
         <div th:each="response : ${responses}">
             <p th:text="${response}"></p>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Cohort name</th>
+                        <th>Class name</th>
+                        <th>Github handle</th>
+                    </tr>
+                    <tr th:each="handle : ${members}">
+                        <form th:action="@{/editmembers/{id}(id=${handle.id})}" method="post">
+                            <td><input th:value="${handle.cohortName}" type="text" placeholder="Cohort name" name="cohortName"/></td>
+                            <td><input th:value="${handle.className}" type="text" placeholder="Class name" name="className"/></td>
+                            <td><input th:value="${handle.githubHandle}" type="text" placeholder="Github Handle" name="githubHandle"/></td>
+                            <td><a th:href="@{/deletemembers/{id}(id=${handle.id})}">
+                                <span class="glyphicon glyphicon-trash"></span></a>
+                            </td>
+                            <td><button type="submit">
+                                <span class="glyphicon glyphicon-pencil"></span></button>
+                            </td>
+                        </form>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
     </body>

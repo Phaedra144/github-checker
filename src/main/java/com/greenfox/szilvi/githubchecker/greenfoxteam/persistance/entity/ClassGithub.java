@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.githubhandles.persistance.entity;
+package com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity;
 import lombok.Setter;
 
 import javax.persistence.Entity;

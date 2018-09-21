@@ -20,7 +20,7 @@
                     <a class="nav-link" href="/checkcommit">Commits</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/addhandles">Members</a>
+                    <a class="nav-link" href="#">Members</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
@@ -34,7 +34,7 @@
     <p>You can add members to database, so we will be able to check their committing progress. </p>
     <p>In order to edit the members in the database click on the "List" button.</p>
     <p>The name of the cohort and the class must match to the valid name, all lower-case please!</p>
-    <form th:action="@{/addhandles}" method="post">
+    <form th:action="@{/addmembers}" method="post">
         <div class="form-row">
             <div class="form-group">
                 <label for="cohort">Cohort name</label>
@@ -50,7 +50,7 @@
             </div>
         </div>
         <button type="submit" class="btn btn-success">Submit</button>
-        <a type="button" href="/listhandles" class="btn btn-success">List</a>
+        <a type="button" href="/listmembers" class="btn btn-success">List</a>
     </form>
     <div class="panel-body">
         <div class="table-responsive">
@@ -61,7 +61,7 @@
                     <th>Github handle</th>
                 </tr>
                 <tr th:each="handle : ${handles}">
-                    <form th:action="@{/edithandles/{id}(id=${handle.id})}" method="post">
+                    <form th:action="@{/editmembers/{id}(id=${handle.id})}" method="post">
                         <td><input th:value="${handle.cohortName}" type="text" placeholder="Cohort name" name="cohortName"/></td>
                         <td><input th:value="${handle.className}" type="text" placeholder="Class name" name="className"/></td>
                         <td><input th:value="${handle.githubHandle}" type="text" placeholder="Github Handle" name="githubHandle"/></td>
