@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -32,9 +29,13 @@ public class GreenfoxTeamController {
     @Autowired
     GreenfoxDbService greenfoxDbService;
 
-    @GetMapping("/addmembers")
-    public String getMemberAdder(HttpServletRequest httpServletRequest, Model model){
+    @ModelAttribute
+    public void addNewForm(Model model) {
         model.addAttribute("greenfoxTeamForm", new GreenfoxTeamForm());
+    }
+
+    @GetMapping("/addmembers")
+    public String getMemberAdder(HttpServletRequest httpServletRequest){
         return userHandling.checkTokenOnPage("members", httpServletRequest);
     }
 
@@ -58,7 +59,7 @@ public class GreenfoxTeamController {
     @RequestMapping(value = "/deletemembers/{id}")
     public String deleteGhHandles(@PathVariable long id){
         greenfoxDbService.removeHandle(id);
-        return "members";
+        return "redirect:/listmembers";
     }
 
     @RequestMapping("/editmembers/{id}")
