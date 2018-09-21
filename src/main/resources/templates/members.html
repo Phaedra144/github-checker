@@ -32,7 +32,7 @@
             <h1 class="page-header">Green Fox Github Checker</h1>
         </div>
         <p>You can add members to Green Fox organization. </p>
-        <p>Please make sure that team name is <b>already created on github</b> and follows this format: &lt;Cohort name&gt;-&lt;Class name&gt;</p>
+        <p>Please make sure that team name is <b>already created on github</b> and follows this format:</br> &lt;Cohort name&gt;-&lt;Class name&gt;</p>
         <form th:action="@{/addmembers}" th:object="${greenfoxTeamForm}" method="post">
             <div class="form-row">
                 <div class="form-group">
@@ -52,6 +52,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-success">Submit</button>
+            <a type="button" href="/listmembers" class="btn btn-success">List</a>
         </form>
         <div th:each="response : ${responses}">
             <p th:text="${response}"></p>
