@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link href="../dataTables.bootstrap.css" rel="stylesheet"/>
+    <link href="../bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../narrow-jumbotron.css"/>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="../addgfamembers.css"/>
+</head>
+<body>
+<div class="container">
+    <header class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills float-right">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/checkcommit">Commits</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Members</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="col-lg-12">
+        <h1 class="page-header">Green Fox Github Checker</h1>
+    </div>
+    <p>You can add members to Green Fox organization. </p>
+    <p>Please make sure that team name is <span style="font-weight: bold">already created on github</span> and follows
+        this format:</p>
+    <p> &lt;Cohort name&gt;-&lt;Class name&gt;</p>
+    <form th:action="@{/addmembers}" th:object="${greenfoxTeamForm}" method="post">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cohort">Cohort name</label>
+                <input th:field="*{cohortName}" type="text" class="form-control" id="cohort" placeholder="Cohort name"/>
+                <label class="error" th:if="${#fields.hasErrors('cohortName')}" th:errors="*{cohortName}"></label>
+            </div>
+            <div class="form-group">
+                <label for="class">Class name</label>
+                <input th:field="*{className}" type="text" class="form-control" id="class" placeholder="Class name"/>
+                <label class="error" th:if="${#fields.hasErrors('className')}" th:errors="*{className}"></label>
+            </div>
+            <div class="form-group">
+                <label for="members">Add members separated by " "</label>
+                <textarea class="form-control" id="members" th:field="*{members}" rows="3"></textarea>
+                <label class="error" th:if="${#fields.hasErrors('members')}" th:errors="*{members}"></label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+        <a type="button" href="/listmembers" class="btn btn-success">List</a>
+    </form>
+    <div th:each="response : ${responses}">
+        <p th:text="${response}"></p>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <tr>
+                    <th>Cohort name</th>
+                    <th>Class name</th>
+                    <th>Github handle</th>
+                </tr>
+                <tr th:each="handle : ${members}">
+                    <form th:action="@{/editmembers/{id}(id=${handle.id})}" method="post">
+                        <td><input th:value="${handle.cohortName}" type="text" placeholder="Cohort name"
+                                   name="cohortName"/></td>
+                        <td><input th:value="${handle.className}" type="text" placeholder="Class name"
+                                   name="className"/></td>
+                        <td><input th:value="${handle.githubHandle}" type="text" placeholder="Github Handle"
+                                   name="githubHandle"/></td>
+                        <td><a th:href="@{/deletemembers/{id}(id=${handle.id})}">
+                            <span class="glyphicon glyphicon-trash"></span></a>
+                        </td>
+                        <td>
+                            <button type="submit">
+                                <span class="glyphicon glyphicon-pencil"></span></button>
+                        </td>
+                    </form>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
