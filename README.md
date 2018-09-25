@@ -41,9 +41,9 @@ For local use you have to setup the below environment variables:
     - To create an AWS CodeCommit repository with the EB CLI
     - Run eb init in your project folder. During configuration, the EB CLI asks if you want to use AWS CodeCommit to store your code and speed up deployments. If you previously configured your project with eb init, you can still run it again to configure AWS CodeCommit. Type y at the prompt to set up AWS CodeCommit.
 
-  `~/my-app$ eb init
-Note: Elastic Beanstalk now supports AWS CodeCommit; a fully-managed source control service. To learn more, see Docs: https://aws.amazon.com/codecommit/
-Do you wish to continue with CodeCommit? (y/n)(default is n): y`
+    `~/my-app$ eb init
+  Note: Elastic Beanstalk now supports AWS CodeCommit; a fully-managed source control service. To learn more, see Docs: https://aws.amazon.com/codecommit/
+  Do you wish to continue with CodeCommit? (y/n)(default is n): y`
 
   - Choose repository.
 
