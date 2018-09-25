@@ -40,7 +40,7 @@ public class GreenfoxTeamController {
     }
 
     @PostMapping("/addmembers")
-    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm,BindingResult bindingResult, Model model) throws IOException {
+    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm,BindingResult bindingResult, Model model, HttpServletRequest httpServletRequest) throws IOException {
         if(bindingResult.hasErrors()){
             return "members";
         }

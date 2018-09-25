@@ -18,18 +18,23 @@ public class GreenfoxDbService {
     GithubHandleRepo githubHandleRepo;
 
     @Autowired
-    GreenfoxTeamService greenfoxTeamService;
+    GithubHandleParser githubHandleParser;
 
+    public void saveToDb(@Valid GreenfoxTeamForm greenfoxTeamForm) {
+        List<String> ghHandles = githubHandleParser.handleListOfHandles(greenfoxTeamForm.getMembers());
+        saveGhHandlesToClass(ghHandles, greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
+    }
 
     public void saveGhHandlesToClass(List<String> ghHandles, String cohortName, String className) {
         for (String ghHandle:ghHandles) {
-            githubHandleRepo.save(new ClassGithub(cohortName, className, ghHandle));
+            if (ghHandleIsNotInDb(ghHandle)){
+                githubHandleRepo.save(new ClassGithub(cohortName, className, ghHandle));
+            }
         }
     }
 
-    public void saveToDb(@Valid GreenfoxTeamForm greenfoxTeamForm) {
-        List<String> ghHandles = greenfoxTeamService.handleListOfHandles(greenfoxTeamForm.getMembers());
-        saveGhHandlesToClass(ghHandles, greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
+    private boolean ghHandleIsNotInDb(String ghHandle) {
+        return githubHandleRepo.findByGithubHandle(ghHandle) != null;
     }
 
     public List<ClassGithub> getAllHandles() {

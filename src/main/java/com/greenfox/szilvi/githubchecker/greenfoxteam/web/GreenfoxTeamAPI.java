@@ -13,11 +13,11 @@ import java.util.List;
 public interface GreenfoxTeamAPI {
 
     @PUT("orgs/{org}/memberships/{username}")
-    Call<GreenfoxTeamStatus> addMemberToOrg(@Path("org") String org, @Path("username") String username);
+    Call<GreenfoxTeamStatus> addMemberToOrg(@Header("Authorization")String token, @Path("org") String org, @Path("username") String username);
 
     @PUT("teams/{id}/memberships/{username}")
-    Call<GreenfoxTeamStatus> addMemberToTeam(@Path("id") int id, @Path("username") String username);
+    Call<GreenfoxTeamStatus> addMemberToTeam(@Header("Authorization")String token, @Path("id") int id, @Path("username") String username);
 
-    @GET("orgs/{org}/teams?per_page=100")
-    Call<List<GreenfoxTeamResponse>>getTeamsOfOrg(@Path("org") String org);
+    @GET("orgs/{org}/teams?per_page=150")
+    Call<List<GreenfoxTeamResponse>>getTeamsOfOrg(@Header("Authorization")String token, @Path("org") String org);
 }
