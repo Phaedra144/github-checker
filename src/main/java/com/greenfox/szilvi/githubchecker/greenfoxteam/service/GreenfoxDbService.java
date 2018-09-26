@@ -34,7 +34,7 @@ public class GreenfoxDbService {
     }
 
     private boolean ghHandleIsNotInDb(String ghHandle) {
-        return githubHandleRepo.findByGithubHandle(ghHandle) != null;
+        return githubHandleRepo.findByGithubHandle(ghHandle) == null;
     }
 
     public List<ClassGithub> getAllHandles() {
