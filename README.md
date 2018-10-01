@@ -5,7 +5,7 @@
 This application is a github parser with a nice bootstrap GUI and some basic functionality.
 The queries relate to activities of Green Fox Academy's students on github.
 
-With the application you are able to check commit activities of students, comment activities of mentors and add new students to  [organization](https://github.com/green-fox-academy).
+With the application you are able to check commit activities of students, comment activities of mentors and add new students to  [green-fox-academy organization](https://github.com/green-fox-academy).
 
 **Please make sure that the name of the student's main repository matches to their github handle.**
 
@@ -35,9 +35,12 @@ For local use you have to setup the below environment variables:
   Elastic Beanstalk CLI is a command line interface that lets you create, update and monitor Elastic Beanstalk environments, and deploy applications right from the terminal.
     - You can install Elastic Beanstalk CLI using Python’s Package management system, PIP. It comes bundled with Python version 3.x.x.
 
+- **Use EB CLI with valid IAM user with administration access**
+  [More info here](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control.html)
+
 
 - **Creating an AWS CodeCommit Repository with the EB CLI**
-  To get started with AWS CodeCommit, run `eb init`. During repository configuration, the EB CLI prompts you to use AWS CodeCommit to store your code and speed up deployments. Even if you previously configured your project with eb init, you can run it again to configure AWS CodeCommit.
+  To get started with AWS CodeCommit, run `eb init`. During repository configuration, the EB CLI prompts you to use AWS CodeCommit to store your code and speed up deployments. Even if you previously configured your project with `eb init`, you can run it again to configure AWS CodeCommit.
     - To create an AWS CodeCommit repository with the EB CLI
     - Run eb init in your project folder. During configuration, the EB CLI asks if you want to use AWS CodeCommit to store your code and speed up deployments. If you previously configured your project with eb init, you can still run it again to configure AWS CodeCommit. Type y at the prompt to set up AWS CodeCommit.
 
