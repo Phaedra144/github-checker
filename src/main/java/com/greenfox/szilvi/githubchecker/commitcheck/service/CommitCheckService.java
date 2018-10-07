@@ -1,11 +1,13 @@
 package com.greenfox.szilvi.githubchecker.commitcheck.service;
 
-import com.greenfox.szilvi.githubchecker.commitcheck.model.Comment;
-import com.greenfox.szilvi.githubchecker.commitcheck.model.ForkedRepo;
-import com.greenfox.szilvi.githubchecker.commitcheck.model.GfCommits;
+import com.greenfox.szilvi.githubchecker.commitcheck.web.dto.Comment;
+import com.greenfox.szilvi.githubchecker.commitcheck.web.dto.ForkedRepo;
+import com.greenfox.szilvi.githubchecker.commitcheck.web.dto.CommitsDTO;
 import com.greenfox.szilvi.githubchecker.commitcheck.web.CommitCheckAPIService;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.dao.GithubHandleRepo;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity.ClassGithub;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GithubHandleParser;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -24,7 +26,7 @@ import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 public class CommitCheckService {
 
     @Autowired
-    GithubHandleRepo classGithubRepo;
+    GreenfoxDbService greenfoxDbService;
 
     @Autowired
     CommitCheckAPIService commitCheckAPIService;
@@ -32,30 +34,20 @@ public class CommitCheckService {
     @Autowired
     CheckDates checkDates;
 
-    public List<String> checkRepos(List<String> ghHandles) {
-        if (ghHandles.get(0).substring(0, 2).equals(",,")) {
-            String firstGhHandle = cutFirstChar(ghHandles.get(0));
-            ghHandles.remove(0);
-            ghHandles.add(0, firstGhHandle);
-        }
-        return ghHandles;
-    }
+    @Autowired
+    GithubHandleParser githubHandleParser;
 
-    private String cutFirstChar(String firstGhHandle) {
-        return firstGhHandle.substring(2);
-    }
-
-    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(List<String> classRepos, String startDate, String endDate, String language, boolean isTodo, boolean isWanderer) throws IOException {
+    public HashMap<String, List<Integer>> fillMapWithRepoRelevantStats(List<String> classRepos, String startDate, String endDate, boolean isTodo, boolean isWanderer) throws IOException {
 
         HashMap<String, List<Integer>> githubThingsHashMap = new HashMap<>();
         for (int i = 0; i < classRepos.size(); i++) {
             try {
                 List<Integer> counts = new ArrayList<>();
                 String classRepo = classRepos.get(i);
-                List<GfCommits> gfCommits = getPreviousWeekCommits(classRepo, startDate, endDate);
-
-                int noCommitDays = checkDates.checkHowManyDaysNotCommitted(gfCommits, startDate, endDate);
-                int gfCommitsSize = gfCommits == null ? 0 : gfCommits.size();
+                List<CommitsDTO> commitsDTO = getPreviousWeekCommits(classRepo, startDate, endDate);
+                String language = greenfoxDbService.getStudentFromDB(classRepo).getLanguage();
+                int noCommitDays = checkDates.checkHowManyDaysNotCommitted(commitsDTO, startDate, endDate);
+                int gfCommitsSize = commitsDTO == null ? 0 : commitsDTO.size();
 
                 int gfComments = getComments(classRepo).size();
 
@@ -82,10 +74,10 @@ public class CommitCheckService {
         return githubThingsHashMap;
     }
 
-    public List<GfCommits> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
+    public List<CommitsDTO> getPreviousWeekCommits(String repoName, String startDate, String endDate) throws IOException {
         startDate = getStringStartDate(startDate);
         endDate = getStringEndDate(endDate);
-        Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommitsForPeriod(GITHUB_ORG, repoName, startDate, endDate);
+        Call<List<CommitsDTO>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommitsForPeriod(GITHUB_ORG, repoName, startDate, endDate);
         System.out.println(gfCommitsCall.request().headers());
         return gfCommitsCall.execute().body();
     }
@@ -95,10 +87,10 @@ public class CommitCheckService {
         return gfComments.execute().body();
     }
 
-    public List<GfCommits> getHashMapCommits(HashMap<String, String> inputHashMap, String repo) throws IOException {
+    public List<CommitsDTO> getHashMapCommits(HashMap<String, String> inputHashMap, String repo) throws IOException {
         for (Map.Entry entry : inputHashMap.entrySet()) {
             if (((String)entry.getKey()).equals(repo)){
-                Call<List<GfCommits>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommits((String)entry.getKey(), (String)entry.getValue());
+                Call<List<CommitsDTO>> gfCommitsCall = commitCheckAPIService.getCommitCheckAPI().getRepoCommits((String)entry.getKey(), (String)entry.getValue());
                 return gfCommitsCall.execute().body();
             }
         }
@@ -121,7 +113,7 @@ public class CommitCheckService {
     }
 
     private HashMap<String, String> getExtraReposAndOwners(String language, String repoType) throws IOException {
-        Call<List<ForkedRepo>> gfForked = commitCheckAPIService.getCommitCheckAPI().getForkedRepos(GITHUB_ORG, getRepoType(repoType, language));
+        Call<List<ForkedRepo>> gfForked = commitCheckAPIService.getCommitCheckAPI().getForkedRepos(GITHUB_ORG, githubHandleParser.getRepoType(repoType, language));
         List<ForkedRepo> forkedRepos = gfForked.execute().body();
         HashMap<String, String> ownersAndRepos = new HashMap<>();
         for (ForkedRepo forkedRepo : forkedRepos) {
@@ -151,45 +143,5 @@ public class CommitCheckService {
         LocalDate startD = checkDates.convertToLocalDate(startDate).minusDays(1);
         startDate = startD.toString();
         return startDate;
-    }
-
-    public String getGfLanguage(String gfclass) {
-        String language = "";
-        if (gfclass.equalsIgnoreCase("badboi") || gfclass.equalsIgnoreCase("teapot") || gfclass.equalsIgnoreCase("seagal") || gfclass.equals("becool") || gfclass.equals("please")) {
-            language = "Java";
-        } else if (gfclass.equals("pebble") || gfclass.equals("asbest")) {
-            language = "C#";
-        } else if (gfclass.equals("ace") || gfclass.equals("secret") || gfclass.equalsIgnoreCase("coffee")) {
-            language = "TypeScript";
-        } else if (gfclass.equals("badcat")) {
-            language = "JavaScript";
-        }
-        return language;
-    }
-
-    public String getRepoType(String repoType, String language) {
-        String transformedLanguage = "";
-        if (repoType.equals("wanderer-")) {
-            switch (language.toLowerCase()) {
-                case "java":
-                    transformedLanguage = "java";
-                    break;
-                case "c#":
-                    transformedLanguage = "cs";
-                    break;
-                case "typescript":
-                    transformedLanguage = "typescript";
-            }
-            return repoType + transformedLanguage;
-        }
-        return repoType;
-    }
-
-    public List<ClassGithub> findAllByClassName(String gfclass) {
-        return classGithubRepo.findAllByClassName(gfclass);
-    }
-
-    public List<String> getDistinctClasses() {
-        return classGithubRepo.getDistinctClasses();
     }
 }

@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.commitcheck.model;
+package com.greenfox.szilvi.githubchecker.commitcheck.web.dto;
 
 public class ForkedRepo {
 

@@ -1,4 +1,4 @@
-package com.greenfox.szilvi.githubchecker.greenfoxteam.model;
+package com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

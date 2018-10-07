@@ -1,14 +1,12 @@
 package com.greenfox.szilvi.githubchecker.greenfoxteam.service;
 
 import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm;
-import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity.ClassGithub;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.dao.GithubHandleRepo;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity.ClassGithub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -22,13 +20,13 @@ public class GreenfoxDbService {
 
     public void saveToDb(@Valid GreenfoxTeamForm greenfoxTeamForm) {
         List<String> ghHandles = githubHandleParser.handleListOfHandles(greenfoxTeamForm.getMembers());
-        saveGhHandlesToClass(ghHandles, greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
+        saveGhHandlesToClass(ghHandles, greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName(), githubHandleParser.parseLanguage(greenfoxTeamForm.getLanguage()));
     }
 
-    public void saveGhHandlesToClass(List<String> ghHandles, String cohortName, String className) {
-        for (String ghHandle:ghHandles) {
-            if (ghHandleIsNotInDb(ghHandle)){
-                githubHandleRepo.save(new ClassGithub(cohortName, className, ghHandle));
+    public void saveGhHandlesToClass(List<String> ghHandles, String cohortName, String className, String language) {
+        for (String ghHandle : ghHandles) {
+            if (ghHandleIsNotInDb(ghHandle)) {
+                githubHandleRepo.save(new ClassGithub(cohortName, className, ghHandle, language));
             }
         }
     }
@@ -52,4 +50,17 @@ public class GreenfoxDbService {
         classGithub.setGithubHandle(githubHandle);
         githubHandleRepo.save(classGithub);
     }
+
+    public List<ClassGithub> findAllByClassName(String gfclass) {
+        return githubHandleRepo.findAllByClassName(gfclass);
+    }
+
+    public List<String> getDistinctClasses() {
+        return githubHandleRepo.getDistinctClasses();
+    }
+
+    public ClassGithub getStudentFromDB(String ghHandle) {
+        return githubHandleRepo.findByGithubHandle(ghHandle);
+    }
+
 }

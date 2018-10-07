@@ -19,4 +19,6 @@ public class GreenfoxTeamForm {
     String cohortName ;
     @NotNull(message = "You must provide a class name!")
     String className;
+    @NotNull(message = "You must select from languages!")
+    String language;
 }

@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Title</title>
@@ -47,6 +48,18 @@
                 <label for="class">Class name</label>
                 <input th:field="*{className}" type="text" class="form-control" id="class" placeholder="Class name"/>
                 <label class="error" th:if="${#fields.hasErrors('className')}" th:errors="*{className}"></label>
+            </div>
+            <div class="form-group">
+                <label for="language">Language</label>
+                <select th:field="*{language}" id="language">
+                    <option th:text="java" th:value="Java"></option>
+                    <option th:text="cs" th:value="CS"></option>
+                    <option th:text="typescript" th:value="TypeScript"></option>
+                    <option th:text="javascript" th:value="JavaScript"></option>
+                    <option th:text="c" th:value="C"></option>
+                    <option th:text="cpp" th:value="CPP"></option>
+                </select>
+                <label class="error" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></label>
             </div>
             <div class="form-group">
                 <label for="members">Add members separated by " "</label>
