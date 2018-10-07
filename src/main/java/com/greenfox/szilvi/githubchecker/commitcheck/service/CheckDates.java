@@ -1,6 +1,6 @@
 package com.greenfox.szilvi.githubchecker.commitcheck.service;
 
-import com.greenfox.szilvi.githubchecker.commitcheck.model.GfCommits;
+import com.greenfox.szilvi.githubchecker.commitcheck.web.dto.CommitsDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -14,9 +14,9 @@ import java.util.Map;
 @Service
 public class CheckDates {
 
-    public int checkHowManyDaysNotCommitted(List<GfCommits> gfCommits, String startDate, String endDate) {
+    public int checkHowManyDaysNotCommitted(List<CommitsDTO> commitsDTO, String startDate, String endDate) {
         int count = 0;
-        HashMap<LocalDate, Integer> myMap = getDaysOfNotCommiting(gfCommits, startDate, endDate);
+        HashMap<LocalDate, Integer> myMap = getDaysOfNotCommiting(commitsDTO, startDate, endDate);
         for (Map.Entry entry : myMap.entrySet()) {
             if (entry.getValue().equals(0)){
                 count++;
@@ -25,10 +25,10 @@ public class CheckDates {
         return count;
     }
 
-    public HashMap<LocalDate, Integer> getDaysOfNotCommiting(List<GfCommits> gfCommits, String startDate, String endDate) {
+    public HashMap<LocalDate, Integer> getDaysOfNotCommiting(List<CommitsDTO> commitsDTO, String startDate, String endDate) {
         HashMap<LocalDate, Integer> dateIntegerHashMap = new HashMap<>();
         putDaysInMap(0, dateIntegerHashMap, startDate, endDate);
-        checkWhichDaysWereNotCommitted(gfCommits, 0, dateIntegerHashMap, startDate, endDate);
+        checkWhichDaysWereNotCommitted(commitsDTO, 0, dateIntegerHashMap, startDate, endDate);
         return dateIntegerHashMap;
     }
 
@@ -38,12 +38,12 @@ public class CheckDates {
         }
     }
 
-    private void checkWhichDaysWereNotCommitted(List<GfCommits> gfCommits, int value, HashMap<LocalDate, Integer> dateIntegerHashMap, String startDate, String endDate) {
-        if (gfCommits == null) {
+    private void checkWhichDaysWereNotCommitted(List<CommitsDTO> commitsDTO, int value, HashMap<LocalDate, Integer> dateIntegerHashMap, String startDate, String endDate) {
+        if (commitsDTO == null) {
             return;
         }
-        for (int i = 0; i < gfCommits.size(); i++) {
-            String date = gfCommits.get(i).getCommit().getAuthor().getDate();
+        for (int i = 0; i < commitsDTO.size(); i++) {
+            String date = commitsDTO.get(i).getCommit().getAuthor().getDate();
             LocalDate inputlocalDate = convertToLocalDate(date.substring(0, 10));
             for (LocalDate weekday : getDaysBetween(startDate, endDate)) {
                 if (inputlocalDate.equals(weekday)) {

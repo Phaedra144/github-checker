@@ -1,10 +1,9 @@
 package com.greenfox.szilvi.githubchecker.greenfoxteam.web;
 
 import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm;
-import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamStatus;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxDbService;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxTeamService;
-import com.greenfox.szilvi.githubchecker.general.CookieUtil;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,7 +39,7 @@ public class GreenfoxTeamController {
     }
 
     @PostMapping("/addmembers")
-    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm,BindingResult bindingResult, Model model, HttpServletRequest httpServletRequest) throws IOException {
+    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm,BindingResult bindingResult, Model model) throws IOException {
         if(bindingResult.hasErrors()){
             return "members";
         }

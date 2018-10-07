@@ -1,8 +1,8 @@
 package com.greenfox.szilvi.githubchecker.greenfoxteam.service;
 
-import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamStatus;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.web.GreenfoxTeamAPIService;
-import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamResponse;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamResponse;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import retrofit2.Call;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;

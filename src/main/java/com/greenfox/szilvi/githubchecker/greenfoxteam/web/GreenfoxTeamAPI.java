@@ -1,7 +1,7 @@
 package com.greenfox.szilvi.githubchecker.greenfoxteam.web;
 
-import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamStatus;
-import com.greenfox.szilvi.githubchecker.greenfoxteam.model.GreenfoxTeamResponse;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -20,4 +20,5 @@ public interface GreenfoxTeamAPI {
 
     @GET("orgs/{org}/teams?per_page=150")
     Call<List<GreenfoxTeamResponse>>getTeamsOfOrg(@Header("Authorization")String token, @Path("org") String org);
+
 }
