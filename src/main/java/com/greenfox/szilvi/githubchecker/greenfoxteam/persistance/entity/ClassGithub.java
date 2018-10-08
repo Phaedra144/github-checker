@@ -17,7 +17,7 @@ import javax.persistence.Id;
 public class ClassGithub {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
     String cohortName;
     String className;
