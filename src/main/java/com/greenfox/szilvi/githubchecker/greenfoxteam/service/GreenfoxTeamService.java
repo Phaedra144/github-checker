@@ -40,9 +40,9 @@ public class GreenfoxTeamService {
 
     private String handleTeamName(String cohortName, String className) {
         String teamName = cohortName + "-" + className;
-        if (className == null) {
+        if (className.equals("")) {
             teamName = cohortName;
-        } else if (cohortName == null) {
+        } else if (cohortName.equals("")) {
             teamName = className;
         }
         return teamName;
