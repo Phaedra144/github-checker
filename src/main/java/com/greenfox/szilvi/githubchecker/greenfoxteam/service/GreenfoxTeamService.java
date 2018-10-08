@@ -32,10 +32,20 @@ public class GreenfoxTeamService {
     public List<GreenfoxTeamStatus> addNewMembersToGf(String members, String cohortName, String className) throws IOException {
         List<String> ghHandles = githubHandleParser.handleListOfHandles(members);
         List<GreenfoxTeamStatus> memberStatusResponseList = new ArrayList<>();
-        String teamName = cohortName + "-" + className;
+        String teamName = handleTeamName(cohortName, className);
         String token = "token " + userHandling.findLastAuth().getAccessToken();
         callingToAddMembersToOrgAndTeam(token, ghHandles, teamName, memberStatusResponseList);
         return  memberStatusResponseList;
+    }
+
+    private String handleTeamName(String cohortName, String className) {
+        String teamName = cohortName + "-" + className;
+        if (className == null) {
+            teamName = cohortName;
+        } else if (cohortName == null) {
+            teamName = className;
+        }
+        return teamName;
     }
 
     private void callingToAddMembersToOrgAndTeam(String token, List<String> ghHandles, String teamName, List<GreenfoxTeamStatus> memberStatusResponseList) throws IOException {
