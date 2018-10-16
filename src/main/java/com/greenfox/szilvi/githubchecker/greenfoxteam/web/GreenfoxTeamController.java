@@ -1,9 +1,10 @@
 package com.greenfox.szilvi.githubchecker.greenfoxteam.web;
 
 import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm;
-import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity.ClassGithub;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxDbService;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxTeamService;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,13 +35,13 @@ public class GreenfoxTeamController {
     }
 
     @GetMapping("/addmembers")
-    public String getMemberAdder(HttpServletRequest httpServletRequest){
+    public String getMemberAdder(HttpServletRequest httpServletRequest) {
         return userHandling.checkTokenOnPage("members", httpServletRequest);
     }
 
     @PostMapping("/addmembers")
-    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm,BindingResult bindingResult, Model model) throws IOException {
-        if(bindingResult.hasErrors()){
+    public String addMember(@Valid GreenfoxTeamForm greenfoxTeamForm, BindingResult bindingResult, Model model) throws IOException {
+        if (bindingResult.hasErrors()) {
             return "members";
         }
         greenfoxDbService.saveToDb(greenfoxTeamForm);
@@ -50,20 +51,20 @@ public class GreenfoxTeamController {
     }
 
     @GetMapping("/listmembers")
-    public String listGhHandles(Model model){
+    public String listGhHandles(Model model) {
         model.addAttribute("members", greenfoxDbService.getAllHandles());
         return "members";
     }
 
     @RequestMapping(value = "/deletemembers/{id}")
-    public String deleteGhHandles(@PathVariable long id){
+    public String deleteGhHandles(@PathVariable long id) {
         greenfoxDbService.removeHandle(id);
         return "redirect:/listmembers";
     }
 
     @RequestMapping("/editmembers/{id}")
-    public String editGhHandles(@PathVariable long id, String className, String cohortName, String githubHandle){
-        greenfoxDbService.findAndReplace(id, className, cohortName, githubHandle);
+    public String editGhHandles(@PathVariable long id, String className, String cohortName, String githubHandle, String language) {
+        greenfoxDbService.findAndReplace(id, className, cohortName, githubHandle, language);
         return "redirect:/listmembers";
     }
 }

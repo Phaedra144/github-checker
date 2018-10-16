@@ -10,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 
 import javax.servlet.http.Cookie;
 
+import java.util.Scanner;
+
 import static com.greenfox.szilvi.githubchecker.general.Settings.*;
 
 /**

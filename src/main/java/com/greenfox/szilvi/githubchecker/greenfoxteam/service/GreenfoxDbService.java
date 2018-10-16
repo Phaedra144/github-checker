@@ -28,6 +28,9 @@ public class GreenfoxDbService {
             if (ghHandleIsNotInDb(ghHandle)) {
                 githubHandleRepo.save(new ClassGithub(cohortName, className, ghHandle, language));
             }
+            else {
+                replaceClassGithub(className, cohortName, ghHandle, language, githubHandleRepo.findByGithubHandle(ghHandle));
+            }
         }
     }
 
@@ -43,12 +46,17 @@ public class GreenfoxDbService {
         githubHandleRepo.delete(id);
     }
 
-    public void findAndReplace(long id, String className, String cohortName, String githubHandle) {
+    public void findAndReplace(long id, String className, String cohortName, String githubHandle, String language) {
         ClassGithub classGithub = githubHandleRepo.findOne(id);
+        replaceClassGithub(className, cohortName, githubHandle, language, classGithub);
+        githubHandleRepo.save(classGithub);
+    }
+
+    private void replaceClassGithub(String className, String cohortName, String githubHandle, String language, ClassGithub classGithub) {
         classGithub.setClassName(className);
         classGithub.setCohortName(cohortName);
         classGithub.setGithubHandle(githubHandle);
-        githubHandleRepo.save(classGithub);
+        classGithub.setLanguage(language);
     }
 
     public List<ClassGithub> findAllByClassName(String gfclass) {

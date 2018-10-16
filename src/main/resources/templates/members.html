@@ -89,6 +89,8 @@
                                    name="className"/></td>
                         <td><input th:value="${handle.githubHandle}" type="text" placeholder="Github Handle"
                                    name="githubHandle"/></td>
+                        <td><input th:value="${handle.language}" type="text" placeholder="Language"
+                                   name="language"/></td>
                         <td><a th:href="@{/deletemembers/{id}(id=${handle.id})}">
                             <span class="glyphicon glyphicon-trash"></span></a>
                         </td>
