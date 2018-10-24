@@ -1,8 +1,8 @@
 package com.greenfox.szilvi.githubchecker.greenfoxteam.service;
 
-import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.web.GreenfoxTeamAPIService;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamResponse;
+import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
 import com.greenfox.szilvi.githubchecker.user.service.UserHandling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,9 @@ import retrofit2.Call;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static com.greenfox.szilvi.githubchecker.general.Settings.*;
+import static com.greenfox.szilvi.githubchecker.general.Settings.GITHUB_ORG;
 
 @Service
 public class GreenfoxTeamService {
@@ -32,27 +33,17 @@ public class GreenfoxTeamService {
     public List<GreenfoxTeamStatus> addNewMembersToGf(String members, String cohortName, String className) throws IOException {
         List<String> ghHandles = githubHandleParser.handleListOfHandles(members);
         List<GreenfoxTeamStatus> memberStatusResponseList = new ArrayList<>();
-        String teamName = handleTeamName(cohortName, className);
         String token = "token " + userHandling.findLastAuth().getAccessToken();
-        callingToAddMembersToOrgAndTeam(token, ghHandles, teamName, memberStatusResponseList);
-        return  memberStatusResponseList;
+        int teamId = getIdOfTeam(token, className, cohortName);
+        callingToAddMembersToOrgAndTeam(token, ghHandles, teamId, memberStatusResponseList);
+        return memberStatusResponseList;
     }
 
-    private String handleTeamName(String cohortName, String className) {
-        String teamName = cohortName + "-" + className;
-        if (className.equals("")) {
-            teamName = cohortName;
-        } else if (cohortName.equals("")) {
-            teamName = className;
-        }
-        return teamName;
-    }
-
-    private void callingToAddMembersToOrgAndTeam(String token, List<String> ghHandles, String teamName, List<GreenfoxTeamStatus> memberStatusResponseList) throws IOException {
-        for (String ghHandle : ghHandles){
+    private void callingToAddMembersToOrgAndTeam(String token, List<String> ghHandles, int teamId, List<GreenfoxTeamStatus> memberStatusResponseList) throws IOException {
+        for (String ghHandle : ghHandles) {
             addMemberToOrg(token, memberStatusResponseList, ghHandle);
             try {
-                addMemberToTeam(token, teamName, memberStatusResponseList, ghHandle);
+                addMemberToTeam(token, teamId, memberStatusResponseList, ghHandle);
             } catch (NullPointerException nullpointer) {
                 System.out.println("Something is not ok with your team name!");
             }
@@ -65,31 +56,43 @@ public class GreenfoxTeamService {
         checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, ghHandle);
     }
 
-    private void addMemberToTeam(String token, String teamName, List<GreenfoxTeamStatus> memberStatusResponseList, String ghHandle) throws IOException {
-        Call<GreenfoxTeamStatus> addMemberToTeam = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToTeam(token, getIdOfTeam(token, teamName), ghHandle);
+    private void addMemberToTeam(String token, int teamId, List<GreenfoxTeamStatus> memberStatusResponseList, String ghHandle) throws IOException {
+        Call<GreenfoxTeamStatus> addMemberToTeam = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToTeam(token, teamId, ghHandle);
         GreenfoxTeamStatus memberStatusResponseToTeam = addMemberToTeam.execute().body();
         checkStatusAndAddToList(memberStatusResponseList, memberStatusResponseToTeam, ghHandle);
     }
 
     private void checkStatusAndAddToList(List<GreenfoxTeamStatus> memberStatusResponseList, GreenfoxTeamStatus memberStatusResponse, String ghHandle) {
-        if (memberStatusResponse != null){
+        if (memberStatusResponse != null) {
             memberStatusResponse.setHttpStatus("ok");
             memberStatusResponse.setGhHandle(ghHandle);
-        } else{
+        } else {
             memberStatusResponse = new GreenfoxTeamStatus("error", ghHandle);
         }
         memberStatusResponseList.add(memberStatusResponse);
     }
 
-    private int getIdOfTeam(String token, String teamName) throws IOException {
+    private int getIdOfTeam(String token, String className, String cohortName) throws IOException {
         Call<List<GreenfoxTeamResponse>> getTeams = greenfoxTeamAPIService.getGreenfoxTeamAPI().getTeamsOfOrg(token, GITHUB_ORG);
         List<GreenfoxTeamResponse> gfTeams = getTeams.execute().body();
         int teamId = 0;
-        for (GreenfoxTeamResponse gfTeam : gfTeams){
-            if (gfTeam.getName().equals(teamName)){
-                teamId = gfTeam.getId();
+        Optional<GreenfoxTeamResponse> classOrCohortOpt = getTeam(gfTeams, className);
+        if (classOrCohortOpt == null) {
+            classOrCohortOpt = getTeam(gfTeams, cohortName);
+            if (classOrCohortOpt != null) {
+                teamId = classOrCohortOpt.get().getId();
             }
+        } else {
+            teamId = classOrCohortOpt.get().getId();
         }
         return teamId;
+    }
+
+    private Optional<GreenfoxTeamResponse> getTeam(List<GreenfoxTeamResponse> gfTeams, String classOrCohort) {
+        Optional<GreenfoxTeamResponse> classOrCohortOpt = Optional.ofNullable(gfTeams.stream()
+                .filter(teamName -> teamName.getName().contains(classOrCohort))
+                .findFirst()
+                .orElse(null));
+        return classOrCohortOpt;
     }
 }
