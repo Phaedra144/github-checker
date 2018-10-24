@@ -1,0 +1,10 @@
+td {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    max-width: 70px;
+}
+
+input {
+    width: 100%;
+}
