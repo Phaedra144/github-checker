@@ -34,7 +34,7 @@
         <h1 class="page-header">Green Fox Github Checker</h1>
     </div>
     <p>You can add members to Green Fox organization. </p>
-    <p>Please make sure that team is <span style="font-weight: bold">already created on github and be case sensitive</span></p>
+    <p>Please make sure that team is <span style="font-weight: bold">already created on github and MIND lower- and upper-cases.</span></p>
     <form th:action="@{/addmembers}" th:object="${greenfoxTeamForm}" method="post">
         <div class="form-row">
             <div class="form-group">
@@ -70,6 +70,12 @@
     </form>
     <div th:each="response : ${responses}">
         <p th:text="${response}"></p>
+    </div>
+    <div>
+        <form>
+            <label style="font-weight: bold">Filter by:</label>
+            <input />
+        </form>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
