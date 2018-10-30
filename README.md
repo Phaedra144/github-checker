@@ -3,15 +3,35 @@
 ### Description
 
 This application is a github parser with a nice bootstrap GUI and some basic functionality.
-The queries relate to activities of Green Fox Academy's students on github.
+The queries relate to the activities of Green Fox Academy's students on github.
 
-With the application you are able to check commit activities of students, comment activities of mentors and add new students to  [green-fox-academy organization](https://github.com/green-fox-academy).
+### Main functionalities
 
-**Please make sure that the name of the student's main repository matches to their github handle.**
+#### Check commits of students
+With the application you are able to check:
+- commit activities of students
+- comment activities of mentors
+- Todo App commits
+  - The format of Todo-App repository has to be: **todo-app-"githubname"**
+- Wanderer commits
+  - The format of Wanderer repository has to be: **wanderer-"githubname"**
 
-Also the app is capable of monitoring some other repositories, such as:
-- Todo App, the format of repository name has to be: todo-app-"githubname"
-- Wanderer, the format of repository name has to be: wanderer-"githubname"
+***Please make sure that the name of the student's main repository matches to their github handle.***
+
+#### Add students to Green Fox Academy's github organisation
+When new cohort comes, first adding every students to cohort team is needed to perform.
+
+***Please make sure that the team (i.e. "2018-10 Rueppelli") has been already created on github.***
+
+After assigning students to the classes you can run adding members again, thus saving students with additional information to the db and adding them to github class team at the same time.
+
+Example:
+
+Cohort name: "Rueppelli"
+Class name: "Seadog"
+Language: "java"
+
+***Please make sure that the team (i.e. "Rueppelli Seadog") has been already created on github.***
 
 ### Environment variables
 
@@ -35,9 +55,9 @@ For local use you have to setup the below environment variables:
   Elastic Beanstalk CLI is a command line interface that lets you create, update and monitor Elastic Beanstalk environments, and deploy applications right from the terminal.
     - You can install Elastic Beanstalk CLI using Python’s Package management system, PIP. It comes bundled with Python version 3.x.x.
 
+
 - **Use EB CLI with valid IAM user with administration access**
   [More info here](https://docs.aws.amazon.com/codecommit/latest/userguide/auth-and-access-control.html)
-
 
 - **Creating an AWS CodeCommit Repository with the EB CLI**
   To get started with AWS CodeCommit, run `eb init`. During repository configuration, the EB CLI prompts you to use AWS CodeCommit to store your code and speed up deployments. Even if you previously configured your project with `eb init`, you can run it again to configure AWS CodeCommit.
