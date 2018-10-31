@@ -61,7 +61,7 @@
                 <label class="error" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></label>
             </div>
             <div class="form-group">
-                <label for="members">Add members separated by " "</label>
+                <label for="members">Members, you can copy them as list</label>
                 <textarea class="form-control" id="members" th:field="*{members}" rows="3"></textarea>
                 <label class="error" th:if="${#fields.hasErrors('members')}" th:errors="*{members}"></label>
             </div>
