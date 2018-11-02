@@ -43,10 +43,11 @@ public class GreenfoxTeamController {
         if (bindingResult.hasErrors()) {
             return "members";
         }
-        System.out.println(greenfoxTeamForm.isSaveToGithub());
         greenfoxDbService.saveToDb(greenfoxTeamForm);
-        List<GreenfoxTeamStatus> memberStatusResponse = greenfoxTeamService.addNewMembersToGf(greenfoxTeamForm.getMembers(), greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
-        model.addAttribute("responses", memberStatusResponse);
+        if (greenfoxTeamForm.isSaveToGithub()) {
+            List<GreenfoxTeamStatus> memberStatusResponse = greenfoxTeamService.addNewMembersToGf(greenfoxTeamForm.getMembers(), greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
+            model.addAttribute("responses", memberStatusResponse);
+        }
         return "members";
     }
 
