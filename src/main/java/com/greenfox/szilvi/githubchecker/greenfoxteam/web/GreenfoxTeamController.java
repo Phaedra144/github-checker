@@ -1,7 +1,6 @@
 package com.greenfox.szilvi.githubchecker.greenfoxteam.web;
 
 import com.greenfox.szilvi.githubchecker.greenfoxteam.formvalid.GreenfoxTeamForm;
-import com.greenfox.szilvi.githubchecker.greenfoxteam.persistance.entity.ClassGithub;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxDbService;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.service.GreenfoxTeamService;
 import com.greenfox.szilvi.githubchecker.greenfoxteam.web.dto.GreenfoxTeamStatus;
@@ -44,6 +43,7 @@ public class GreenfoxTeamController {
         if (bindingResult.hasErrors()) {
             return "members";
         }
+        System.out.println(greenfoxTeamForm.isSaveToGithub());
         greenfoxDbService.saveToDb(greenfoxTeamForm);
         List<GreenfoxTeamStatus> memberStatusResponse = greenfoxTeamService.addNewMembersToGf(greenfoxTeamForm.getMembers(), greenfoxTeamForm.getCohortName(), greenfoxTeamForm.getClassName());
         model.addAttribute("responses", memberStatusResponse);

@@ -53,22 +53,33 @@ public class GreenfoxTeamService {
     private void addMemberToOrg(String token, List<GreenfoxTeamStatus> memberStatusResponseList, String ghHandle) throws IOException {
         Call<GreenfoxTeamStatus> addingMemberResponse = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToOrg(token, GITHUB_ORG, ghHandle);
         GreenfoxTeamStatus memberStatusResponse = addingMemberResponse.execute().body();
-        checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, ghHandle);
+        checkStatusAndAddToList(memberStatusResponseList, memberStatusResponse, ghHandle, "Added to Green Fox organisation.");
     }
 
     private void addMemberToTeam(String token, int teamId, List<GreenfoxTeamStatus> memberStatusResponseList, String ghHandle) throws IOException {
-        Call<GreenfoxTeamStatus> addMemberToTeam = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToTeam(token, teamId, ghHandle);
-        GreenfoxTeamStatus memberStatusResponseToTeam = addMemberToTeam.execute().body();
-        checkStatusAndAddToList(memberStatusResponseList, memberStatusResponseToTeam, ghHandle);
+        GreenfoxTeamStatus memberStatusResponseToTeam = getGreenfoxTeamStatus(token, teamId, ghHandle);
+        GreenfoxTeamResponse realGfTeam = getGreenfoxTeamResponse(token, teamId);
+        checkStatusAndAddToList(memberStatusResponseList, memberStatusResponseToTeam, ghHandle, "Added to team: " + realGfTeam.getName());
     }
 
-    private void checkStatusAndAddToList(List<GreenfoxTeamStatus> memberStatusResponseList, GreenfoxTeamStatus memberStatusResponse, String ghHandle) {
+    private GreenfoxTeamStatus getGreenfoxTeamStatus(String token, int teamId, String ghHandle) throws IOException {
+        Call<GreenfoxTeamStatus> addMemberToTeam = greenfoxTeamAPIService.getGreenfoxTeamAPI().addMemberToTeam(token, teamId, ghHandle);
+        return addMemberToTeam.execute().body();
+    }
+
+    private GreenfoxTeamResponse getGreenfoxTeamResponse(String token, int teamId) throws IOException {
+        Call<GreenfoxTeamResponse> getTeamBasedOnId = greenfoxTeamAPIService.getGreenfoxTeamAPI().getGfTeam(token, teamId);
+        return getTeamBasedOnId.execute().body();
+    }
+
+    private void checkStatusAndAddToList(List<GreenfoxTeamStatus> memberStatusResponseList, GreenfoxTeamStatus memberStatusResponse, String ghHandle, String actiontype) {
         if (memberStatusResponse != null) {
             memberStatusResponse.setHttpStatus("ok");
             memberStatusResponse.setGhHandle(ghHandle);
         } else {
             memberStatusResponse = new GreenfoxTeamStatus("error", ghHandle);
         }
+        memberStatusResponse.setActionType(actiontype);
         memberStatusResponseList.add(memberStatusResponse);
     }
 

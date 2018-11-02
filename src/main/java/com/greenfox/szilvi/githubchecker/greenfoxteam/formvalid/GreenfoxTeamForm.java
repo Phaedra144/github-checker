@@ -21,4 +21,5 @@ public class GreenfoxTeamForm {
     String className;
     @NotNull(message = "You must select from languages!")
     String language;
+    boolean saveToGithub;
 }

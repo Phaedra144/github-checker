@@ -21,4 +21,7 @@ public interface GreenfoxTeamAPI {
     @GET("orgs/{org}/teams?per_page=150")
     Call<List<GreenfoxTeamResponse>>getTeamsOfOrg(@Header("Authorization")String token, @Path("org") String org);
 
+    @GET("teams/{team_id}")
+    Call<GreenfoxTeamResponse>getGfTeam(@Header("Authorization")String token, @Path("team_id") int teamId);
+
 }

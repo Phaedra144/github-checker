@@ -5,6 +5,7 @@ td {
     max-width: 70px;
 }
 
-input {
+input .form-control {
     width: 100%;
 }
+

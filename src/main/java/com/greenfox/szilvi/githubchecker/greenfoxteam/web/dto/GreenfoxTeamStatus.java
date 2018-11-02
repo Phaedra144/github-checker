@@ -13,6 +13,7 @@ public class GreenfoxTeamStatus {
     String message;
     String state;
     String ghHandle;
+    String actionType;
 
     public GreenfoxTeamStatus() {
     }
@@ -26,8 +27,10 @@ public class GreenfoxTeamStatus {
     public String toString() {
         return "GreenfoxTeamStatus{" +
                 "httpStatus='" + httpStatus + '\'' +
+                ", message='" + message + '\'' +
                 ", state='" + state + '\'' +
                 ", ghHandle='" + ghHandle + '\'' +
+                ", actionType='" + actionType + '\'' +
                 '}';
     }
 }
