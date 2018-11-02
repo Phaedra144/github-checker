@@ -49,7 +49,6 @@ public class GreenfoxDbService {
     public void findAndReplace(long id, String className, String cohortName, String githubHandle, String language) {
         ClassGithub classGithub = githubHandleRepo.findOne(id);
         replaceClassGithub(className, cohortName, githubHandle, language, classGithub);
-        githubHandleRepo.save(classGithub);
     }
 
     private void replaceClassGithub(String className, String cohortName, String githubHandle, String language, ClassGithub classGithub) {
@@ -57,6 +56,7 @@ public class GreenfoxDbService {
         classGithub.setCohortName(cohortName);
         classGithub.setGithubHandle(githubHandle);
         classGithub.setLanguage(language);
+        githubHandleRepo.save(classGithub);
     }
 
     public List<ClassGithub> findAllByClassName(String gfclass) {
